@@ -100,6 +100,6 @@ function arkiv() {
 
 export default defineConfig({
   base: "./",
-  plugins: [arkiv(), delning()],
+  plugins: [arkiv(), delning(), import("./scripts/admin/plugin.mjs").then((m) => m.default())], // Redigeringsbordet finns bara i npm run dev
   build: { outDir: "dist", assetsInlineLimit: 0, chunkSizeWarningLimit: 900 },
 });

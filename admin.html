@@ -1,0 +1,57 @@
+<!doctype html>
+<!-- Redigeringsbordet. Finns bara när npm run dev körs (scripts/admin/plugin.mjs). Publiceras aldrig. -->
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Redigeringsbordet · Verket för oväntade lösningar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,800;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/src/stil/redigeringsbordet.css">
+</head>
+<body>
+<a class="rb-hoppa" href="#rb-rutnat">Hoppa till verken</a>
+<header class="rb-bar">
+  <a class="rb-brand" href="/admin.html" aria-label="Redigeringsbordet, början">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" stroke-width=".8"/><g stroke="var(--hand)" stroke-width="2.4" stroke-linecap="round"><path d="M20 12v16"/><path d="M13.1 16l13.8 8"/><path d="M13.1 24l13.8-8"/></g></svg>
+    <span><b>Redigeringsbordet</b><small>Verket för oväntade lösningar · endast på denna dator</small></span>
+  </a>
+  <nav class="rb-nav" aria-label="Bordet">
+    <button type="button" class="rb-kontrollknapp" id="rb-kontrollknapp" data-status="vantar">Kontroll pågår</button>
+    <a href="/" target="_blank" rel="noopener">Sajten ↗</a>
+  </nav>
+</header>
+<p class="rb-avbrott" id="rb-avbrott" role="alert" hidden>Kontakten med <code>npm run dev</code> är bruten. Bordet försöker igen. Ändringar kan inte sparas under tiden.</p>
+<main class="rb-yta" id="rb-yta">
+  <section class="rb-rum" aria-labelledby="rb-rum-rubrik">
+    <h1 class="rb-dold-text" id="rb-rum-rubrik">Verken</h1>
+    <div id="rb-verktyg"></div>
+    <div id="rb-rutnat" class="rb-rutnat" tabindex="-1"></div>
+  </section>
+  <aside class="rb-panel" id="rb-panel" aria-label="Arbetsytan">
+    <span class="hal a" aria-hidden="true"></span><span class="hal b" aria-hidden="true"></span>
+    <div class="rb-flikar" role="tablist" aria-label="Arbetsytan">
+      <button type="button" role="tab" id="rb-tab-handling" aria-controls="rb-flik-handling" data-flik="handling">Handling</button>
+      <button type="button" role="tab" id="rb-tab-arende" aria-controls="rb-flik-arende" data-flik="arende">Ärende <span class="rb-rakna" id="rb-rakna-arende"></span></button>
+      <button type="button" role="tab" id="rb-tab-inkorg" aria-controls="rb-flik-inkorg" data-flik="inkorg">Inkorg <span class="rb-rakna" id="rb-rakna-inkorg"></span></button>
+      <button type="button" role="tab" id="rb-tab-kontroll" aria-controls="rb-flik-kontroll" data-flik="kontroll">Kontroll</button>
+      <button type="button" class="rb-stang-panel" id="rb-stang-panel" aria-label="Stäng arbetsytan">Stäng</button>
+    </div>
+    <div class="rb-flik" role="tabpanel" id="rb-flik-handling" aria-labelledby="rb-tab-handling"></div>
+    <div class="rb-flik" role="tabpanel" id="rb-flik-arende" aria-labelledby="rb-tab-arende" hidden></div>
+    <div class="rb-flik" role="tabpanel" id="rb-flik-inkorg" aria-labelledby="rb-tab-inkorg" hidden></div>
+    <div class="rb-flik" role="tabpanel" id="rb-flik-kontroll" aria-labelledby="rb-tab-kontroll" hidden></div>
+  </aside>
+</main>
+<nav class="rb-docka" aria-label="Arbetsytan">
+  <button type="button" data-flik="arende">Ärende <span class="rb-rakna" data-rakna="arende"></span></button>
+  <button type="button" data-flik="inkorg">Inkorg <span class="rb-rakna" data-rakna="inkorg"></span></button>
+  <button type="button" data-flik="kontroll">Kontroll</button>
+</nav>
+<div class="rb-meddelanden" id="rb-meddelanden" aria-live="polite"></div>
+<div class="rb-slapp" id="rb-slapp" hidden><p><b>Släpp filerna</b><span>De läggs i inkorgen och intaget körs.</span></p></div>
+<script type="module" src="/scripts/admin/klient/bordet.js"></script>
+</body>
+</html>
