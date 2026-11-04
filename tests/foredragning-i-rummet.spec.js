@@ -31,6 +31,9 @@ async function nasta(page) {
 }
 
 test.describe("Föredragningen i Arkivrummet", () => {
+  // Rummet ritas i mjukvara på testdatorerna. Att ladda det tar tid, och här laddas det ofta två gånger.
+  test.describe.configure({ timeout: 150_000 });
+
   test("knappen i rummet startar en föredragning med ett frö i adressen", async ({ page }) => {
     await page.goto("./#arkivrummet");
     await expect(page.locator("canvas.gl")).toBeVisible();
