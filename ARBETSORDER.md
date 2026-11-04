@@ -131,6 +131,22 @@ Alla åtta uppdragen är ihopslagna på `samlat`. Kontroll och bygge går igenom
 
 **Klart när:** alla tester går igenom i GitHub Actions på pull request #9 (grön bock), utan att något test har tagits bort eller försvagats utan skäl. Skriv i pull requesten vad som var fel i sajten och vad som var fel i testerna.
 
+### Uppdrag 13. Det nya materialet från Dropbox
+**Gren:** arbeta direkt på `dropbox` (pull request mot `main` finns redan).
+
+107 nya verk har lagts in från Johans Dropbox-mapp Portfolio: 26 filmer (`content/verk/v02-…` till `v27-…`, filerna i `public/media/film/`) och 81 bilder (`content/verk/106-…` och framåt). Johan har dömt allt på ett sorteringsbord. Domen står i fältet `dom:` och vikten är redan satt efter den (hjälte, ja = frö, kanske = damm). Fältet `kalla:` säger vilken portfoliomapp filen kom från, `original:` vad originalfilen hette. Rör inte `dom`, `vikt`, `kalla` eller `original`.
+
+Titlarna är provisoriska, tagna ur filnamnen. `epok` är tom, `avdelning` är "Övrigt", `ton` är en platshållare och `datum` saknas.
+
+- **Titta på varje bild och varje films stillbild** (för filmer: ta också några bildrutor ur filen med ffmpeg) och sätt titel, `epok`, `avdelning`, `ton` och en text på en till tre meningar i torr registerprosa, som uppdrag 3 gjorde. Befintliga epoker och avdelningar används om de passar (se andra verkfiler), annars nya. Titlar i samma stil som de befintliga: korta, konkreta, utan versaler och utan filnamnsrester.
+- **Datum:** sätt bara datum som går att belägga. Filnamnen innehåller ofta datum (till exempel `170927` = 2017-09-27, `251209` = 2025-12-09, `2017`, `2018`). Annars `datum: null` och `[JOHAN: år?]` sist i texten om det spelar roll. Gissa inte. Riksteatern-material är 2012 till 2017, Clio/Bonnier 2018 till 2022, Marketing Levels 2022 till 2026 (detta får användas som `datum_gissat: true` med mittåret om inget annat finns).
+- **Hitta inte på uppdragsgivare, roller eller sammanhang** som inte syns i bilden, filnamnet eller mappnamnet.
+- **Ärenden:** skriv ärendeutkast (`utkast: true`) för de tydliga grupperna i det nya materialet, till exempel Riksteaterns livesändningar och projektioner, Kungliga Operan (Bella Figura, In the Middle, Värdet av konst), Clio/Bonnier, Eduflix med generativ AI, och de AI-genererade varumärkesvärldarna (Meeat Burgers, Blosserum, Distribulock). Samma form som de befintliga utkasten, med frågor till Johan.
+- **Föredragningen och ansökan** ska kunna bifoga filmerna som filmer (de har `video:` och `bild:`). Kontrollera att visaren spelar dem, på dator och mobil, och att Arkivrummet och Registret visar dem rätt.
+- Sajtens storlek är nu cirka 600 MB av GitHub Pages gräns på 1 GB. Lägg inte till fler filmfiler.
+
+**Klart när:** inga provisoriska titlar finns kvar, kontroll, bygge och vakten går igenom, och pull requesten listar alla nya titlar i en tabell (fil, gammal titel, ny titel) så att Johan kan ändra det han inte gillar.
+
 ---
 
 ## Våg 2 (efter att våg 1 är sammanslagen)
