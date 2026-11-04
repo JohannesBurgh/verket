@@ -3,7 +3,7 @@
 // (se vite.config.js). Här får de en egen avdelning, en stämpel och ett
 // föreläggande som samlar alla [JOHAN: …]-frågor.
 import "../stil/arenden.css";
-import { A, S, el, papper, huvud, tumnagel, metaRad, byId, kontaktRuta, kanalFarg, PREVIEW, ytBild, reduce } from "../data.js";
+import { A, S, el, papper, huvud, tumnagel, metaRad, byId, kontaktRuta, kanalFarg, PREVIEW, ytBild, reduce, bild } from "../data.js";
 import { oppna } from "../visare.js";
 
 const efterDnr = (a, b) => String(a.diarienummer).localeCompare(String(b.diarienummer), "sv", { numeric: true });
@@ -87,7 +87,7 @@ function alla(kropp) {
 
 // Omslaget: fotot, eller för film utan stillbild ett blad i kanalens färg.
 function omslag(v) {
-  if (v.bild) return el("div", { class: "omslag" }, el("img", { src: v.bild, alt: v.titel }));
+  if (v.bild) return el("div", { class: "omslag" }, bild(v, { ivrig: true, sizes: "(max-width: 760px) 100vw, 800px" }));
   if (!v.youtube) return null;
   const [bg, fg] = kanalFarg(v.kanal);
   const o = el("div", { class: "omslag yt", style: `background:${bg};color:${fg}` },

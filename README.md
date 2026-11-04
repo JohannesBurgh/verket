@@ -37,9 +37,11 @@ content/
   ansokan.json     Frågorna i ansökan, svaren och poängen
   verk/            Ett verk per fil (foto, film eller YouTube)
   arenden/         En projektresa per fil
+  bilder.json      Vilka storlekar varje bild finns i (skapas av intaget, rör inte)
 public/media/
-  bilder/          Bilderna, nedskalade
+  bilder/          Bilderna. Huvudbilden här, storlekarna (AVIF, WebP, JPEG) i bilder/storlek/
   film/            Egna filmfiler
+public/typsnitt/   Typsnitten (Public Sans, IBM Plex Mono) ligger på sajten själv
 inkorg/            Släpp nytt material här och kör npm run intag
 scripts/           Intaget och kontrollen
 src/               Själva sajten (kod). Behöver sällan röras.
@@ -48,9 +50,18 @@ src/               Själva sajten (kod). Behöver sällan röras.
 ## Lägga till nytt material
 
 1. Släpp bilder, filmer eller en `youtube.txt` i `inkorg/` (se `inkorg/LASMIG.txt`).
-2. Kör `npm run intag`. Bilderna skalas ned, datum läses ur kamerans metadata och en fil skapas per verk i `content/verk/`.
+2. Kör `npm run intag`. Varje bild sparas i tre storlekar (480, 960 och 1600 pixlar på längsta sidan) i AVIF och WebP, med JPEG som reserv. Datum läses ur kamerans metadata och en fil skapas per verk i `content/verk/`.
 3. Justera titel, avdelning och vikt i de nya filerna om du vill.
 4. Kör `npm run kontroll`, som säger till om något saknas.
+
+**Byta en liten bild mot originalet.** De äldre bilderna är bara 720 pixlar breda. Lägg originalfilen i `inkorg/` med samma namn som står i verkets `original:` (till exempel `CRW_7316.jpg`), eller döp den efter verket (`057-rattan.jpg`), och kör `npm run intag`. Bilden byts ut i alla storlekar. Texten i verkfilen rörs inte. `npm run bildstorlekar -- --lista` visar vilka bilder som fortfarande är små.
+
+## Delning, ikoner och sökmotorer
+
+- **Delningsbilder.** När sajten byggs skapas en bild på 1200×630 till startsidan och en till varje ärende (papper, stämpel, ett verk), plus en delningssida per ärende: `…/arende/nordisk-saga/`. Dela den adressen, så visas ärendets bild och text i Messenger, Slack, LinkedIn och liknande. Den som klickar hamnar i ärendet. Vilket verk som syns på startsidans bild styrs av `delningsverk:` i `content/verket.md`. För att titta på bilderna utan att bygga: `node scripts/delning.mjs` (hamnar i `dist-delning/`).
+- **Adressen.** `adress:` i `content/verket.md` används i delningstaggarna och i `sitemap.xml`. Byt den om sajten får en egen domän.
+- **Ikoner.** `npm run ikoner` gör favicon och hemskärmsikoner av emblemet. Behövs bara om emblemet ändras.
+- **Storlekar för befintliga bilder.** `npm run bildstorlekar` skapar det som saknas. Intaget gör det själv för nya bilder.
 
 ## Ett verk
 

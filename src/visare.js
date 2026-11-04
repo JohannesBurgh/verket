@@ -1,5 +1,5 @@
 // Visaren: ett verk i taget, stort. Pilar, svep och Esc. Delas av alla vyer.
-import { el, metaRad, kanalFarg, PREVIEW, reduce } from "./data.js";
+import { el, metaRad, kanalFarg, PREVIEW, reduce, storBild } from "./data.js";
 import { klick } from "./ljud.js";
 
 const root = document.getElementById("visare");
@@ -24,7 +24,7 @@ function media(v) {
     const [bg, fg] = kanalFarg(v.kanal);
     m.append(el("div", { class: "ytstor", style: `background:${bg};color:${fg}` }, el("small", {}, v.kanal), el("strong", {}, v.titel),
       el("a", { href: "https://www.youtube.com/watch?v=" + v.youtube, target: "_blank", rel: "noopener" }, "Spela på YouTube")));
-  } else m.append(el("img", { src: v.bild, alt: v.titel }));
+  } else m.append(storBild(v));
   return m;
 }
 const STILAR = {

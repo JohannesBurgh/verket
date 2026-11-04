@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import delning from "./scripts/delning.mjs";
 
 const CONTENT = path.resolve("content");
 const ID = "virtual:arkiv";
@@ -99,6 +100,6 @@ function arkiv() {
 
 export default defineConfig({
   base: "./",
-  plugins: [arkiv()],
+  plugins: [arkiv(), delning()],
   build: { outDir: "dist", assetsInlineLimit: 0, chunkSizeWarningLimit: 900 },
 });

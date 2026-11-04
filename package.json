@@ -9,7 +9,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "intag": "node scripts/intag.mjs",
-    "kontroll": "node scripts/kontroll.mjs"
+    "kontroll": "node scripts/kontroll.mjs",
+    "bildstorlekar": "node scripts/bildstorlekar.mjs",
+    "ikoner": "node scripts/ikoner.mjs"
   },
   "dependencies": {
     "three": "0.170.0"
