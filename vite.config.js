@@ -23,7 +23,12 @@ function renderBody(md) {
   return html.replace(/<!--[\s\S]*?-->/g, "");
 }
 
-function load() {
+// Ett ärende med "utkast: true" visas när Johan kör npm run dev men lämnas
+// utanför npm run build. Allt annat än ett uttryckligt false räknas som utkast,
+// så att ett felskrivet värde hellre döljer ärendet än publicerar det.
+const arUtkast = (data) => data.utkast != null && data.utkast !== false;
+
+function load({ medUtkast = false } = {}) {
   const fel = [];
   const verk = readDir("verk").map((f) => {
     const id = f.replace(/\.md$/, "");
@@ -58,10 +63,13 @@ function load() {
       text: content.trim() ? marked.parseInline(content.trim()) : "",
     };
   });
-  const arenden = readDir("arenden").map((f) => {
+  const allaArenden = readDir("arenden").map((f) => {
     const { data, content } = matter(fs.readFileSync(path.join(CONTENT, "arenden", f), "utf8"));
-    return { id: f.replace(/\.md$/, ""), ...data, html: renderBody(content) };
+    return { id: f.replace(/\.md$/, ""), ...data, utkast: arUtkast(data), html: renderBody(content) };
   });
+  const arenden = medUtkast ? allaArenden : allaArenden.filter((a) => !a.utkast);
+  const utelamnade = allaArenden.length - arenden.length;
+  if (utelamnade) console.log(`[innehåll] ${utelamnade} ärendeutkast lämnas utanför bygget.`);
   const v = matter(fs.readFileSync(path.join(CONTENT, "verket.md"), "utf8"));
   const ansokan = JSON.parse(fs.readFileSync(path.join(CONTENT, "ansokan.json"), "utf8"));
   if (fel.length) console.warn("\n[innehåll] " + fel.join("\n[innehåll] ") + "\n");
@@ -69,10 +77,13 @@ function load() {
 }
 
 function arkiv() {
+  let medUtkast = false;
   return {
     name: "arkiv",
+    // Utkast tas bara med i utvecklingsservern (npm run dev), aldrig i bygget.
+    configResolved: (config) => { medUtkast = config.command === "serve" && config.mode !== "production"; },
     resolveId: (id) => (id === ID ? RID : null),
-    load: (id) => (id === RID ? `export default ${JSON.stringify(load())};` : null),
+    load: (id) => (id === RID ? `export default ${JSON.stringify(load({ medUtkast }))};` : null),
     configureServer(server) {
       server.watcher.add(CONTENT);
       server.watcher.on("all", (_, file) => {

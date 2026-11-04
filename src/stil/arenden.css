@@ -1,0 +1,67 @@
+/* Ärenden: utkast, frågor till Johan och omslag för film (uppdrag 4).
+   Utkasten syns bara i npm run dev. Paletten är sajtens egen. */
+
+/* ---------- förteckningen ---------- */
+.utkastdel{margin-top:40px}
+.utkastnot{font-size:14px;color:var(--muted);max-width:62ch;margin:0 0 16px}
+.utkastnot .prov{color:var(--stamp);border-color:var(--stamp)}
+.status.utkast{color:var(--muted);border-style:dashed}
+.arendelista .ar-utkast .om{filter:grayscale(.35);opacity:.92}
+.arendelista .fragantal{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.04em;color:var(--stamp);margin-top:4px}
+
+/* ---------- ärendet ---------- */
+.paper.ar-utkast{background-image:repeating-linear-gradient(-45deg,transparent 0 22px,rgba(191,45,37,.018) 22px 44px)}
+.utkaststampel{position:absolute;right:30px;top:92px;z-index:2;pointer-events:none;color:var(--stamp);
+  font-weight:800;font-size:26px;letter-spacing:.2em;text-transform:uppercase;line-height:1;
+  padding:8px 14px 6px;border:3px solid currentColor;transform:rotate(-7deg);opacity:.82;mix-blend-mode:multiply;
+  animation:utkast-ned .42s cubic-bezier(.3,1.5,.5,1) .25s both}
+.arende .utkastnot{max-width:calc(100% - 190px)}
+.utkaststampel small{display:block;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;font-weight:500;text-align:center;margin-top:4px}
+@keyframes utkast-ned{0%{transform:rotate(-14deg) scale(2.1);opacity:0}100%{transform:rotate(-7deg) scale(1);opacity:.82}}
+
+/* Frågor till Johan i löptexten. Inte klickbara, därför ingen lime. */
+.fraga{background:var(--field);color:var(--ink);padding:1px 5px;font-style:normal;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;border-bottom:1.5px dashed var(--stamp)}
+.fraga .nr{font-style:normal;font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--stamp);
+  border:1px solid currentColor;padding:0 4px;margin-right:6px;position:relative;top:-1px}
+.lead .fraga,.fields .fraga{font-size:.92em}
+.fraga.blink{animation:fraga-blink 1.4s var(--ease)}
+@keyframes fraga-blink{0%,40%{background:var(--ink);color:var(--paper)}100%{background:var(--field);color:var(--ink)}}
+
+/* ---------- föreläggandet ---------- */
+.forelaggande{margin-top:40px;border:1.5px solid var(--ink);padding:4px 22px 22px;background:rgba(255,255,255,.35)}
+.forelaggande h2{border-top:0;margin-top:18px;padding-top:0}
+.forelaggande > p{font-size:15px;max-width:62ch;margin:0 0 14px}
+.fragelista{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:0;border-top:1px solid var(--rule)}
+.fragelista li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--rule);font-size:15px;line-height:1.45}
+.tilltext{font-family:var(--f-mono);font-size:11.5px;font-weight:500;min-width:38px;padding:3px 6px;border:0;
+  background:var(--hand);color:var(--hand-ink);text-align:center;transition:transform .15s var(--ease)}
+.tilltext:hover{transform:translateX(2px)}
+.sagors{background:var(--field);padding:12px 16px;font-size:14px}
+.sagors b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.sagors ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.forelaggande .kopiera{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:16px}
+.kopierat{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* ---------- omslag för film utan stillbild ---------- */
+.omslag.yt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:stretch}
+.omslag.yt.utanbild{grid-template-columns:1fr;aspect-ratio:auto;min-height:200px}
+.omslag.yt .yttext{display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:26px 28px 24px 68px}
+.omslag.yt small{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.omslag.yt strong{font-size:clamp(22px,3.4vw,34px);line-height:1.08;font-weight:800}
+.omslag.yt span{font-family:var(--f-mono);font-size:12px;opacity:.75}
+.omslag.yt .ytbild{position:relative;overflow:hidden}
+.omslag.yt .ytbild img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.85)}
+
+@media (max-width:760px){
+  .arende .utkastnot{max-width:none}
+  .utkaststampel{position:relative;right:auto;top:auto;display:inline-block;font-size:19px;margin:0 0 14px 4px}
+  .forelaggande{padding:2px 14px 16px}
+  .omslag.yt{grid-template-columns:1fr;aspect-ratio:auto}
+  .omslag.yt .yttext{padding:18px 18px 16px 32px}
+  .omslag.yt .ytbild{aspect-ratio:16/9}
+}
+@media (prefers-reduced-motion:reduce){
+  .utkaststampel,.fraga.blink{animation:none}
+  .tilltext{transition:none}
+}

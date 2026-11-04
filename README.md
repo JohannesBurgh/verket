@@ -104,6 +104,24 @@ Text om hur det började.
 ::verk 019-maskerna-vid-bordet 021-masker-svartvitt
 ```
 
+### Utkast
+
+Ett ärende som inte är färdigt får raden `utkast: true` i fälten överst:
+
+```yaml
+---
+titel: "Clio"
+diarienummer: "VOL UTK 2026/04"
+utkast: true                 # syns i npm run dev, publiceras inte
+---
+```
+
+- **`npm run dev`:** utkasten syns under rubriken *Utkast under beredning* längst ned på sidan Ärenden, med stämpeln UTKAST.
+- **`npm run build` och den publicerade sajten:** utkasten finns inte med alls. De går inte att nå ens med rätt adress.
+- **Publicera ett utkast:** ta bort raden `utkast: true` (eller skriv `utkast: false`). Allt annat än `false` räknas som utkast, så ett felskrivet värde hellre döljer ärendet än publicerar det.
+
+I utkasten står frågor till dig som `[JOHAN: …]`. På ärendets sida blir de numrerade (F1, F2 …) och samlas längst ned i ett *Föreläggande om komplettering*. Svara gärna med ett röstmemo där du säger numret före varje svar, lägg det i `inkorg/` och be Claude föra in svaren. `npm run kontroll` varnar om ett publicerat ärende fortfarande har obesvarade `[JOHAN: …]`.
+
 ## Kontaktuppgifter
 
 Fyll i `epost`, `telefon` och gärna `instagram` överst i `content/verket.md`. Tills dess visas en platshållare.
