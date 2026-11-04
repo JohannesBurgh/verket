@@ -4,7 +4,7 @@ diarienummer: "VOL 2010/0517"
 period: "maj–november 2010"
 status: "Avgjort"
 omslag: "019-maskerna-vid-bordet"
-ingress: "Ett ärende om barn, masker och en skog som inte riktigt är att lita på. Utkast skrivet av handläggaren, ska granskas av Johan."
+ingress: "Ett ärende om barn, masker och en skog som inte riktigt är att lita på."
 ---
 
 ## Inkom
