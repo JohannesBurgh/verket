@@ -1,0 +1,41 @@
+/* Arkivrummet, uppdrag 1: återgivning, korn utan efterbehandling, Mörkrummet. */
+
+/* Knappen för återgivningen: liten, torr, uppe till vänster */
+.rum .atergivning{position:absolute;top:16px;left:max(16px,env(safe-area-inset-left,0px));z-index:3;
+  font:400 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--room-muted);background:rgba(18,28,33,.82);border:1px solid var(--room-line);padding:8px 10px}
+.rum .atergivning:hover,.rum .atergivning:focus-visible{color:var(--hand);border-color:var(--hand)}
+.rum .atergivning:empty{display:none}
+
+/* Förenklad återgivning: vinjett och papperskorn i CSS, stilla och billigt */
+.rum .korn{position:absolute;inset:0;pointer-events:none;z-index:1;display:none;
+  background:radial-gradient(ellipse 75% 70% at 50% 46%,transparent 55%,rgba(0,0,0,.42) 100%)}
+.rum .korn::after{content:"";position:absolute;inset:0;background-image:var(--korn,none);background-size:240px 240px;opacity:.11}
+.rum.enkel .korn{display:block}
+
+/* Mörkrummet: rumsnamnet och svepet i säkerhetsljus */
+.rum[data-rum="mork"] .rumnamn small{color:#c46a5c}
+.rum[data-rum="mork"] .svep{-webkit-text-stroke-color:#ff4a26}
+.rum[data-rum="mork"] .tips{background:rgba(30,10,8,.92);border-color:rgba(255,74,38,.28)}
+
+/* Utan WebGL */
+.rum .rum-lapp{position:absolute;inset:auto 0 0;top:30%;margin:0 auto;max-width:440px;padding:24px 26px;background:var(--paper);color:var(--ink);font-size:15px}
+.rum .rum-lapp b{display:block;margin-bottom:8px}
+.rum .rum-lapp p{display:inline;margin:0}
+.rum .rum-lapp a{color:var(--ink);font-weight:600}
+
+/* Fem rum i dockan: tätare på smala skärmar */
+@media (max-width:520px){
+  .docka{gap:2px;padding:3px}
+  .docka button{padding:10px 7px;font-size:10.5px;letter-spacing:.02em}
+  .rum .atergivning{top:12px;padding:7px 8px;font-size:9.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rum .atergivning{transition:none}
+}
+
+/* Rumsnamnets underrad får bryta på smala skärmar i stället för att klippas */
+@media (max-width:600px){
+  .rum .rumnamn{left:auto;max-width:calc(100% - 200px)}
+  .rum .rumnamn small{display:block;line-height:1.45}
+}
