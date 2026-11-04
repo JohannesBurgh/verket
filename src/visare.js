@@ -1,5 +1,5 @@
 // Visaren: ett verk i taget, stort. Pilar, svep och Esc. Delas av alla vyer.
-import { el, metaRad, kanalFarg, PREVIEW, reduce } from "./data.js";
+import { el, metaRad, kanalFarg, PREVIEW, reduce, storBild } from "./data.js";
 import { klick } from "./ljud.js";
 
 const root = document.getElementById("visare");
@@ -24,7 +24,7 @@ function media(v) {
     const [bg, fg] = kanalFarg(v.kanal);
     m.append(el("div", { class: "ytstor", style: `background:${bg};color:${fg}` }, el("small", {}, v.kanal), el("strong", {}, v.titel),
       el("a", { href: "https://www.youtube.com/watch?v=" + v.youtube, target: "_blank", rel: "noopener" }, "Spela på YouTube")));
-  } else m.append(el("img", { src: v.bild, alt: v.titel }));
+  } else m.append(storBild(v));
   return m;
 }
 const STILAR = {
@@ -32,6 +32,7 @@ const STILAR = {
   trumma: (d) => [[{ transform: "rotateY(0)", opacity: 1 }, { transform: `translateX(${-34 * d}%) rotateY(${40 * d}deg)`, opacity: 0 }], [{ transform: `translateX(${34 * d}%) rotateY(${-40 * d}deg)`, opacity: 0 }, { transform: "none", opacity: 1 }]],
   dimma: (d) => [[{ transform: "scale(1)", filter: "blur(0)", opacity: 1 }, { transform: `translateX(${-26 * d}%) scale(.82)`, filter: "blur(10px)", opacity: 0 }], [{ transform: `translateX(${26 * d}%) scale(1.18)`, filter: "blur(10px)", opacity: 0 }, { transform: "none", filter: "blur(0)", opacity: 1 }]],
   vagg: (d) => [[{ transform: "skewX(0)", opacity: 1 }, { transform: `translateX(${-70 * d}%) skewX(${10 * d}deg)`, opacity: .2 }], [{ transform: `translateX(${70 * d}%) skewX(${-10 * d}deg)`, opacity: .2 }, { transform: "none", opacity: 1 }]],
+  mork: () => [[{ opacity: 1 }, { opacity: 0 }], [{ filter: "brightness(3.2) grayscale(1) contrast(.6)", opacity: 1 }, { filter: "brightness(1.4) grayscale(.6) contrast(.9)", opacity: 1, offset: .5 }, { filter: "none", opacity: 1 }]],
 };
 function visa(d) {
   const v = lista[i], gammal = scen.querySelector(".m"), ny = media(v);

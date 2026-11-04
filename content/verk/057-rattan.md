@@ -13,4 +13,4 @@ farg: {nyans: 11, mattnad: 0.22, ljushet: 0.25}
 ton: {allvar: 0.7, lek: 0.5, stilla: 1, skruv: 1, konst: 1}
 original: "CRW_7316.jpg"
 ---
-Den udda bilden. Den behöver ingen förklaring.
+En råtta ligger på sidan på ett brunt golv. Den udda bilden. Den behöver ingen förklaring.

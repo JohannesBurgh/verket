@@ -10,6 +10,7 @@ vikt: "frö"
 synlig: true
 dom: "ja"
 farg: {nyans: 25, mattnad: 0.12, ljushet: 0.38}
-ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
+ton: {allvar: 0.9, stilla: 1, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_7136.jpg"
 ---
+Rimfrost på taket av en bil av äldre modell. Skärpan ligger på frostkristallerna. Bilens rundade sidorutor syns nedanför.

@@ -1,0 +1,65 @@
+# Vakten: kör testerna i tests/ på varje pull request och på main.
+# Resultatet syns på pull requesten. Skärmdumpar och rapport laddas ned under "Artifacts" på körningens sida.
+name: Tester
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      fro:
+        description: "VAKT_FRO, för att köra om exakt samma slump (lämna tomt för ny slump)"
+        required: false
+permissions:
+  contents: read
+concurrency:
+  group: tester-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  vakten:
+    name: Vakten (dator, mobil, utan rörelse)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VAKT_FRO: ${{ inputs.fro }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Playwright-webbläsaren (sparas mellan körningar)
+        id: pw
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.pw.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.pw.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - name: Kontroll av innehållet
+        run: npm run kontroll
+      - name: Bygg sajten
+        run: npm run build
+      - name: Tester
+        run: npm test
+      - name: Skärmdumpar
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: skarmdumpar
+          path: tests/utdata/skarmdumpar/
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Testrapport
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: testrapport
+          path: |
+            tests/utdata/rapport/
+            tests/utdata/sammanfattning.md
+          if-no-files-found: ignore
+          retention-days: 30

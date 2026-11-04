@@ -10,6 +10,7 @@ vikt: "damm"
 synlig: true
 dom: "kanske"
 farg: {nyans: 60, mattnad: 0.14, ljushet: 0.17}
-ton: {allvar: 1, stilla: 1, manniska: 1, ljus: 0.9, konst: 0.6}
+ton: {allvar: 1, stilla: 1, ljus: 0.9, konst: 0.6}
 original: "CRW_2731.jpg"
 ---
+En jordväg leder in i en dimmig dal. Höga träd står i mörker till vänster. Vägen är tom.

@@ -13,3 +13,4 @@ farg: {nyans: 198, mattnad: 0.29, ljushet: 0.3}
 ton: {lek: 1, stilla: 1, manniska: 0.6, skruv: 0.9, konst: 0.6}
 original: "IMG_4151.jpg"
 ---
+Tre personer i vinterkläder ser åt samma håll, utanför bild. Bakom dem står kala träd och en ledningsstolpe. Det de tittar på redovisas inte.

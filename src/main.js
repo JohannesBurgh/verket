@@ -1,5 +1,6 @@
 // Verket för oväntade lösningar. Startpunkt och vägvisare.
 import "./style.css";
+import "./stil/meny.css";
 import { S, reduce } from "./data.js";
 import * as ansokan from "./vyer/ansokan.js";
 import * as registret from "./vyer/registret.js";
@@ -21,12 +22,13 @@ async function route() {
   const h = decodeURIComponent(location.hash.slice(1)) || "ansokan";
   const [vy, ...rest] = h.split("-"), arg = rest.join("-");
   if (oppen() && vy !== "verk") stang();
-  const namn = vy === "verk" ? "registret" : vy === "arende" ? "arenden" : vy;
+  const namn = vy === "verk" ? "registret" : vy === "arende" ? "arenden" : vy === "beslut" ? "ansokan" : vy;
   document.querySelectorAll(".nav a").forEach((a) => (a.dataset.r === namn ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   if (sistaVy === "arkivrummet" && vy !== "arkivrummet" && rummet) (await rummet).stoppa();
   app.classList.toggle("full", vy === "arkivrummet");
   fot.hidden = vy === "arkivrummet";
-  if (vy === "verk" && sistaVy === "registret" && app.querySelector(".grid")) { sistaVy = "registret"; return; }
+  // Registret visas redan: öppna verket i visaren utan att rita om sidan.
+  if (vy === "verk" && sistaVy === "registret" && app.querySelector(".grid")) { registret.visaVerk(arg); return; }
   sistaVy = vy === "verk" ? "registret" : vy;
   switch (vy) {
     case "registret": registret.render(app); break;
@@ -35,9 +37,11 @@ async function route() {
     case "arende": arenden.arende(app, arg); break;
     case "bestallare": arenden.bestallare(app); break;
     case "arkivrummet": (await laddaRummet()).render(app); break;
+    case "foredragning": (await import("./vyer/foredragning.js")).render(app, arg); break;
+    case "beslut": ansokan.delat(app, arg); break;
     default: ansokan.render(app);
   }
-  document.title = vy === "ansokan" || !vy ? S.namn : `${{ registret: "Registret", verk: "Registret", arenden: "Ärenden", arende: "Ärende", bestallare: "För beställare", arkivrummet: "Arkivrummet" }[vy] || ""} · ${S.namn}`;
+  document.title = vy === "ansokan" || !vy ? S.namn : `${{ registret: "Registret", verk: "Registret", arenden: "Ärenden", arende: "Ärende", bestallare: "För beställare", arkivrummet: "Arkivrummet", foredragning: "Föredragningen", beslut: "Beslut" }[vy] || ""} · ${S.namn}`;
   if (vy !== "verk") window.scrollTo({ top: 0, behavior: "auto" });
 }
 addEventListener("hashchange", route);

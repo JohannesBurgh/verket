@@ -9,7 +9,7 @@ Sajten har fem delar:
 | **Ansökan** | Fem frågor, en cirkel att rita, handläggning och beslut. Svaren styr vilka verk som bifogas. |
 | **Ärenden** | Projektresor: från idé via skisser och material till färdigt verk. |
 | **Registret** | Allt material på papper, ordnat efter år, med sök och filter. |
-| **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet och Väggen, med en tidslinje som andas. |
+| **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet, Väggen och Mörkrummet, med en tidslinje som andas. Knappen "Återgivning" stänger av efterbehandlingen på svaga enheter. |
 | **För beställare** | Det torra: verksamhet, uppdragsgivare, kontakt. |
 
 All text och allt material ligger som vanliga filer i mappen `content/`. Det finns ingen databas och inget inloggningssystem att hålla reda på.
@@ -37,20 +37,48 @@ content/
   ansokan.json     Frågorna i ansökan, svaren och poängen
   verk/            Ett verk per fil (foto, film eller YouTube)
   arenden/         En projektresa per fil
+  bilder.json      Vilka storlekar varje bild finns i (skapas av intaget, rör inte)
 public/media/
-  bilder/          Bilderna, nedskalade
+  bilder/          Bilderna. Huvudbilden här, storlekarna (AVIF, WebP, JPEG) i bilder/storlek/
   film/            Egna filmfiler
+public/typsnitt/   Typsnitten (Public Sans, IBM Plex Mono) ligger på sajten själv
 inkorg/            Släpp nytt material här och kör npm run intag
-scripts/           Intaget och kontrollen
+scripts/           Intaget, kontrollen och Redigeringsbordet (scripts/admin/)
 src/               Själva sajten (kod). Behöver sällan röras.
 ```
 
 ## Lägga till nytt material
 
 1. Släpp bilder, filmer eller en `youtube.txt` i `inkorg/` (se `inkorg/LASMIG.txt`).
-2. Kör `npm run intag`. Bilderna skalas ned, datum läses ur kamerans metadata och en fil skapas per verk i `content/verk/`.
+2. Kör `npm run intag`. Varje bild sparas i tre storlekar (480, 960 och 1600 pixlar på längsta sidan) i AVIF och WebP, med JPEG som reserv. Datum läses ur kamerans metadata och en fil skapas per verk i `content/verk/`.
 3. Justera titel, avdelning och vikt i de nya filerna om du vill.
 4. Kör `npm run kontroll`, som säger till om något saknas.
+
+**Byta en liten bild mot originalet.** De äldre bilderna är bara 720 pixlar breda. Lägg originalfilen i `inkorg/` med samma namn som står i verkets `original:` (till exempel `CRW_7316.jpg`), eller döp den efter verket (`057-rattan.jpg`), och kör `npm run intag`. Bilden byts ut i alla storlekar. Texten i verkfilen rörs inte. `npm run bildstorlekar -- --lista` visar vilka bilder som fortfarande är små.
+
+## Delning, ikoner och sökmotorer
+
+- **Delningsbilder.** När sajten byggs skapas en bild på 1200×630 till startsidan och en till varje ärende (papper, stämpel, ett verk), plus en delningssida per ärende: `…/arende/nordisk-saga/`. Dela den adressen, så visas ärendets bild och text i Messenger, Slack, LinkedIn och liknande. Den som klickar hamnar i ärendet. Vilket verk som syns på startsidans bild styrs av `delningsverk:` i `content/verket.md`. För att titta på bilderna utan att bygga: `node scripts/delning.mjs` (hamnar i `dist-delning/`).
+- **Adressen.** `adress:` i `content/verket.md` används i delningstaggarna och i `sitemap.xml`. Byt den om sajten får en egen domän.
+- **Ikoner.** `npm run ikoner` gör favicon och hemskärmsikoner av emblemet. Behövs bara om emblemet ändras.
+- **Storlekar för befintliga bilder.** `npm run bildstorlekar` skapar det som saknas. Intaget gör det själv för nya bilder.
+
+## Redigeringsbordet
+
+Ett verktyg för att ändra verken utan att öppna filerna. Det finns bara på din egen dator och kommer aldrig med på den publicerade sajten.
+
+1. Kör `npm run dev`.
+2. Öppna **http://localhost:5173/admin.html**.
+
+Där kan du:
+
+- se alla verk som rutnät och sätta vikt med ett klick: **hjälte**, **frö**, **damm** eller **dold** (dold = `synlig: false`). Ett klick på "Ångra" i rutan som dyker upp tar tillbaka det.
+- klicka på en bild för att ändra titel, datum, epok, avdelning, ton och text. Spara med knappen eller Ctrl S (Cmd S på Mac). Bara de rader som ändrats skrivs om i filen.
+- dra in bilder var som helst i fönstret. De läggs i `inkorg/` och intaget körs direkt. Sätt sedan titel, epok, avdelning, ton och vikt på de nya verken.
+- välja fliken **Ärende**, klicka på verk i den ordning de ska visas och kopiera färdiga `::verk`-rader till en fil i `content/arenden/`.
+- se resultatet av `npm run kontroll` uppe till höger. Den körs om av sig själv när något ändras.
+
+Bordet svarar bara på `localhost`. Det går alltså inte att nå från en annan dator, inte ens med `npm run dev -- --host`.
 
 ## Ett verk
 
@@ -104,6 +132,24 @@ Text om hur det började.
 ::verk 019-maskerna-vid-bordet 021-masker-svartvitt
 ```
 
+### Utkast
+
+Ett ärende som inte är färdigt får raden `utkast: true` i fälten överst:
+
+```yaml
+---
+titel: "Clio"
+diarienummer: "VOL UTK 2026/04"
+utkast: true                 # syns i npm run dev, publiceras inte
+---
+```
+
+- **`npm run dev`:** utkasten syns under rubriken *Utkast under beredning* längst ned på sidan Ärenden, med stämpeln UTKAST.
+- **`npm run build` och den publicerade sajten:** utkasten finns inte med alls. De går inte att nå ens med rätt adress.
+- **Publicera ett utkast:** ta bort raden `utkast: true` (eller skriv `utkast: false`). Allt annat än `false` räknas som utkast, så ett felskrivet värde hellre döljer ärendet än publicerar det.
+
+I utkasten står frågor till dig som `[JOHAN: …]`. På ärendets sida blir de numrerade (F1, F2 …) och samlas längst ned i ett *Föreläggande om komplettering*. Svara gärna med ett röstmemo där du säger numret före varje svar, lägg det i `inkorg/` och be Claude föra in svaren. `npm run kontroll` varnar om ett publicerat ärende fortfarande har obesvarade `[JOHAN: …]`.
+
 ## Kontaktuppgifter
 
 Fyll i `epost`, `telefon` och gärna `instagram` överst i `content/verket.md`. Tills dess visas en platshållare.
@@ -118,6 +164,14 @@ Kräver [Node.js](https://nodejs.org) version 20 eller senare.
 npm install
 npm run dev        # öppnar sajten på http://localhost:5173 och uppdateras när du sparar
 npm run build      # bygger den färdiga sajten till mappen dist/
+```
+
+## Tester (vakten)
+
+Varje pull request testas automatiskt i en riktig webbläsare, på dator och mobil. På pull requesten syns raden **Tester**: grön bock betyder att allt fungerar. Under *Details → Summary* står vad som gick fel och där finns skärmdumpar att ladda ned. Mer i `tests/LASMIG.md`.
+
+```
+npm test           # bygger sajten och kör alla tester
 ```
 
 ## Publicera

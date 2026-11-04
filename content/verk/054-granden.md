@@ -13,3 +13,4 @@ farg: {nyans: 297, mattnad: 0.31, ljushet: 0.18}
 ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_7305.jpg"
 ---
+En trång gränd full av människor i rörelse. Elledningar hänger tätt ovanför. De flesta går bort från kameran.

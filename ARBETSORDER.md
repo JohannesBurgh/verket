@@ -116,6 +116,23 @@ Ett verktyg som bara finns när Johan kör `npm run dev`, på `http://localhost:
 
 ---
 
+## Våg 1,5 (görs nu, en session)
+
+### Uppdrag 12. Få vakten grön på den samlade versionen
+**Gren:** arbeta direkt på `samlat` (pull request #9), inte på en ny gren.
+
+Alla åtta uppdragen är ihopslagna på `samlat`. Kontroll och bygge går igenom, men vakten (uppdrag 8) fäller 26 tester, eftersom testerna skrevs mot den gamla sajten. Gör så här:
+
+- **Ansökan:** testerna i `tests/ansokan.spec.js` och `tests/stod/ansokan.js` förutsätter den gamla ansökan. Skriv om dem för Ansökan 2.0 (frågebank, reglage, bildval, fritt ord, fyra beslutstyper, `#beslut-<kod>`). Behåll reglerna: aldrig två bilagor ur samma epok, aldrig damm bland bilagorna, förenklat förfarande bara hjältar. Pröva också att ett delat beslut återskapas.
+- **Navigering:** Föredragningen lägger till ett frö i adressen (`#foredragning-<frö>`). Testet ska acceptera det.
+- **Arkivrummet:** testerna för rummen, Blås och tidslinjen får `Element is not attached to the DOM` och tidsgränser efter uppdrag 1 (efterbehandling, Mörkrummet). Ta reda på om det är testet eller sajten som har fel. Är det sajten (till exempel att canvas byts ut, eller att rummet ritar för långsamt utan grafikkort), rätta sajten. Är det testet, rätta testet. Sänk inte kraven bara för att få grönt.
+- **Skärmdumpar:** `tests/skarmdumpar.spec.js` ska följa den nya ansökan.
+- Gå också igenom det som uppdragen själva flaggade: menyn får inte plats på mobil ("För beställare" och ljudknappen sticker ut), och en adress `#verk-…` inklistrad medan man står i Registret gör ingenting.
+
+**Klart när:** alla tester går igenom i GitHub Actions på pull request #9 (grön bock), utan att något test har tagits bort eller försvagats utan skäl. Skriv i pull requesten vad som var fel i sajten och vad som var fel i testerna.
+
+---
+
 ## Våg 2 (efter att våg 1 är sammanslagen)
 
 ### Uppdrag 9. English version

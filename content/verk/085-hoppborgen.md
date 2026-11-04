@@ -13,3 +13,4 @@ farg: {nyans: 73, mattnad: 0.2, ljushet: 0.32}
 ton: {lek: 1, stilla: 1, manniska: 0.6, skruv: 0.9, konst: 0.6}
 original: "IMG_5798.jpg"
 ---
+En pojke klättrar i en lucka i en grön hoppborg. Bilden är tagen underifrån och hoppborgen fyller hela ytan.

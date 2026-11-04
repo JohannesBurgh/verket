@@ -13,3 +13,4 @@ farg: {nyans: 40, mattnad: 0.5, ljushet: 0.42}
 ton: {allvar: 0.6, lek: 0.4, stilla: 1, manniska: 1, ljus: 0.6, konst: 0.8}
 original: "CRW_6575.jpg"
 ---
+Två personer lagar mat vid en spis. En man rör i en kastrull medan en kvinna tittar på. Ljuset är grönt och ett tredje ansikte har beskurits av bildkanten.

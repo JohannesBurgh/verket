@@ -11,8 +11,10 @@ function urval() {
   return VERK.filter((v) => (avd === "Alla avdelningar" || v.avdelning === avd)
     && (lage === "alla" || (lage === "stilla" && v.typ === "foto") || (lage === "rorligt" && v.typ !== "foto") || (lage === "absurdimo" && v.kanal === "Absurdimo"))
     && (!q || (v.titel + " " + v.epok + " " + (v.kanal || "") + " " + (v.datum || "")).toLowerCase().includes(q)))
-    .sort((a, b) => (a.ar ?? 3000) - (b.ar ?? 3000) || a.id.localeCompare(b.id));
+    .sort((a, b) => ordning(a) - ordning(b) || a.id.localeCompare(b.id));
 }
+// Odaterat först, Absurdimo sist, så att varje rubrik bara förekommer en gång.
+const ordning = (v) => v.ar ?? (v.kanal === "Absurdimo" && !v.datum ? 3001 : 3000);
 const rubrik = (v) => (v.kanal === "Absurdimo" && !v.datum ? "Absurdimo" : arRunt(v) ?? "Odaterat");
 
 export function render(app, oppnaId) {
@@ -48,7 +50,16 @@ export function render(app, oppnaId) {
     el("label", { class: "sok" }, sokfalt, antal)), grid);
   app.replaceChildren(p);
   rita();
-  if (oppnaId && byId[oppnaId]) { const l = urval(); oppnaVerk(l.includes(byId[oppnaId]) ? l : VERK, (l.includes(byId[oppnaId]) ? l : VERK).indexOf(byId[oppnaId])); }
+  if (oppnaId) visaVerk(oppnaId);
+}
+// Öppnar ett verk i visaren, i Registrets ordning. Används också när en adress #verk-… klistras in
+// medan Registret redan visas. Står verket utanför filtret bläddrar visaren i hela registret.
+export function visaVerk(id) {
+  const v = byId[id];
+  if (!v) return false;
+  const l = urval(), lista = l.includes(v) ? l : VERK.slice().sort((a, b) => ordning(a) - ordning(b) || a.id.localeCompare(b.id));
+  oppnaVerk(lista, lista.indexOf(v));
+  return true;
 }
 function oppnaVerk(lista, i) {
   oppna(lista, i, { onStep: (v) => history.replaceState(null, "", "#verk-" + v.id) });

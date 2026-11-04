@@ -13,3 +13,4 @@ farg: {nyans: 326, mattnad: 0.09, ljushet: 0.07}
 ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_7698.jpg"
 ---
+Ett barn sitter vid ett fönster. Fönsterljuset tecknar ansiktets profil medan resten av bilden ligger i mörker.

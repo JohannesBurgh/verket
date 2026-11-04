@@ -1,5 +1,7 @@
 // Allt innehåll kommer från mappen content/ via vite.config.js.
 import arkiv from "virtual:arkiv";
+import STORLEKAR from "../content/bilder.json";
+import "./stil/bilder.css";
 
 export const A = arkiv;
 export const S = arkiv.verket;
@@ -43,9 +45,41 @@ export function ytBild(v) {
   return `https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`;
 }
 
+// Bildkällor: storlekarna som intaget tagit fram (content/bilder.json), i AVIF och WebP med JPEG som reserv.
+function kallor(v) {
+  const post = v.bild && STORLEKAR[v.bild.replace(/^media\//, "")];
+  if (!post) return null;
+  const mapp = v.bild.replace(/[^/]+$/, "storlek/"), namn = v.bild.replace(/^.*\/|\.[^.]+$/g, "");
+  const set = (ext) => post.b.map(([w]) => `${ext === "jpg" && w === post.j ? v.bild : `${mapp}${namn}-${w}.${ext}`} ${w}w`).join(", ");
+  return { avif: set("avif"), webp: set("webp"), jpg: set("jpg"), max: post.b.at(-1)[0], b: post.b, mapp, namn, j: post.j };
+}
+
+// Adressen till en version av bilden som är minst `bredd` pixlar bred (WebP), till exempel för texturer.
+export function bildUrl(v, bredd = 960) {
+  const k = kallor(v);
+  if (!k) return v.bild;
+  const [w] = k.b.find(([w]) => w >= bredd) || k.b.at(-1);
+  return `${k.mapp}${k.namn}-${w}.webp`;
+}
+
+// Ett fotografi som <picture>. sizes beskriver hur brett det visas. ivrig = laddas direkt (bilden högst upp).
+export function bild(v, { sizes, ivrig = false, alt = v.titel } = {}) {
+  const k = kallor(v);
+  const img = el("img", { src: v.bild, alt, decoding: "async", loading: ivrig ? null : "lazy", fetchpriority: ivrig ? "high" : null });
+  if (!k) return img;
+  // "auto" låter webbläsaren räkna ut bredden själv för bilder som laddas lat; resten är reserv.
+  const s = sizes || (ivrig ? "100vw" : "auto, (max-width: 760px) 50vw, 240px");
+  img.setAttribute("srcset", k.jpg); img.setAttribute("sizes", s);
+  return el("picture", {}, el("source", { type: "image/avif", srcset: k.avif, sizes: s }), el("source", { type: "image/webp", srcset: k.webp, sizes: s }), img);
+}
+// Största bredden som finns, för visaren som annars skulle förstora små bilder.
+export const bildBredd = (v) => kallor(v)?.max || null;
+// Ett verk i full storlek (visaren): aldrig bredare än skärmen, än den största filen eller än höjden tillåter.
+export const storBild = (v) => bild(v, { ivrig: true, sizes: `min(100vw, ${bildBredd(v) || 720}px, ${Math.round((v.format || 1.5) * 100)}vh)` });
+
 // En liten bild av verket: foto, videostill eller ett kort i kanalens färg.
 export function tumnagel(v) {
-  if (v.bild) return el("img", { src: v.bild, alt: v.titel, loading: "lazy", decoding: "async" });
+  if (v.bild) return bild(v);
   const [bg, fg] = kanalFarg(v.kanal);
   const d = el("div", { class: "ytthumb", style: `background:${bg};color:${fg}` }, el("small", {}, "▶ " + v.kanal), el("strong", {}, v.titel));
   if (!PREVIEW && v.youtube) {

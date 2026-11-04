@@ -10,6 +10,7 @@ vikt: "frö"
 synlig: true
 dom: "ja"
 farg: {nyans: 359, mattnad: 0.54, ljushet: 0.22}
-ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
+ton: {allvar: 0.5, lek: 0.6, stilla: 1, skruv: 1, konst: 1}
 original: "CRW_1468.jpg"
 ---
+Två röda metallfästen med hål. Det stora fästet i förgrunden är skarpt och resten av bilden löses upp. Ändamålet har inte fastställts.

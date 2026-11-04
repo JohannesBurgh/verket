@@ -13,3 +13,4 @@ farg: {nyans: 285, mattnad: 0.29, ljushet: 0.18}
 ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_8492.jpg"
 ---
+Ett spädbarn matas med sked av en vuxen hand med armband. Barnet tittar upp mot kameran. Bilden är tagen ovanifrån.

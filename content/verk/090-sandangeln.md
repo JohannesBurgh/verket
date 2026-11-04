@@ -13,3 +13,4 @@ farg: {nyans: 215, mattnad: 0.19, ljushet: 0.68}
 ton: {lek: 0.9, stilla: 1, manniska: 0.6, ljus: 0.8, skruv: 0.4, konst: 0.7}
 original: "Nic-ANGEL-5278_0068-PRINT.jpg"
 ---
+En person i jeans och keps ligger på rygg och gör en ängel i vit sand. Bilden är tagen ovanifrån. Sanden har formats efter armar och ben.

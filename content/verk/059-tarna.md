@@ -13,3 +13,4 @@ farg: {nyans: 19, mattnad: 0.41, ljushet: 0.26}
 ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_7343.jpg"
 ---
+Två fötter med tåringar och flagnat rött nagellack. Fötterna vilar mot varandra. Bakgrunden är oskarp och blå.
