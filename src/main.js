@@ -36,12 +36,12 @@ async function route() {
     case "arenden": arenden.lista(app); break;
     case "arende": arenden.arende(app, arg); break;
     case "bestallare": arenden.bestallare(app); break;
-    case "arkivrummet": (await laddaRummet()).render(app); break;
+    case "arkivrummet": (await laddaRummet()).render(app, arg); break;
     case "foredragning": (await import("./vyer/foredragning.js")).render(app, arg); break;
     case "beslut": ansokan.delat(app, arg); break;
     default: ansokan.render(app);
   }
-  document.title = vy === "ansokan" || !vy ? S.namn : `${{ registret: "Registret", verk: "Registret", arenden: "Ärenden", arende: "Ärende", bestallare: "För beställare", arkivrummet: "Arkivrummet", foredragning: "Föredragningen", beslut: "Beslut" }[vy] || ""} · ${S.namn}`;
+  document.title = vy === "ansokan" || !vy ? S.namn : vy === "arkivrummet" && arg.startsWith("foredragning") ? `Föredragningen i Arkivrummet · ${S.namn}` : `${{ registret: "Registret", verk: "Registret", arenden: "Ärenden", arende: "Ärende", bestallare: "För beställare", arkivrummet: "Arkivrummet", foredragning: "Föredragningen", beslut: "Beslut" }[vy] || ""} · ${S.namn}`;
   if (vy !== "verk") window.scrollTo({ top: 0, behavior: "auto" });
 }
 addEventListener("hashchange", route);

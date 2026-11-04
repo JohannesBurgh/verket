@@ -2,6 +2,7 @@
 // Fem rum, en tidslinje som andas och en knapp som blåser omkull allt.
 // Korten är papper under en lampa. Rummen byts i en bestämd ordning: insamling,
 // förflyttning, utdelning. Mörkrummet framkallar handlingarna när man närmar sig.
+// Föredragningen kan spelas här inne (#arkivrummet-foredragning-<frö>): se src/rum/foredragning.js.
 import * as THREE from "three";
 import "../stil/arkivrummet.css";
 import { VERK, el, reduce } from "../data.js";
@@ -12,13 +13,17 @@ import { skapaEfter } from "../rum/efter.js";
 import { skapaKvalitet } from "../rum/kvalitet.js";
 import { skapaMorkrum, LUTNING } from "../rum/morkrummet.js";
 import { skapaKoreografi } from "../rum/koreografi.js";
+import { skapaRumsforedragning, nyttFro } from "../rum/foredragning.js";
 
 let byggd = null;
 
-export function render(app) {
+// arg: det som står efter #arkivrummet- i adressen. "foredragning-<frö>" spelar föredragningen i rummet.
+export function render(app, arg = "") {
   if (!byggd) byggd = bygg();
   app.replaceChildren(byggd.rot);
   byggd.starta();
+  const f = /^foredragning(?:-(.*))?$/.exec(arg || "");
+  byggd.foredra(f ? f[1] || "" : null);
 }
 export function stoppa() { if (byggd) byggd.stoppa(); }
 
@@ -27,7 +32,8 @@ function utanRum() {
   const rot = el("section", { class: "rum" },
     el("div", { class: "rum-lapp" }, el("b", {}, "Arkivrummet kan inte visas på den här enheten."),
       el("p", {}, "Webbläsaren saknar stöd för tredimensionell återgivning. Samtliga handlingar finns i "), el("a", { href: "#registret" }, "Registret"), "."));
-  return { rot, starta() {}, stoppa() {} };
+  // Föredragningen går att se utan rummet.
+  return { rot, starta() {}, stoppa() {}, foredra(fro) { if (fro != null) location.replace("#foredragning" + (fro ? "-" + fro : "")); } };
 }
 
 function bygg() {
@@ -72,7 +78,9 @@ function bygg() {
   const blasKnapp = el("button", { type: "button", class: "blas" }, "Blås"); docka.append(blasKnapp);
   const korn = el("div", { class: "korn", "aria-hidden": "true" });
   const atergivning = el("button", { type: "button", class: "atergivning", title: "Efterbehandling: djupskärpa, ljus och korn" });
-  const rot = el("section", { class: "rum" }, canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, laddar, svep, tips,
+  const foredraKnapp = el("button", { type: "button", class: "foredra", title: "Föredragningen, spelad här i rummet" }, "Föredra arkivet");
+  foredraKnapp.addEventListener("click", () => { klick(); location.hash = "#arkivrummet-foredragning-" + nyttFro(); });
+  const rot = el("section", { class: "rum" }, canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, foredraKnapp, laddar, svep, tips,
     el("div", { class: "hud" }, el("div", { class: "tidslinje" }, absKnapp, arText, tl), docka));
 
   // ---- scen ----
@@ -128,6 +136,7 @@ function bygg() {
   const TJOCK = { hjälte: .036, frö: .018, damm: .01 };
   const RAM = { abs: new THREE.Color(0xef3fe6), film: new THREE.Color(0x5ff3ff), foto: new THREE.Color(0xf2f3ee) };
   let klara = 0; const antalBilder = FRO.filter((s) => s.v.bild).length;
+  let hamtade; const klart = new Promise((r) => (hamtade = r)); // när handlingarna är hämtade (för föredragningen)
   const fontKlar = document.fonts ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]) : Promise.resolve();
   FRO.forEach((s, i) => {
     const { m: mat, u } = fotoMaterial(PAPPER.ytaTex);
@@ -140,14 +149,14 @@ function bygg() {
     const mount = new THREE.Mesh(lada, ram); mount.scale.set(1 + .07 / W, 1 + .07 / H, s.tjock); mount.position.z = -s.tjock / 2 - .0015; m.add(mount);
     const skugga = new THREE.Mesh(plan, skuggMat); skugga.renderOrder = 3; m.add(skugga);
     s.mat = mat; s.uni = u; s.ram = ram; s.skugga = skugga; s.dim = 1; s.last = 0; s.fram = 1; s.hoj = 0;
-    const klar = () => { s.klar = true; if (++klara >= antalBilder * .85) laddar.style.opacity = 0; };
+    const klar = () => { s.klar = true; if (++klara >= antalBilder * .85) { laddar.style.opacity = 0; hamtade(); } };
     if (s.v.bild) loader.load(s.v.bild, (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; mat.map = t; mat.needsUpdate = true; klar(); }, undefined, klar);
     else fontKlar.then(() => { mat.map = kanalKort(s.v); mat.needsUpdate = true; s.klar = true; });
     m.position.set((rnd() - .5) * 40, (rnd() - .5) * 24, -25 - rnd() * 10);
     s.mesh = m; s.tp = new THREE.Vector3(); s.tq = new THREE.Quaternion(); s.start = 0; world.add(m);
   });
   fontKlar.then(ritaEtiketter);
-  setTimeout(() => (laddar.style.opacity = 0), 7000);
+  setTimeout(() => { laddar.style.opacity = 0; hamtade(); }, 7000);
 
   // markeringen runt det kort som pekas på: lime, eftersom det går att klicka på
   const markMat = new THREE.MeshBasicMaterial({ color: 0xd4ff3f, fog: false }); limeMat.push(markMat);
@@ -237,7 +246,9 @@ function bygg() {
   let rotX = 0, rotY = 0, velX = 0, velY = 0, panX = xOf(borjan[2010] ?? 0), panMal = panX, rotXMal = null, rotYMal = null;
   let fokusAr = null, hover = null, aktuell = null;
   const miljo = { falt: 1, mork: 0 }, dof = { start: 12, omfang: 8 };
-  const ko = skapaKoreografi({ world, camera });
+  // Koreografin samlar bunten framför rummets egen kamera, även när föredragningen styr den riktiga.
+  const rumsKam = { position: new THREE.Vector3(0, 0, 10) };
+  const ko = skapaKoreografi({ world, camera: rumsKam });
   let kamFran = null, kamTill = null;
   const traff = (s, y) => (y >= ABS ? s.abs : y >= UD ? s.undated : !s.abs && !s.undated && Math.floor(s.v.ar) === Math.floor(y));
   const klampa = (p) => { const r = ROOMS[rum].panSpann(); return Math.max(r[0], Math.min(r[1], p)); };
@@ -276,15 +287,50 @@ function bygg() {
     }
     docka.querySelectorAll("[data-rum]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.rum === r ? "true" : "false"));
     namn.textContent = R.namn; under.textContent = R.under; rot.dataset.rum = r;
-    if (!tyst) { prassel(.6); if (!reduce) { svep.textContent = (R.namn + " ■ ").repeat(3); svep.classList.remove("go"); void svep.offsetWidth; svep.classList.add("go"); } }
+    if (!tyst && !RF.aktiv) { prassel(.6); if (!reduce) { svep.textContent = (R.namn + " ■ ").repeat(3); svep.classList.remove("go"); void svep.offsetWidth; svep.classList.add("go"); } }
   }
-  function blas() {
+  // stanna: blås omkull men stanna i rummet (föredragningen bestämmer själv vart det går sedan)
+  function blas(stanna) {
     ko.avbryt(); FRO.forEach((s) => { s.flyg = null; });
-    aktiva().forEach((s) => { const p = new THREE.Vector3((rnd() - .5) * 18, (rnd() - .5) * 11, (rnd() - .5) * 12); dummy.position.copy(p); dummy.rotation.set(rnd() * 6, rnd() * 6, rnd() * 6); s.tp.copy(p); s.tq.copy(dummy.quaternion); s.start = klocka + rnd() * .15; });
-    velY += (rnd() - .5) * 3; velX += (rnd() - .5) * 2; prassel(1.4);
+    // i föredragningen blåser korten omkring där kameran står, inte kring rummets mitt
+    const cx = stanna && ROOMS[rum].pan ? panX : 0;
+    aktiva().forEach((s) => { const p = new THREE.Vector3(cx + (rnd() - .5) * 18, (rnd() - .5) * 11, (rnd() - .5) * 12); dummy.position.copy(p); dummy.rotation.set(rnd() * 6, rnd() * 6, rnd() * 6); s.tp.copy(p); s.tq.copy(dummy.quaternion); s.start = klocka + rnd() * .15; });
+    velY += (rnd() - .5) * 3; velX += (rnd() - .5) * 2;
+    if (stanna) { rotXMal = rotYMal = null; return; }
+    prassel(1.4);
     const andra = Object.keys(ROOMS).filter((r) => r !== rum);
-    setTimeout(() => bytRum(andra[Math.floor(rnd() * andra.length)]), reduce ? 0 : 1300);
+    setTimeout(() => { if (!RF.aktiv) bytRum(andra[Math.floor(rnd() * andra.length)]); }, reduce ? 0 : 1300);
   }
+
+  // ---- föredragningen i rummet ----
+  const kortFor = new Map(FRO.map((s) => [s.v, s]));
+  let absFore = null;
+  const RF = skapaRumsforedragning({
+    camera, rot, ko, LUTNING,
+    kortFor: (v) => kortFor.get(v),
+    get rum() { return rum; },
+    bytRum: (r, tyst) => bytRum(r, tyst),
+    blas: () => blas(true),
+    fov: () => ROOMS[rum].fov,
+    dof: () => [dof.start, dof.omfang],
+    anvand: () => anvand(),
+    portratt: () => camera.aspect < .85,
+    klar: klart,
+    varld: {
+      las: () => ({ rotX, rotY, panX }),
+      satt(w) { rotX = rotXMal = w.rotX; rotY = rotYMal = w.rotY; panX = panMal = w.panX; velX = velY = 0; },
+      mal(w) { if (w.rotY != null) rotYMal = w.rotY; if (w.panX != null) panMal = w.panX; },
+    },
+    // när föredragningen börjar och slutar: rummets egna reglage göms och visas igen
+    andrat(pa) {
+      rot.classList.toggle("foredrar", pa);
+      if (pa) {
+        fokusAr = null; fokus(); if (hover) hover.het = false; hover = null; satsMark(null); tips.style.transform = "translate(-9999px,0)";
+        absFore = visaAbs; if (!visaAbs) satsAbs(true);
+      } else if (absFore === false) { satsAbs(false); absFore = null; }
+      storlek();
+    },
+  });
 
   // ---- tidslinjen ----
   const tc = tl.getContext("2d");
@@ -338,10 +384,11 @@ function bygg() {
     if (y > Y1 + .5) y = visaAbs && fokusAr === UD && e.key === "ArrowRight" ? ABS : UD; if (fokusAr === ABS && e.key === "ArrowLeft") y = UD; if (y < Y0) y = Y0 + .5;
     fokusAr = y; fokus();
   });
-  absKnapp.addEventListener("click", () => {
-    visaAbs = !visaAbs; absKnapp.setAttribute("aria-pressed", visaAbs); absEtikett.forEach((m) => (m.visible = visaAbs));
+  function satsAbs(v) {
+    visaAbs = v; absKnapp.setAttribute("aria-pressed", visaAbs); absEtikett.forEach((m) => (m.visible = visaAbs));
     if (!visaAbs && fokusAr === ABS) fokusAr = null; bytRum(rum, true);
-  });
+  }
+  absKnapp.addEventListener("click", () => satsAbs(!visaAbs));
 
   // ---- interaktion i rummet ----
   const ray = new THREE.Raycaster(), mus = new THREE.Vector2();
@@ -374,7 +421,7 @@ function bygg() {
   docka.querySelectorAll("[data-rum]").forEach((b) => b.addEventListener("click", () => bytRum(b.dataset.rum)));
   blasKnapp.addEventListener("click", blas);
   const tangent = (e) => {
-    if (!aktiv || visareOppen() || document.activeElement === tl || /input|textarea/i.test(document.activeElement?.tagName)) return;
+    if (!aktiv || RF.aktiv || visareOppen() || document.activeElement === tl || /input|textarea/i.test(document.activeElement?.tagName)) return;
     const map = { 1: "falt", 2: "rulle", 3: "moln", 4: "vagg", 5: "mork" }; if (map[e.key]) bytRum(map[e.key]);
     if (e.key === " ") { e.preventDefault(); blas(); }
     if (e.key === "Escape" && fokusAr != null) { fokusAr = null; fokus(); }
@@ -421,6 +468,7 @@ function bygg() {
     renderer.setSize(w, h, false); camera.aspect = w / h;
     if (kv.efter) efter.storlek(w, h, renderer.getPixelRatio()); else efter.storlek(1, 1, 1);
     UI.top = w < 600 ? 64 : 70; UI.bottom = h < 560 ? 132 : 150;
+    if (RF.aktiv) { UI.top = 52; UI.bottom = w <= 700 ? 104 : 86; } // föredragningens kontroller i stället för tidslinjen
     camera.setViewOffset(w, h, 0, (UI.bottom - UI.top) / 2, w, h); camera.updateProjectionMatrix();
     if (rum === "vagg") ROOMS.vagg.layout();
   }
@@ -433,6 +481,7 @@ function bygg() {
     // Tiden följer klockan även när rutorna är få, så att en övergång tar lika lång tid på en svag dator.
     // Ett steg är högst en kvarts sekund. Har fliken varit dold börjar klockan om (se visibilitychange nedan).
     const ra = (nu - sist) / 1000, dt = Math.min(.25, Math.max(0, ra)); sist = nu; klocka += dt;
+    RF.fore();
     const k = 1 - Math.exp(-dt * (reduce ? 30 : 3.4)), kq = 1 - Math.exp(-dt * (reduce ? 30 : 4));
     if (!visareOppen()) aktuell = null;
     const lugn = aktuell || fokusAr != null ? .15 : 1;
@@ -446,8 +495,8 @@ function bygg() {
       velX = velY = 0;
       camera.position.set(0, Math.sin(Math.PI * e) * .35, camZ); camera.lookAt(0, camera.position.y * .4, camZ - 1);
     } else {
-      if (rum === "rulle") velX += dt * .05 * lugn;
-      if (rum === "moln") velY += dt * .04 * lugn;
+      if (rum === "rulle" && RF.fritt) velX += dt * .05 * lugn;
+      if (rum === "moln" && RF.fritt) velY += dt * .04 * lugn;
       rotX += velX * dt * 4; rotY += velY * dt * 4; velX *= Math.pow(.04, dt); velY *= Math.pow(.04, dt);
       if (rotXMal != null) { rotX += (rotXMal - rotX) * k * 1.2; velX *= .9; }
       if (rotYMal != null) { let d = rotYMal - rotY; d = Math.atan2(Math.sin(d), Math.cos(d)); rotY += d * k * 1.2; velY *= .9; }
@@ -461,15 +510,17 @@ function bygg() {
     if (ko.klar(klocka)) FRO.forEach((s) => { s.flyg = null; });
     // syns i DOM medan korten flyttas mellan rummen (används av testerna)
     if (rot.hasAttribute("data-overgang") !== !!ko.aktiv) rot.toggleAttribute("data-overgang", !!ko.aktiv);
+    rumsKam.position.copy(camera.position);
     world.rotation.set(rotX, rotY, 0, "YXZ"); world.position.x = -panX;
     world.updateMatrixWorld();
+    RF.kamera(); // föredragningen tar över kameran
     const mo = miljo.mork, mk = mo * mo * (3 - 2 * mo);
 
     // dimma, bakgrund och ljus
     if (rum === "rulle" && !ko.aktiv) { scene.fog.near = camZ - 1.5; scene.fog.far = camZ + 4.2; } else { scene.fog.near = R.inne ? 3 : Math.max(4, camZ - 2); scene.fog.far = camZ + (R.inne ? 14 : rum === "mork" ? 11 : 24); }
     scene.background.copy(RUM_FARG).lerp(MORK_FARG, mk); scene.fog.color.copy(scene.background);
     lx += (lxMal - lx) * (1 - Math.exp(-dt * 2.2)); ly += (lyMal - ly) * (1 - Math.exp(-dt * 2.2));
-    lampa.position.set(lx * 7, 3.5 - ly * 3.5, camZ + 6); lampa.target.position.set(0, 0, camZ - 8);
+    if (!RF.ljus(lampa)) { lampa.position.set(lx * 7, 3.5 - ly * 3.5, camZ + 6); lampa.target.position.set(0, 0, camZ - 8); }
     lampa.intensity = 1.7 * (1 - mk);
     himmel.intensity = lerp(1.9, 1.5, mk); himmel.color.copy(HIMMEL[0]).lerp(HIMMEL[1], mk); himmel.groundColor.copy(MARK[0]).lerp(MARK[1], mk);
     saker.intensity = 8 * mk; saker.position.set(panX, 2.6, M.VZ + 1.2);
@@ -479,7 +530,8 @@ function bygg() {
     grid.visible = miljo.falt > .01;
     M.steg(mk, klocka, panX);
     const [ds, dz] = R.dof(camZ); dof.start += (ds - dof.start) * k; dof.omfang += (dz - dof.omfang) * k;
-    efter.U.uStart.value = dof.start; efter.U.uOmfang.value = dof.omfang;
+    const fdof = RF.dof() || [dof.start, dof.omfang];
+    efter.U.uStart.value = fdof[0]; efter.U.uOmfang.value = fdof[1];
     efter.U.uTidK.value = reduce ? 1 : Math.floor(klocka * 24) % 97;
     efter.U.uVinjett.value = lerp(.5, .62, mk);
 
@@ -489,14 +541,15 @@ function bygg() {
     const synlHalv = camZ * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
     const iMork = rum === "mork" && !ko.aktiv;
     FRO.forEach((s) => {
-      const m = s.mesh, av = s.abs && !visaAbs;
-      if (s.flyg) { if (ko.kort(s, klocka)) s.flyg = null; if (s.flyg && s.flyg.ljud) { s.flyg.ljud = false; if (++ljudRakna % 12 === 0) prassel(.3); } }
+      const m = s.mesh, av = s.abs && !visaAbs, fk = RF.kort(s);
+      if (s.flyg) { if (ko.kort(s, klocka)) s.flyg = null; if (s.flyg && s.flyg.ljud) { s.flyg.ljud = false; if (++ljudRakna % 12 === 0 && !fk) prassel(.3); } }
       else if (klocka >= s.start) {
         _t.copy(s.tp); if (rum === "mork") _t.y += s.hoj;
         m.position.lerp(_t, k); m.quaternion.slerp(s.tq, kq);
       }
-      const f = av ? 0 : (s.het ? 1.22 : 1) * (aktuell === s ? 1.3 : 1) * (s.lyft ? 1.18 : s.tillbaka ? .86 : 1);
-      m.scale.x += (s.bas.x * f - m.scale.x) * .2; m.scale.y += (s.bas.y * f - m.scale.y) * .2; m.visible = m.scale.x > .01;
+      const f = av ? 0 : (s.het ? 1.22 : 1) * (aktuell === s ? 1.3 : 1) * (s.lyft ? 1.18 : s.tillbaka ? .86 : 1) * (fk ? fk.skala : 1);
+      const ks = fk ? 1 - Math.exp(-dt * 14) : .2; // i föredragningen viker korten undan lika fort oavsett bildfrekvens
+      m.scale.x += (s.bas.x * f - m.scale.x) * ks; m.scale.y += (s.bas.y * f - m.scale.y) * ks; m.visible = m.scale.x > .01;
       let fade = 1;
       if (rum === "rulle" && !s.flyg) { m.getWorldPosition(_p); m.getWorldQuaternion(_q); _n.set(0, 0, 1).applyQuaternion(_q); _c.copy(camera.position).sub(_p).normalize(); fade = Math.max(0, Math.min(1, (_n.dot(_c) - .05) / .45)); }
       s.fade = fade;
@@ -504,12 +557,13 @@ function bygg() {
       if (s.klar) s.last = Math.min(1, s.last + dt / (reduce ? .2 : .9));
       if (iMork) {
         const dx = Math.abs(m.position.x - panX) / Math.max(1, synlHalv);
-        const mal = Math.max(1 - THREE.MathUtils.smoothstep(dx, .16, .5), s.het || s.lyft || aktuell === s ? 1 : 0);
-        s.fram += mal > s.fram ? Math.min((reduce ? 3 : .5) * dt, mal - s.fram) : -Math.min(.06 * dt, s.fram - mal);
+        const mal = fk ? fk.fram ?? 0 : Math.max(1 - THREE.MathUtils.smoothstep(dx, .16, .5), s.het || s.lyft || aktuell === s ? 1 : 0);
+        if (fk && fk.fram != null) s.fram = fk.fram; // i föredragningen framkallas hjälten i takt
+        else s.fram += mal > s.fram ? Math.min((reduce ? 3 : .5) * dt, mal - s.fram) : -Math.min(.06 * dt, s.fram - mal);
         s.hoj += (((s.het || aktuell === s) ? .3 : s.lyft ? .18 : 0) - s.hoj) * k;
       } else s.hoj += (0 - s.hoj) * k;
-      const dimMal = (s.tillbaka ? .42 : 1) * (rum === "rulle" ? .02 + .98 * fade : 1);
-      s.dim += (dimMal - s.dim) * .15;
+      const dimMal = (s.tillbaka ? .42 : 1) * (rum === "rulle" ? .02 + .98 * fade : 1) * (fk ? fk.dim : 1);
+      s.dim += (dimMal - s.dim) * (fk ? 1 - Math.exp(-dt * 9) : .15);
       if (rum === "rulle" && fade < .02 && s.dim < .08 && !s.flyg) m.visible = false; // trummans baksida syns inte, som förut
       s.uni.uDev.value = s.last * lerp(1, s.fram, mk); s.uni.uDim.value = s.dim;
       s.ram.color.copy(s.ramFarg).multiplyScalar(s.dim * lerp(1, .6 + .4 * s.uni.uDev.value, mk));
@@ -523,11 +577,12 @@ function bygg() {
         sk.scale.set(1 + (.3 + gap) / s.bas.x, 1 + (.3 + gap) / s.bas.y, 1);
       } else sk.visible = false;
     });
-    satsMark(!ko.aktiv && (hover || aktuell) || null);
+    satsMark(!ko.aktiv && !RF.aktiv && (hover || aktuell) || null);
 
     if (kv.efter) efter.rita(scene, camera, markPa || miljo.falt > .02);
     else { renderer.setRenderTarget(null); renderer.render(scene, camera); }
-    ritaTL();
+    if (!RF.aktiv) ritaTL();
+    RF.efter();
     if (kv.mat(ra, ko.aktiv || klara < antalBilder * .85)) tillampa();
   }
   addEventListener("visibilitychange", () => { sist = performance.now(); });
@@ -535,6 +590,7 @@ function bygg() {
   return {
     rot,
     starta() { aktiv = true; requestAnimationFrame(() => { tillampa(); sist = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(ruta); }); },
-    stoppa() { aktiv = false; cancelAnimationFrame(raf); },
+    stoppa() { aktiv = false; cancelAnimationFrame(raf); RF.stoppa(); },
+    foredra: (fro) => RF.foredra(fro),
   };
 }
