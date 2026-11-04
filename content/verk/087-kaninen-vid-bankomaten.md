@@ -13,3 +13,4 @@ farg: {nyans: 18, mattnad: 0.33, ljushet: 0.27}
 ton: {lek: 1, stilla: 1, manniska: 0.8, skruv: 1, konst: 0.8}
 original: "IMG_5846.jpg"
 ---
+Fotografiet visar en kanin vid en bankomat. Kaninen förefaller inte ha något ärende. Den har lagt en tass på grannens axel.

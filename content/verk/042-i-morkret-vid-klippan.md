@@ -13,3 +13,4 @@ farg: {nyans: 0, mattnad: 0.0, ljushet: 0.06}
 ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
 original: "CRW_2982.jpg"
 ---
+En person med ljust hår ligger på rygg mot en klippa, sedd uppifrån. Ett hårt ljus träffar ansiktet och axlarna. Resten av bilden är svart.

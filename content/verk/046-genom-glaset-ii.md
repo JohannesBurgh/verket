@@ -13,3 +13,4 @@ farg: {nyans: 258, mattnad: 0.17, ljushet: 0.19}
 ton: {allvar: 0.7, stilla: 1, ljus: 1, konst: 1}
 original: "CRW_4029.jpg"
 ---
+En variant av Genom glaset, tagen genom samma glas. Horisonten ligger något högre.

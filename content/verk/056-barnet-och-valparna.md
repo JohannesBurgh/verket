@@ -13,3 +13,4 @@ farg: {nyans: 217, mattnad: 0.33, ljushet: 0.17}
 ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_7313.jpg"
 ---
+Ett barn i turkos stickad tröja sitter på huk och klappar en valp. Ovanför dem hänger en cykelpedal. En vit tass skymtar bakom barnets hand.

@@ -13,3 +13,4 @@ farg: {nyans: 23, mattnad: 0.2, ljushet: 0.49}
 ton: {allvar: 1, stilla: 1, manniska: 1, ljus: 0.9, konst: 0.6}
 original: "CRW_3096.jpg"
 ---
+En äldre man passerar i bildens nederkant framför en grind med affischer. Motorcyklar står parkerade till höger. Motljuset är disigt och hårt.

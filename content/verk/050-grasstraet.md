@@ -13,3 +13,4 @@ farg: {nyans: 166, mattnad: 0.34, ljushet: 0.24}
 ton: {allvar: 0.6, lek: 0.4, stilla: 1, manniska: 1, ljus: 0.6, konst: 0.8}
 original: "CRW_6773.jpg"
 ---
+En hand håller ett grässtrå mot ett motljus som löst upp sig i stora ljusfläckar. Stråets borst är skarpa.

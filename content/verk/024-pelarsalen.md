@@ -13,3 +13,4 @@ farg: {nyans: 14, mattnad: 0.37, ljushet: 0.36}
 ton: {allvar: 1, stilla: 1, manniska: 1, ljus: 0.9, konst: 0.6}
 original: "CRW_2139.jpg"
 ---
+En pelarsal med rödvita ränder. Människor sitter och vilar i skuggan mellan pelarna. Ingen förefaller vänta på något särskilt.

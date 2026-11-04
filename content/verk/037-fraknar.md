@@ -13,3 +13,4 @@ farg: {nyans: 34, mattnad: 0.39, ljushet: 0.33}
 ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
 original: "CRW_2486.jpg"
 ---
+Närbild av ett barn med fräknar och kisande ögon. Skärpan ligger på ögonen. Leendet är behärskat.

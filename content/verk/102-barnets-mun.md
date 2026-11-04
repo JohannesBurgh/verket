@@ -13,3 +13,4 @@ farg: {nyans: 54, mattnad: 0.5, ljushet: 0.31}
 ton: {allvar: 0.6, lek: 0.4, stilla: 1, manniska: 1, ljus: 0.6, konst: 0.8}
 original: "_MG_1851.jpg"
 ---
+Närbild av ett barns öppna mun. Barnet bär en grön stickad kofta. Bakgrunden har lösts upp i ljusfläckar.

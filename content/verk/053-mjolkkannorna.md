@@ -13,3 +13,4 @@ farg: {nyans: 33, mattnad: 0.23, ljushet: 0.18}
 ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
 original: "CRW_7267.jpg"
 ---
+Ett stort antal mjölkkannor bärs genom en folkmassa. En man i grön stickad väst passerar i förgrunden.

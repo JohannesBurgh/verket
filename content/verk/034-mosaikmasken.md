@@ -13,3 +13,4 @@ farg: {nyans: 266, mattnad: 0.13, ljushet: 0.11}
 ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
 original: "CRW_2442.jpg"
 ---
+Ett barn ligger på rygg med en svart mask över ansiktets övre del. Masken är belagd med skärvor av glas och kakel. Munnen och kinden syns under kanten.
