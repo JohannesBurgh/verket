@@ -36,8 +36,11 @@ async function nasta(page) {
 test.describe("Föredragningen i Arkivrummet", () => {
   // Rummet ritas i mjukvara på testdatorerna. Att ladda det tar tid, och här laddas det ofta två gånger.
   test.describe.configure({ timeout: 150_000 });
+  // Utan rörelse prövas det som rör sig annorlunda: genomgången, Escape och mobilen. Resten är detsamma som på dator.
+  const baraMedRorelse = (info) => test.skip(info.project.name === "lugn", "Samma som på dator.");
 
-  test("knappen i rummet startar en föredragning med ett frö i adressen", async ({ page }) => {
+  test("knappen i rummet startar en föredragning med ett frö i adressen", async ({ page }, info) => {
+    baraMedRorelse(info);
     await page.goto("./#arkivrummet");
     await expect(page.locator("canvas.gl")).toBeVisible();
     await page.getByRole("button", { name: "Föredra arkivet" }).click();
@@ -51,7 +54,8 @@ test.describe("Föredragningen i Arkivrummet", () => {
     await expect(spelaren(page).getByRole("button", { name: "Paus" })).toBeVisible();
   });
 
-  test("en adress utan frö får ett", async ({ page }) => {
+  test("en adress utan frö får ett", async ({ page }, info) => {
+    baraMedRorelse(info);
     await page.goto("./#arkivrummet-foredragning");
     await expect(page).toHaveURL(/#arkivrummet-foredragning-[0-9a-z]+$/);
     await expect(spelaren(page)).toBeVisible();
@@ -101,8 +105,9 @@ test.describe("Föredragningen i Arkivrummet", () => {
     expect(sedda.map((a) => a.live), "Samma föredragning i rummet som utan").toEqual(utan);
   });
 
-  test("Utan rummet fortsätter på samma ställe, och tillbaka", async ({ page, slump, isMobile }) => {
+  test("Utan rummet fortsätter på samma ställe, och tillbaka", async ({ page, slump, isMobile }, info) => {
     test.skip(isMobile, "Prövas på dator.");
+    baraMedRorelse(info);
     await mindre(page);
     const fro = froFor(slump);
     await oppna(page, fro);
