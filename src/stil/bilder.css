@@ -1,0 +1,3 @@
+/* Uppdrag 6. <picture> runt fotografierna ska inte påverka layouten:
+   bilden inuti beter sig som om den låg direkt i sin ruta. */
+picture{display:contents}

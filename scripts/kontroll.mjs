@@ -26,6 +26,10 @@ for (const f of fs.existsSync(AR) ? fs.readdirSync(AR).filter((f) => f.endsWith(
   if (data.omslag && !ids.has(data.omslag)) fel.push(`arenden/${f}: omslag "${data.omslag}" finns inte`);
   for (const m of content.matchAll(/^::verk\s+(.+)$/gm)) for (const id of m[1].trim().split(/\s+/)) if (!ids.has(id)) fel.push(`arenden/${f}: verket "${id}" finns inte`);
 }
+// Bildstorlekar (uppdrag 6): varje bild ska ha sina storlekar, annars visas bara huvudbilden.
+{ const { lasRegister, komplett } = await import("./bilder.mjs"), reg = lasRegister(); let n = 0;
+  for (const f of fs.readdirSync(VERK).filter((f) => f.endsWith(".md"))) { const b = matter(fs.readFileSync(path.join(VERK, f), "utf8")).data.bild; if (b && fs.existsSync(path.join(MEDIA, b)) && !komplett(b, reg[b])) n++; }
+  if (n) varn.push(`${n} bilder saknar storlekar (AVIF, WebP). Kör npm run bildstorlekar.`); }
 try { JSON.parse(fs.readFileSync("content/ansokan.json", "utf8")); } catch (e) { fel.push("content/ansokan.json: felaktig JSON (" + e.message + ")"); }
 varn.forEach((v) => console.log("varning: " + v));
 fel.forEach((v) => console.log("FEL: " + v));

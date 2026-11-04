@@ -5,6 +5,11 @@ undertitel: "Johan O Söderberg · film, foto, scen"
 handlaggare: "J. O. Söderberg"
 blankett: "Blankett VOL 1 · Utgåva 2026:1"
 diarieprefix: "VOL"
+# Sajtens adress på nätet, med / på slutet. Används av delningsbilderna och sitemap.xml.
+# Byt mot den egna domänen om sajten flyttar dit.
+adress: "https://johannesburgh.github.io/verket/"
+# Verket på delningsbilden för startsidan (filnamnet utan .md). Tomt = det första hjälteverket.
+delningsverk: ""
 # Kontaktuppgifter. Lämna tomt ("") så visas en platshållare.
 epost: ""
 telefon: ""

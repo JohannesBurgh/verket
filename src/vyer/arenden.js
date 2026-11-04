@@ -1,5 +1,5 @@
 // Ärenden: projektresor. En markdownfil per ärende i content/arenden/.
-import { A, S, el, papper, huvud, tumnagel, metaRad, byId, kontaktRuta } from "../data.js";
+import { A, S, el, papper, huvud, tumnagel, metaRad, byId, kontaktRuta, bild } from "../data.js";
 import { oppna } from "../visare.js";
 
 const ARENDEN = A.arenden.slice().sort((a, b) => String(b.diarienummer).localeCompare(String(a.diarienummer)));
@@ -27,7 +27,7 @@ export function arende(app, id) {
   const p = papper(); p.classList.add("arende");
   p.append(huvud(`Ärende · ${a.diarienummer}`, a.titel));
   const om = byId[a.omslag];
-  if (om && om.bild) p.append(el("div", { class: "omslag" }, el("img", { src: om.bild, alt: om.titel })));
+  if (om && om.bild) p.append(el("div", { class: "omslag" }, bild(om, { ivrig: true, sizes: "(max-width: 760px) 100vw, 800px" })));
   p.append(el("div", { class: "fields" },
     el("div", {}, el("span", {}, "Diarienummer"), el("b", {}, a.diarienummer)),
     el("div", {}, el("span", {}, "Period"), el("b", {}, a.period || "–")),
