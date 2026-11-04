@@ -17,8 +17,9 @@ test.describe("Navigering", () => {
       await expect(a, `${namn} ska vara markerad`).toHaveAttribute("aria-current", "page");
       await expect(page.locator('.nav a[aria-current="page"]')).toHaveCount(1);
       await expect(page.locator("#app > *").first()).toBeVisible();
-      const titel = await page.title();
-      expect(titel === VERKET.namn || titel.startsWith(namn), `Sidtiteln för ${namn}: "${titel}"`).toBe(true);
+      // Titeln sätts när vyn är klar. Arkivrummet laddas för sig och kan dröja.
+      const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      await expect(page, `Sidtiteln för ${namn}`).toHaveTitle(new RegExp(`^(${esc(namn)} · |${esc(VERKET.namn)}$)`));
     }
   });
 
