@@ -1,0 +1,9 @@
+Släpp nya bilder, filmer och en youtube.txt här och kör: npm run intag
+
+youtube.txt, en film per rad:
+https://www.youtube.com/watch?v=XXXXXXXXXXX | Titel | Kanal | År
+
+Vill du ge en bild en titel och en text: lägg en textfil med samma namn bredvid.
+  bild.jpg + bild.txt  (första raden = titel, resten = text)
+
+Behandlade filer flyttas till inkorg/klart/.

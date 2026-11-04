@@ -1,0 +1,24 @@
+{
+  "name": "verket-for-ovantade-losningar",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Johan O Söderbergs portfolio: Verket för oväntade lösningar",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "intag": "node scripts/intag.mjs",
+    "kontroll": "node scripts/kontroll.mjs"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "exifr": "7.1.3",
+    "gray-matter": "4.0.3",
+    "marked": "15.0.12",
+    "sharp": "0.33.5",
+    "vite": "6.3.5"
+  }
+}

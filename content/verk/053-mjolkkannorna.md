@@ -1,0 +1,15 @@
+---
+titel: "Mjölkkannorna"
+datum: "2010-02-07"
+typ: foto
+bild: "bilder/053.jpg"
+format: 0.667
+epok: "Kolkata, 2010"
+avdelning: "Människan"
+vikt: "damm"
+synlig: false
+dom: "nej"
+farg: {nyans: 33, mattnad: 0.23, ljushet: 0.18}
+ton: {allvar: 0.9, stilla: 1, manniska: 0.8, ljus: 0.5, skruv: 0.8, konst: 0.7}
+original: "CRW_7267.jpg"
+---
