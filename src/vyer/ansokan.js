@@ -309,7 +309,12 @@ const minnas = (a) => { if (!st || st.fro !== a.fro) return; a.bilagor.forEach((
 // ---------- vyerna ----------
 function visa(node, efter) {
   const nr = ++visaNr, gammal = app.firstElementChild;
-  const klar = () => { if (nr !== visaNr) return; app.replaceChildren(node); VISADE.add(node); if (efter) efter(node); };
+  const klar = () => {
+    if (nr !== visaNr) return;
+    app.replaceChildren(node); VISADE.add(node); if (efter) efter(node);
+    // Med tangentbordet får fokus inte försvinna när arket byts: det läggs på rubriken.
+    if (tangentbord && !app.contains(document.activeElement)) { const h = node.querySelector("h1"); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } }
+  };
   if (gammal && !reduce) {
     gammal.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(-40px) rotate(-1deg)" }], { duration: 220, easing: "ease-in", fill: "forwards" }).onfinish = klar;
   } else klar();
@@ -339,6 +344,7 @@ function nyAnsokan() {
 function start() {
   st = null;
   satt(location.hash.startsWith("#beslut") ? "#ansokan" : location.hash);
+  document.title = S.namn;
   const p = papper();
   p.append(huvud(S.blankett, "Ansökan om kreativ insats"),
     el("p", { class: "lead" }, S.inledning),
@@ -367,9 +373,12 @@ function fraga() {
   let fokus = null;
   if (under) {
     fs.append(ritruta());
+    const avstar = el("button", { type: "button", class: "btn ghost", onclick: () => lamnaIn(true) }, "Avstår från att rita");
     nav.append(el("div", { class: "actions", style: "margin:0" },
-      el("button", { type: "button", class: "btn ghost", onclick: () => lamnaIn(true) }, "Avstår från att rita"),
+      avstar,
       el("button", { type: "button", class: "btn", onclick: () => lamnaIn(false) }, "Lämna in ansökan")));
+    // Cirkeln ritas med mus eller finger. Med tangentbordet hamnar man på knappen bredvid.
+    fokus = () => tangentbord && avstar.focus({ preventScroll: true });
   } else if (q.typ === "val") {
     const opts = el("div", { class: "opts" });
     q.svar.forEach((o, k) => opts.append(el("button", { type: "button", class: "opt", "aria-pressed": f.v === k ? "true" : "false", onclick: () => valj(k) },
@@ -452,7 +461,10 @@ function ritruta() {
   // Ytan mäts när den syns. Arket glider in först, så storleken är inte känd när rutan skapas.
   // Ändras storleken (telefonen vrids) ritas strecket om.
   const ritaOm = () => { if (pts.length < 2) return; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); pts.forEach(([x, y]) => ctx.lineTo(x, y)); ctx.stroke(); };
-  new ResizeObserver(() => { if (wrap.isConnected) { storlek(); ritaOm(); } }).observe(wrap);
+  // När rutan har lämnat sidan släpps den, så att gamla ritytor inte ligger kvar i minnet.
+  let sedd = false;
+  const ro = new ResizeObserver(() => { if (wrap.isConnected) { sedd = true; storlek(); ritaOm(); } else if (sedd) ro.disconnect(); });
+  ro.observe(wrap);
   const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top, r.width, r.height]; };
   c.addEventListener("pointerdown", (e) => { if (!ctx || !c.width) storlek(); ner = true; c.setPointerCapture(e.pointerId); pts.length = 0; const r = c.getBoundingClientRect(); ctx.clearRect(0, 0, r.width, r.height); const [x, y] = pos(e); pts.push([x, y]); ctx.beginPath(); ctx.moveTo(x, y); hint.hidden = true; });
   c.addEventListener("pointermove", (e) => { if (!ner) return; const [x, y, w, h] = pos(e); pts.push([x, y]); ctx.lineTo(x, y); ctx.stroke(); st.ritning = { pts: pts.slice(), w, h }; });
@@ -501,9 +513,13 @@ function overklaga(a, status) {
 // ---------- beslut ----------
 function visaKod(kod) {
   const a = dekoda(kod);
-  if (!a) { skadad(); return; }
+  if (!a) { skadad(); return (document.title = `Beslut · ${S.namn}`, "Beslut"); }
   satt("#beslut-" + kod);
   beslut(a, kod);
+  // Sidans titel följer beslutet, även när adressen byts utan att sidan laddas om.
+  const titel = `Beslut ${dnr(a)}`;
+  document.title = `${titel} · ${S.namn}`;
+  return titel;
 }
 function skadad() {
   const p = papper();
@@ -615,7 +631,7 @@ export function render(root) {
 // Ett delat beslut: #beslut-<kod>
 export function delat(root, kod) {
   app = root;
-  visaKod(kod);
+  return visaKod(kod);
 }
 export function tangent(e) {
   if (!app || e.ctrlKey || e.metaKey || e.altKey) return;

@@ -13,4 +13,4 @@ synlig: true
 farg: {nyans: 0, mattnad: 0.2, ljushet: 0.3}
 ton: {lek: 0.5, rorligt: 1, scen: 0.6, uppdrag: 0.6, konst: 0.6}
 ---
-Animerad av mig själv. Klippet spelas upp här.
+Logotypen har animerats av Verket. Klippet spelas upp här.

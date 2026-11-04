@@ -60,10 +60,11 @@ function bygg() {
 
   // ---- DOM ----
   const canvas = renderer.domElement;
-  canvas.className = "gl"; canvas.setAttribute("aria-label", "Arkivrummet, ett tredimensionellt rum med alla handlingar");
+  canvas.className = "gl"; canvas.tabIndex = 0;
+  canvas.setAttribute("aria-label", "Arkivrummet, ett tredimensionellt rum med alla handlingar. Pilarna flyttar blicken. Enter öppnar handlingen mitt i bild.");
   const namn = el("b"), under = el("small");
   const tips = el("div", { class: "tips" }), laddar = el("div", { class: "laddar" }, "[ handlingarna hämtas ]"), svep = el("div", { class: "svep", "aria-hidden": "true" });
-  const tl = el("canvas", { tabindex: "0", role: "slider", "aria-label": "Tidslinje. Klicka på ett år för att lyfta fram det.", "aria-valuemin": Y0, "aria-valuemax": Y1 });
+  const tl = el("canvas", { tabindex: "0", role: "slider", "aria-label": "Tidslinje. Klicka på ett år för att lyfta fram det. Med tangentbordet: pilarna väljer år, Enter öppnar en handling från året.", "aria-valuemin": Y0, "aria-valuemax": Y1 + 2, "aria-valuenow": Y0 });
   const absKnapp = el("button", { type: "button", class: "abs", "aria-pressed": "true" }, "Absurdimo");
   const arText = el("span", { class: "ar" });
   const ROOMNAMES = [["falt", "Fältet", "1"], ["rulle", "Rullen", "2"], ["moln", "Molnet", "3"], ["vagg", "Väggen", "4"], ["mork", "Mörkrummet", "5"]];
@@ -72,7 +73,7 @@ function bygg() {
   const blasKnapp = el("button", { type: "button", class: "blas" }, "Blås"); docka.append(blasKnapp);
   const korn = el("div", { class: "korn", "aria-hidden": "true" });
   const atergivning = el("button", { type: "button", class: "atergivning", title: "Efterbehandling: djupskärpa, ljus och korn" });
-  const rot = el("section", { class: "rum" }, canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, laddar, svep, tips,
+  const rot = el("section", { class: "rum", "aria-labelledby": "rum-rubrik" }, el("h1", { class: "dold", id: "rum-rubrik" }, "Arkivrummet"), canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, laddar, svep, tips,
     el("div", { class: "hud" }, el("div", { class: "tidslinje" }, absKnapp, arText, tl), docka));
 
   // ---- scen ----
@@ -319,7 +320,12 @@ function bygg() {
     const u = fokusAr != null ? posAr(fokusAr) : nuvarandeU();
     if (u != null) { const x = hudX(u, w); tc.fillStyle = "#d4ff3f"; tc.fillRect(x - 1, 2, 2, h - 4); tc.beginPath(); tc.moveTo(x - 6, 2); tc.lineTo(x + 6, 2); tc.lineTo(x, 9); tc.fill(); }
     const a = fokusAr ?? (u != null ? uTillAr(u) : null);
-    arText.textContent = a == null ? "" : a >= ABS ? "Absurdimo" : a >= UD ? "Utan datum" : `${Math.floor(a)} · ${antal[Math.floor(a)]} handlingar` + (fokusAr != null ? " · klicka igen för att släppa" : "");
+    const n = a == null || a >= UD ? 0 : antal[Math.floor(a)];
+    const text = a == null ? "" : a >= ABS ? "Absurdimo" : a >= UD ? "Utan datum" : `${Math.floor(a)} · ${n} ${n === 1 ? "handling" : "handlingar"}`;
+    arText.textContent = text + (text && fokusAr != null && a < UD ? " · klicka igen för att släppa" : "");
+    // Skärmläsaren får samma uppgift som syns ovanför tidslinjen.
+    const nu = a == null ? Y0 : a >= ABS ? ABS : a >= UD ? UD : Math.floor(a);
+    if (tl.getAttribute("aria-valuetext") !== (text || "Inget år valt")) { tl.setAttribute("aria-valuenow", nu); tl.setAttribute("aria-valuetext", text || "Inget år valt"); }
   }
   let drar = false, dragFlytt = 0, sistaX = 0;
   tl.addEventListener("pointerdown", (e) => { drar = true; dragFlytt = 0; sistaX = e.clientX; tl.setPointerCapture(e.pointerId); });
@@ -333,6 +339,8 @@ function bygg() {
     fokusAr = fokusAr != null && Math.floor(fokusAr) === Math.floor(ny) ? null : ny; klick(); fokus();
   });
   tl.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && fokusAr != null) { e.preventDefault(); fokusAr = null; fokus(); return; }
+    if (e.key === "Enter") { e.preventDefault(); oppnaNarmast(); return; }
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; e.preventDefault();
     let y = fokusAr ?? 2010; y = Math.floor(y) + .5 + (e.key === "ArrowRight" ? 1 : -1);
     if (y > Y1 + .5) y = visaAbs && fokusAr === UD && e.key === "ArrowRight" ? ABS : UD; if (fokusAr === ABS && e.key === "ArrowLeft") y = UD; if (y < Y0) y = Y0 + .5;
@@ -373,10 +381,22 @@ function bygg() {
   canvas.addEventListener("wheel", (e) => { e.preventDefault(); zoom = Math.max(.35, Math.min(2.2, zoom * (1 + e.deltaY * .0012))); }, { passive: false });
   docka.querySelectorAll("[data-rum]").forEach((b) => b.addEventListener("click", () => bytRum(b.dataset.rum)));
   blasKnapp.addEventListener("click", blas);
+  // Med tangentbordet: pilarna flyttar blicken och Enter öppnar handlingen mitt i bild.
+  canvas.addEventListener("keydown", (e) => {
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (e.key === "Enter") { e.preventDefault(); oppnaNarmast(); }
+    else if (d) {
+      e.preventDefault();
+      if (ROOMS[rum].pan) panMal = klampa(panMal + d * 1.1);
+      else rotYMal = (rotYMal ?? rotY) + d * .22;
+    }
+  });
   const tangent = (e) => {
-    if (!aktiv || visareOppen() || document.activeElement === tl || /input|textarea/i.test(document.activeElement?.tagName)) return;
+    const fokuserad = document.activeElement;
+    if (!aktiv || visareOppen() || fokuserad === tl || /input|textarea/i.test(fokuserad?.tagName)) return;
     const map = { 1: "falt", 2: "rulle", 3: "moln", 4: "vagg", 5: "mork" }; if (map[e.key]) bytRum(map[e.key]);
-    if (e.key === " ") { e.preventDefault(); blas(); }
+    // Mellanslag på en knapp trycker på knappen. Annars blåser det.
+    if (e.key === " " && !fokuserad?.closest?.("button, a")) { e.preventDefault(); blas(); }
     if (e.key === "Escape" && fokusAr != null) { fokusAr = null; fokus(); }
   };
   addEventListener("keydown", tangent);
@@ -392,6 +412,19 @@ function bygg() {
     if (R.pan) panMal = klampa(s.tp.x);
     else { rotYMal = Math.atan2(s.tp.x, -s.tp.z); if (rum === "moln") rotXMal = -Math.asin(s.tp.y / Math.max(.01, s.tp.length())); }
   }
+  // Den handling som står närmast mitten av bilden. Ett år i fokus går före.
+  function narmast() {
+    let bast = null, bd = Infinity;
+    for (const s of aktiva()) {
+      if ((s.fade ?? 1) < .35 || !s.mesh.visible) continue;
+      s.mesh.getWorldPosition(_p).project(camera);
+      if (_p.z > 1 || Math.abs(_p.x) > 1.05 || Math.abs(_p.y) > 1.05) continue;
+      const d = Math.hypot(_p.x * camera.aspect, _p.y) - (s.lyft ? 10 : 0);
+      if (d < bd) { bd = d; bast = s; }
+    }
+    return bast;
+  }
+  function oppnaNarmast() { if (ko.aktiv) return; const s = narmast(); if (s) { klick(); oppnaFro(s); } }
   function oppnaFro(s) {
     const o = ordning();
     oppna(o.map((x) => x.v), o.indexOf(s), { stil: ROOMS[rum].stil, onStep: (v) => folj(FRO.find((x) => x.v === v)) });

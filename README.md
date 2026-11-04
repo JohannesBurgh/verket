@@ -9,7 +9,7 @@ Sajten har fem delar:
 | **Ansökan** | Fem frågor, en cirkel att rita, handläggning och beslut. Svaren styr vilka verk som bifogas. |
 | **Ärenden** | Projektresor: från idé via skisser och material till färdigt verk. |
 | **Registret** | Allt material på papper, ordnat efter år, med sök och filter. |
-| **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet, Väggen och Mörkrummet, med en tidslinje som andas. Knappen "Återgivning" stänger av efterbehandlingen på svaga enheter. |
+| **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet, Väggen och Mörkrummet, med en tidslinje som andas. Knappen "Återgivning" stänger av efterbehandlingen på svaga enheter. Med tangentbord: pilarna flyttar blicken, Enter öppnar handlingen mitt i bild, siffrorna 1 till 5 byter rum. |
 | **För beställare** | Det torra: verksamhet, uppdragsgivare, kontakt. |
 
 All text och allt material ligger som vanliga filer i mappen `content/`. Det finns ingen databas och inget inloggningssystem att hålla reda på.
