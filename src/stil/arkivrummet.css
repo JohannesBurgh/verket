@@ -33,3 +33,9 @@
 @media (prefers-reduced-motion:reduce){
   .rum .atergivning{transition:none}
 }
+
+/* Rumsnamnets underrad får bryta på smala skärmar i stället för att klippas */
+@media (max-width:600px){
+  .rum .rumnamn{left:auto;max-width:calc(100% - 200px)}
+  .rum .rumnamn small{display:block;line-height:1.45}
+}
