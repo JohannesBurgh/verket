@@ -506,6 +506,7 @@ function bygg() {
       } else s.hoj += (0 - s.hoj) * k;
       const dimMal = (s.tillbaka ? .42 : 1) * (rum === "rulle" ? .02 + .98 * fade : 1);
       s.dim += (dimMal - s.dim) * .15;
+      if (rum === "rulle" && fade < .02 && s.dim < .08 && !s.flyg) m.visible = false; // trummans baksida syns inte, som förut
       s.uni.uDev.value = s.last * lerp(1, s.fram, mk); s.uni.uDim.value = s.dim;
       s.ram.color.copy(s.ramFarg).multiplyScalar(s.dim * lerp(1, .6 + .4 * s.uni.uDev.value, mk));
       // skuggan faller bort från ljuset
