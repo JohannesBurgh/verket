@@ -11,8 +11,10 @@ function urval() {
   return VERK.filter((v) => (avd === "Alla avdelningar" || v.avdelning === avd)
     && (lage === "alla" || (lage === "stilla" && v.typ === "foto") || (lage === "rorligt" && v.typ !== "foto") || (lage === "absurdimo" && v.kanal === "Absurdimo"))
     && (!q || (v.titel + " " + v.epok + " " + (v.kanal || "") + " " + (v.datum || "")).toLowerCase().includes(q)))
-    .sort((a, b) => (a.ar ?? 3000) - (b.ar ?? 3000) || a.id.localeCompare(b.id));
+    .sort((a, b) => ordning(a) - ordning(b) || a.id.localeCompare(b.id));
 }
+// Odaterat först, Absurdimo sist, så att varje rubrik bara förekommer en gång.
+const ordning = (v) => v.ar ?? (v.kanal === "Absurdimo" && !v.datum ? 3001 : 3000);
 const rubrik = (v) => (v.kanal === "Absurdimo" && !v.datum ? "Absurdimo" : arRunt(v) ?? "Odaterat");
 
 export function render(app, oppnaId) {

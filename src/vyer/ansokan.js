@@ -110,7 +110,7 @@ function valjUt(P) {
   return { ut, vind: vindfro(ut) };
 }
 function vindfro(ut) {
-  const pool = VERK.filter((v) => !ut.includes(v) && !st.visade.has(v.id) && v.vikt !== "hjälte");
+  const pool = VERK.filter((v) => !ut.includes(v) && !st.visade.has(v.id) && v.vikt !== "hjälte" && !ut.some((u) => u.epok === v.epok));
   const damm = pool.filter((v) => v.vikt === "damm"), kalla = Math.random() < .45 && damm.length ? damm : pool;
   const v = kalla[Math.floor(Math.random() * kalla.length)]; if (v) st.visade.add(v.id); return v;
 }
@@ -129,9 +129,9 @@ function lamnaIn() {
 function forenklat() {
   st.dnr = st.dnr || nyttDnr();
   const hj = VERK.filter((v) => v.vikt === "hjälte" && !st.visade.has(v.id)).map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
-  const ut = [], ta = (t) => { const v = hj.find((x) => t(x) && !ut.includes(x)); if (v) ut.push(v); };
+  const ut = [], ta = (t) => { const v = hj.find((x) => t(x) && !ut.includes(x) && !ut.some((u) => u.epok === x.epok)); if (v) ut.push(v); return v; };
   ta((v) => v.typ === "foto"); ta((v) => v.typ !== "foto" && v.kanal !== "Absurdimo"); ta((v) => v.kanal === "Absurdimo" || v.avdelning === "Skruven");
-  while (ut.length < 3 && hj.length > ut.length) ta(() => true);
+  while (ut.length < 3 && ta(() => true));
   ut.forEach((v) => st.visade.add(v.id));
   beslut({ ut, vind: vindfro(ut) }, null, null, true);
 }

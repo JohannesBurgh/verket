@@ -120,6 +120,14 @@ npm run dev        # öppnar sajten på http://localhost:5173 och uppdateras nä
 npm run build      # bygger den färdiga sajten till mappen dist/
 ```
 
+## Tester (vakten)
+
+Varje pull request testas automatiskt i en riktig webbläsare, på dator och mobil. På pull requesten syns raden **Tester**: grön bock betyder att allt fungerar. Under *Details → Summary* står vad som gick fel och där finns skärmdumpar att ladda ned. Mer i `tests/LASMIG.md`.
+
+```
+npm test           # bygger sajten och kör alla tester
+```
+
 ## Publicera
 
 Sajten är statisk, det vill säga bara filer, så den kan ligga nästan var som helst gratis.
