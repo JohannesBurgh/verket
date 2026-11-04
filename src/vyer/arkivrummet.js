@@ -419,7 +419,7 @@ function bygg() {
   canvas.addEventListener("pointerleave", () => { if (hover) hover.het = false; hover = null; tips.style.transform = "translate(-9999px,0)"; });
   canvas.addEventListener("wheel", (e) => { e.preventDefault(); zoom = Math.max(.35, Math.min(2.2, zoom * (1 + e.deltaY * .0012))); }, { passive: false });
   docka.querySelectorAll("[data-rum]").forEach((b) => b.addEventListener("click", () => bytRum(b.dataset.rum)));
-  blasKnapp.addEventListener("click", blas);
+  blasKnapp.addEventListener("click", () => blas());
   const tangent = (e) => {
     if (!aktiv || RF.aktiv || visareOppen() || document.activeElement === tl || /input|textarea/i.test(document.activeElement?.tagName)) return;
     const map = { 1: "falt", 2: "rulle", 3: "moln", 4: "vagg", 5: "mork" }; if (map[e.key]) bytRum(map[e.key]);
