@@ -1,0 +1,152 @@
+/* Ansökan 2.0: nya svarstyper, fler beslut, delning och utskrift.
+   Bygger på pappret och knapparna i src/style.css. */
+
+/* ---------- förloppet: fem frågor och en underskrift ---------- */
+.ansokan .progress i.underskrift{flex:.55;background:transparent;box-shadow:inset 0 0 0 1px var(--muted)}
+.ansokan .progress i.underskrift.on{background:var(--ink);box-shadow:none}
+
+/* ---------- reglaget ---------- */
+.reglage{max-width:600px}
+.reglage .lage{display:block;font-size:clamp(24px,3.6vw,32px);font-weight:800;letter-spacing:-.012em;line-height:1.1;min-height:1.12em}
+.reglage .varde{display:block;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:6px;min-height:1.5em}
+.reglage .spar{position:relative;margin-top:10px;height:52px}
+.reglage .spar i{position:absolute;top:34px;width:1px;height:9px;background:var(--muted);left:calc(13px + (100% - 26px) * var(--x));pointer-events:none}
+.reglage input{--p:50%;position:relative;display:block;-webkit-appearance:none;appearance:none;width:100%;height:52px;margin:0;padding:0;background:transparent;cursor:pointer;touch-action:pan-y}
+.reglage input::-webkit-slider-runnable-track{height:3px;background:linear-gradient(90deg,var(--ink) var(--p),var(--rule) var(--p))}
+.reglage input::-moz-range-track{height:3px;background:var(--rule)}
+.reglage input::-moz-range-progress{height:3px;background:var(--ink)}
+.reglage input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:40px;margin-top:-18.5px;border:0;border-radius:0;
+  background:linear-gradient(90deg,transparent 11.5px,var(--hand) 11.5px 14.5px,transparent 14.5px),var(--ink);box-shadow:0 2px 0 rgba(0,0,0,.18),0 8px 14px -6px rgba(0,0,0,.45);transition:transform .15s var(--ease)}
+.reglage input::-moz-range-thumb{width:26px;height:40px;border:0;border-radius:0;
+  background:linear-gradient(90deg,transparent 11.5px,var(--hand) 11.5px 14.5px,transparent 14.5px),var(--ink);box-shadow:0 2px 0 rgba(0,0,0,.18),0 8px 14px -6px rgba(0,0,0,.45)}
+.reglage input:active::-webkit-slider-thumb{transform:scaleY(1.08)}
+.reglage input:focus-visible{outline:none}
+.reglage input:focus-visible::-webkit-slider-thumb{outline:2px solid var(--ink);outline-offset:3px}
+.reglage input:focus-visible::-moz-range-thumb{outline:2px solid var(--ink);outline-offset:3px}
+.reglage .skala{display:flex;justify-content:space-between;gap:12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+
+/* ---------- välj en av tre bilder ---------- */
+.bildval{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.bv{display:flex;flex-direction:column;gap:8px;background:none;border:0;padding:0;text-align:left;color:var(--ink);min-width:0;position:relative}
+.bv .nr{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.bv kbd{font-family:var(--f-mono);font-size:11px}
+.bv .m{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;background:#d4d9d5;
+  box-shadow:0 1px 2px rgba(0,0,0,.18),0 10px 22px -10px rgba(0,0,0,.4);outline:2px solid transparent;outline-offset:3px;transition:outline-color .15s,transform .25s var(--ease)}
+.bv .m img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
+.bv b{font-size:14px;line-height:1.25;font-weight:600}
+.bv:hover .m{transform:translateY(-2px)}
+.bv:hover .m img{transform:scale(1.04)}
+.bv:hover .m,.bv:focus-visible .m{outline-color:var(--ink)}
+.bv:focus-visible{outline:none}
+.bv[aria-pressed="true"] .m{outline:3px solid var(--ink)}
+.bv[aria-pressed="true"] .m::after{content:"";position:absolute;right:8px;top:8px;width:26px;height:26px;background:var(--ink)}
+.bv[aria-pressed="true"] .m::before{content:"";position:absolute;right:13px;top:13px;width:16px;height:16px;z-index:1;background:var(--hand);clip-path:polygon(14% 52%,0 66%,38% 100%,100% 22%,86% 8%,38% 72%)}
+
+/* ---------- det fria ordet ---------- */
+.ord{max-width:540px}
+.ord .falt{display:flex;align-items:flex-end;gap:12px;border-bottom:2px solid var(--ink);background:linear-gradient(transparent 60%,rgba(225,231,227,.55))}
+.ord input{flex:1;min-width:0;font:inherit;font-size:clamp(26px,4.6vw,38px);font-weight:800;letter-spacing:-.012em;line-height:1.2;color:var(--ink);background:transparent;border:0;border-radius:0;padding:10px 2px 6px}
+.ord input::placeholder{color:#a3acaa;font-weight:400}
+.ord input:focus-visible{outline:none}
+.ord .falt:focus-within{box-shadow:0 2px 0 var(--ink)}
+.ord .rakna{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding-bottom:12px;flex:none}
+.ord .hint{margin:8px 0 0}
+.ord .hint.fel{color:var(--stamp)}
+
+/* ---------- beslutet ---------- */
+.beslut .fields{grid-template-columns:repeat(4,minmax(0,1fr))}
+.stamp.lang{font-size:22px;letter-spacing:.13em;padding:7px 13px 5px}
+.stamp.tva{top:auto;bottom:-30px;right:64px;font-size:16px;letter-spacing:.16em;padding:5px 11px 3px;border-width:3px;transform:rotate(5deg)}
+.stamp.tva small{font-size:9px}
+.stamp.tva.go{animation:thump-tva .42s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes thump-tva{0%{transform:rotate(12deg) scale(2.1);opacity:0}60%{opacity:.95}100%{transform:rotate(5deg) scale(1);opacity:.9}}
+.utgang-absurdimo .stamp{color:var(--magenta)}
+.beslut .sig svg{color:var(--ink);overflow:visible}
+.beslut .lagrum{font-family:var(--f-mono);font-size:11.5px;line-height:1.5;color:var(--muted);margin:16px 0 0}
+.bilagor.n2{grid-template-columns:repeat(2,minmax(0,1fr));max-width:540px}
+.bilaga.fran-absurdimo .m{box-shadow:0 0 0 3px var(--magenta),0 8px 18px -8px rgba(0,0,0,.35)}
+.bilaga.aterkallad .m{background:repeating-linear-gradient(45deg,var(--field) 0 8px,var(--paper-2) 8px 16px)}
+.bilaga.aterkallad b{font-weight:500;color:var(--muted)}
+.kontakt[hidden]{display:none}
+.hanvisning{max-width:none !important;font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px;margin:30px 0 0}
+.hanvisning b{color:var(--ink)}
+.beslut .actions.sekundar{margin-top:12px;gap:10px 18px}
+.btn.liten{padding:9px 14px;font-size:14px}
+.delstatus{font-family:var(--f-mono);font-size:12px;color:var(--muted);min-height:1.5em;margin:12px 0 0;max-width:none !important}
+.adressfalt{display:block;width:100%;margin-top:8px;font-family:var(--f-mono);font-size:12px;padding:9px 10px;border:1px solid var(--rule);background:#fff;color:var(--ink);border-radius:0}
+.utskrift{display:none}
+
+@media (max-width:760px){
+  .bildval{gap:10px}
+  .bv b{font-size:12.5px}
+  .bv .nr kbd{display:none}
+  .beslut .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .beslut .fields div{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .beslut .fields div:nth-child(2n){border-right:0}
+  .beslut .fields div:nth-last-child(-n+2){border-bottom:0}
+  .stamp.tva{position:relative;bottom:auto;right:auto;display:inline-block;margin:0 0 16px 14px;font-size:14px}
+  .bilagor.n2{grid-template-columns:1fr}
+}
+@media (max-width:420px){
+  .bildval{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .bv .m{aspect-ratio:3/4}
+}
+@media (prefers-reduced-motion:reduce){
+  .stamp.tva.go{animation:none}
+  .bv .m,.bv .m img,.reglage input::-webkit-slider-thumb{transition:none}
+  .bv:hover .m{transform:none}
+}
+
+/* ---------- utskrift: ett A4-dokument med hålslag ---------- */
+@page beslut{
+  size:A4;margin:14mm 0 15mm;
+  @top-right{content:"Sida " counter(page) " (" counter(pages) ")";font-family:"IBM Plex Mono",monospace;font-size:8pt;color:#555;padding-right:16mm}
+}
+@media print{
+  html:has(.paper.beslut),body:has(.paper.beslut){background:#fff !important;color:#000;min-height:0;color-scheme:light}
+  body:has(.paper.beslut) :is(.bar,.lamp,.foot,.visare){display:none !important}
+  body:has(.paper.beslut) main{padding:0 !important}
+  .paper.beslut{page:beslut;width:210mm;max-width:none;min-height:268mm;margin:0;padding:0 16mm 0 27mm;font-size:9.2pt;line-height:1.36;color:#000;
+    background:#fff;box-shadow:none;animation:none !important;transform:none !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .paper.beslut *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* Hålslag: två hål med 80 mm mellanrum, centrerade på sidans höjd. */
+  .paper.beslut .hal{left:8.5mm;width:6mm;height:6mm;background:#fff;box-shadow:inset 0 0 0 .25mm #7f888b,inset 0 .5mm .8mm rgba(0,0,0,.22)}
+  .paper.beslut .hal.a{top:calc(134.5mm - 40mm - 3mm)}
+  .paper.beslut .hal.b{top:calc(134.5mm + 40mm - 3mm);bottom:auto}
+  .beslut .head{padding-bottom:3mm;margin-bottom:4mm}
+  .beslut .head h1{font-size:19pt}
+  .beslut .fields{margin-bottom:4mm;break-inside:avoid}
+  .beslut .fields b{font-size:9pt}
+  .beslut p{margin:0 0 1.6mm}
+  .beslut .beslut-text p:not(.lagrum){max-width:112mm}
+  .beslut .stamp{font-size:20pt;right:-4mm;top:-1mm}
+  .beslut .stamp.lang{font-size:15pt}
+  .beslut .stamp.tva{font-size:11pt;bottom:-8mm;right:22mm}
+  .beslut .stamp,.beslut .stamp.go{animation:none;opacity:.9}
+  .beslut .sig{margin:2mm 0 0}
+  .beslut .sig svg{width:22mm;height:16.5mm}
+  .beslut .lagrum{font-size:7.2pt;margin-top:2mm}
+  .beslut h2{font-size:8.5pt;margin:4.5mm 0 2.5mm;padding-top:2.5mm;break-after:avoid}
+  .beslut .bilagor,.beslut .bilagor.n2{grid-template-columns:repeat(3,35mm);gap:5mm;max-width:none;break-inside:avoid}
+  .beslut .bilaga{gap:1.2mm;break-inside:avoid}
+  .beslut .bilaga .m{box-shadow:none;outline:.2mm solid #9aa2a4}
+  .beslut .bilaga.fran-absurdimo .m{outline:.8mm solid var(--magenta)}
+  .beslut .bilaga .m img{transform:none !important}
+  .beslut .bilaga .clip{top:6mm;left:4mm;width:3.2mm;height:9mm;border-width:.45mm}
+  .beslut .bilaga b{font-size:8.5pt}
+  .beslut .bilaga .meta,.beslut .bilaga .lbl{font-size:7pt}
+  .beslut .ytthumb{padding:1.6mm 2mm}
+  .beslut .ytthumb small{font-size:5.5pt}
+  .beslut .ytthumb strong{font-size:7.5pt}
+  .beslut .vind{grid-template-columns:20mm minmax(0,1fr);gap:4mm;padding:2mm;margin-top:3mm;background:none;outline:.2mm solid #c3c9c7;break-inside:avoid}
+  .beslut .vind p{font-size:9pt}
+  .beslut .vind .small{font-size:7.5pt}
+  .beslut .hanvisning{font-size:7.6pt;margin-top:4mm;padding-top:2.5mm;break-inside:avoid}
+  .beslut .actions,.beslut .delstatus{display:none !important}
+  .beslut .kontakt{display:flex !important;flex-wrap:wrap;gap:.6mm 7mm;margin-top:3mm;padding:2.5mm 4mm;border-width:.3mm;font-size:8pt;break-inside:avoid}
+  .beslut .kontakt>p{flex-basis:100%;font-size:8.5pt}
+  .beslut .kontakt .row{gap:2.5mm}
+  .beslut .kontakt .row span:first-child{width:auto;font-size:6.8pt}
+  .beslut .utskrift{display:block;margin:3mm 0 0;font-size:7pt;color:#555;max-width:none;overflow-wrap:anywhere}
+  .beslut .utskrift .mono{font-size:6.6pt}
+}

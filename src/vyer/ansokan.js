@@ -1,72 +1,435 @@
-// Ansökan: fem frågor, handläggning och beslut med bilagor.
-// Frågorna och poängen ligger i content/ansokan.json.
-import { A, S, VERK, DIMS, el, papper, huvud, tumnagel, metaRad, kontaktRuta, idag, reduce } from "../data.js";
+// Ansökan: en frågebank, fem frågor per besök styrda av ett frö, en cirkel som underskrift,
+// handläggning och ett av fyra slags beslut. Beslutet kan delas (#beslut-<kod>) och skrivas ut.
+// Frågor, tolkningar och beslutstexter ligger i content/ansokan.json.
+import "../stil/ansokan.css";
+import { A, S, VERK, DIMS, el, papper, huvud, tumnagel, metaRad, kontaktRuta, reduce } from "../data.js";
 import { oppna } from "../visare.js";
 import { stampel, prassel, klick } from "../ljud.js";
 
-const Q = A.ansokan.fragor, CIRKEL = A.ansokan.cirkel, MOTIV = A.ansokan.motiveringar;
-let app = null;
-let st = ny();
-function ny() { return { steg: 0, svar: [], cirkel: null, visade: new Set(), overklag: 0, dnr: null }; }
-const nyttDnr = () => `${S.diarieprefix} ${new Date().getFullYear()}/${String(10000 + Math.floor(Math.random() * 89999))}`;
+const AN = A.ansokan, BANK = AN.fragor, CIRKEL = AN.cirkel, MOTIV = AN.motiveringar, BES = AN.beslut;
+const TYPER = ["val", "reglage", "bild", "ord"];
+const UTGANG = ["bifall", "delvis", "avslag", "absurdimo"];
+const CIRKELBED = ["noggrann", "fri", "potatis"];
 // Bara verk som får visas i beslut: synliga och inte "damm".
 const KANDIDATER = VERK.filter((v) => v.vikt !== "damm");
+const BILDPOOL = KANDIDATER.filter((v) => v.typ === "foto" && v.bild);
 
-function visa(node) {
-  const gammal = app.firstElementChild;
-  if (gammal && !reduce) {
-    gammal.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(-40px) rotate(-1deg)" }], { duration: 220, easing: "ease-in", fill: "forwards" })
-      .onfinish = () => { app.replaceChildren(node); };
-  } else app.replaceChildren(node);
-  prassel(.8);
-  window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+let app = null, st = null, tangentbord = false, visaNr = 0;
+addEventListener("keydown", () => (tangentbord = true), true);
+addEventListener("pointerdown", () => (tangentbord = false), true);
+
+// ---------- frö, datum och diarienummer ----------
+function slump(fro) {
+  let a = fro >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const blanda = (a, r) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const nyttFro = () => { try { return crypto.getRandomValues(new Uint32Array(1))[0]; } catch (e) { return Math.floor(Math.random() * 2 ** 32); } };
+// Verken pekas ut med en kort kontrollsumma av filnamnet, så att ett delat beslut tål att arkivet växer.
+function hash24(s) { let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0) & 0xffffff; }
+const HASH = new Map();
+VERK.forEach((v) => { const h = hash24(v.id); if (!HASH.has(h)) HASH.set(h, v); });
+const nyckel = (v) => hash24(v.id);
+
+const DAG0 = Date.UTC(2024, 0, 1);
+const dagNu = () => Math.floor((Date.now() - DAG0) / 864e5);
+const datum = (d) => new Date(DAG0 + d * 864e5).toISOString().slice(0, 10);
+const dnr = (a) => `${S.diarieprefix} ${datum(a.dag).slice(0, 4)}/${10000 + (a.fro % 90000)}`;
+const blankett = () => S.blankett.split("·")[0].trim();
+const citat = (s) => `”${s}”`;
+const fyll = (t, v) => (t || "").replace(/\{(\w+)\}/g, (_, k) => (k === "n" ? v[k] : v[k] != null ? citat(v[k]) : ""));
+
+// ---------- beslutets kod ----------
+// Allt som behövs för att återskapa beslutet packas i bitar och skrivs med 64 tecken.
+const B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+const kontrolltecken = (s) => B64[[...s].reduce((a, c, i) => (a + B64.indexOf(c) * ((i % 7) + 1)) % 64, 0)];
+function skrivare() {
+  const b = [];
+  return {
+    u(v, n) { for (let i = n - 1; i >= 0; i--) b.push(Math.floor(v / 2 ** i) % 2); },
+    kod() { while (b.length % 6) b.push(0); let s = ""; for (let i = 0; i < b.length; i += 6) { let v = 0; for (let k = 0; k < 6; k++) v = v * 2 + b[i + k]; s += B64[v]; } return s; },
+  };
+}
+function lasare(s) {
+  const b = [];
+  for (const c of s) { const v = B64.indexOf(c); if (v < 0) throw new Error("tecken"); for (let k = 5; k >= 0; k--) b.push((v >> k) & 1); }
+  let p = 0;
+  return { u(n) { if (p + n > b.length) throw new Error("slut"); let v = 0; for (let k = 0; k < n; k++) v = v * 2 + b[p++]; return v; } };
+}
+const ENC = new TextEncoder(), DEC = new TextDecoder();
+export function koda(a) {
+  const w = skrivare();
+  w.u(1, 4); w.u(a.fro >>> 0, 32); w.u(a.dag, 16); w.u(a.snabb ? 1 : 0, 1); w.u(Math.min(a.overklag, 15), 4); w.u(a.utgang, 2);
+  w.u(a.fragor.length, 3);
+  for (const f of a.fragor) {
+    w.u(f.i, 5); w.u(f.t, 2);
+    if (f.t === 0) w.u(f.v == null ? 15 : f.v, 4);
+    else if (f.t === 1) w.u(f.v == null ? 127 : f.v, 7);
+    else if (f.t === 2) { w.u(f.v == null ? 0 : 1, 1); if (f.v != null) w.u(f.v, 24); }
+    else { const by = f.v == null ? null : ENC.encode(f.v); w.u(by ? by.length : 63, 6); if (by) by.forEach((x) => w.u(x, 8)); }
+  }
+  w.u(a.bilagor.length, 3); a.bilagor.forEach((h) => w.u(h, 24));
+  w.u(a.vind == null ? 0 : 1, 1); if (a.vind != null) w.u(a.vind, 24);
+  w.u(a.cirkel ? 1 : 0, 1);
+  if (a.cirkel) { w.u(a.cirkel.bed, 2); w.u(a.cirkel.pts.length, 5); a.cirkel.pts.forEach(([x, y]) => { w.u(x, 6); w.u(y, 6); }); }
+  const s = w.kod();
+  return s + kontrolltecken(s);
+}
+export function dekoda(kod) {
+  try {
+    const s = String(kod || "").slice(0, -1);
+    if (!s || kontrolltecken(s) !== kod.slice(-1)) return null;
+    const r = lasare(s);
+    if (r.u(4) !== 1) return null;
+    const a = { fro: r.u(32), dag: r.u(16), snabb: !!r.u(1), overklag: r.u(4), utgang: r.u(2), fragor: [] };
+    const n = r.u(3);
+    for (let k = 0; k < n; k++) {
+      const i = r.u(5), t = r.u(2);
+      let v;
+      if (t === 0) { v = r.u(4); if (v === 15) v = null; }
+      else if (t === 1) { v = r.u(7); if (v > 100) v = null; }
+      else if (t === 2) v = r.u(1) ? r.u(24) : null;
+      else { const len = r.u(6); if (len === 63) v = null; else { const by = new Uint8Array(len); for (let j = 0; j < len; j++) by[j] = r.u(8); v = DEC.decode(by); } }
+      if (!BANK[i] || TYPER.indexOf(BANK[i].typ) !== t) return null;
+      a.fragor.push({ i, t, v });
+    }
+    const nb = r.u(3); a.bilagor = []; for (let k = 0; k < nb; k++) a.bilagor.push(r.u(24));
+    a.vind = r.u(1) ? r.u(24) : null;
+    a.cirkel = null;
+    if (r.u(1)) { const bed = Math.min(r.u(2), 2), np = r.u(5), pts = []; for (let k = 0; k < np; k++) pts.push([r.u(6), r.u(6)]); a.cirkel = { bed, pts }; }
+    return a;
+  } catch (e) { return null; }
 }
 
-// ---------- start ----------
+// ---------- frågorna ----------
+function draFragor(fro) {
+  const r = slump(fro ^ 0x5eed5eed), per = {};
+  BANK.slice(0, 32).forEach((q, i) => (per[q.typ] ||= []).push(i));
+  const urval = AN.urval || { val: 5 }, antal = Math.min(7, Object.values(urval).reduce((x, y) => x + y, 0));
+  let ut = [];
+  for (const [typ, n] of Object.entries(urval)) ut.push(...blanda((per[typ] || []).slice(), r).slice(0, n));
+  const rest = blanda(Object.values(per).flat().filter((i) => !ut.includes(i)), r);
+  while (ut.length < antal && rest.length) ut.push(rest.shift());
+  ut = blanda(ut, r).slice(0, antal);
+  // Ansökan börjar alltid med en vanlig flervalsfråga.
+  const f = ut.findIndex((i) => BANK[i].typ === "val");
+  if (f > 0) [ut[0], ut[f]] = [ut[f], ut[0]];
+  return ut.map((i) => ({ i, t: TYPER.indexOf(BANK[i].typ), v: null }));
+}
+// Tre bilder ur arkivet, helst ur olika avdelningar och epoker.
+function bildval(fro, i) {
+  const r = slump(fro ^ Math.imul(i + 1, 0x85ebca6b)), pool = blanda(BILDPOOL.slice(), r), ut = [], av = new Set(), ep = new Set();
+  for (const v of pool) { if (ut.length === 3) break; if (av.has(v.avdelning) || ep.has(v.epok)) continue; ut.push(v); av.add(v.avdelning); ep.add(v.epok); }
+  for (const v of pool) { if (ut.length === 3) break; if (!ut.includes(v) && !ep.has(v.epok)) { ut.push(v); ep.add(v.epok); } }
+  for (const v of pool) { if (ut.length === 3) break; if (!ut.includes(v)) ut.push(v); }
+  return ut;
+}
+const zon = (q, v) => q.zoner.find((z) => v <= z.till) || q.zoner[q.zoner.length - 1];
+
+// ---------- det fria ordet ----------
+const norm = (s) => String(s || "").toLowerCase().normalize("NFC").replace(/[^\p{L}\p{N}]/gu, "");
+function rensa(s) {
+  let t = String(s || "").replace(/[^\p{L}\p{N}\- ]/gu, "").replace(/\s+/g, " ").trim().slice(0, 20).trim();
+  while (ENC.encode(t).length > 62) t = t.slice(0, -1);
+  return t;
+}
+const forstaOrd = (s) => { const d = String(s || "").trim().split(/\s+/).filter(Boolean); return { ord: d[0] || "", flera: d.length > 1 }; };
+function lev(a, b) {
+  if (Math.abs(a.length - b.length) > 1) return 2;
+  let f = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const n = [i];
+    for (let j = 1; j <= b.length; j++) n[j] = Math.min(f[j] + 1, n[j - 1] + 1, f[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    f = n;
+  }
+  return f[b.length];
+}
+// Exakt träff först, sedan ordets början (dansa, dansband), sedan ett stavfel.
+function tolka(ord) {
+  const w = norm(ord), R = AN.tolkning || [];
+  if (!w) return null;
+  return R.find((r) => r.ord.some((k) => norm(k) === w))
+    || R.find((r) => r.ord.some((k) => { k = norm(k); return k.length >= 4 && w.startsWith(k); }))
+    || R.find((r) => r.ord.some((k) => { k = norm(k); return k.length >= 5 && w.length >= 5 && lev(w, k) <= 1; }))
+    || null;
+}
+const STOPP = new Set(["och", "med", "vid", "den", "det", "ett", "som", "för", "till", "från", "under", "över", "mot", "utan", "efter", "del", "the", "and", "på", "av", "är", "i", "en"]);
+// Verk vars titel innehåller ordet, i någon böjning (råtta, råttan; fisk, fisken).
+function arkivtraffar(ord) {
+  const w = norm(ord);
+  if (w.length < 3) return [];
+  return KANDIDATER.filter((v) => v.titel.toLowerCase().split(/[^\p{L}\p{N}]+/u).some((t) => {
+    if (t.length < 3 || STOPP.has(t)) return false;
+    let cp = 0;
+    while (cp < t.length && cp < w.length && t[cp] === w[cp]) cp++;
+    return cp >= 3 && cp >= Math.min(t.length, w.length) - 2;
+  }));
+}
+
+// ---------- cirkeln ----------
+const NP = 18;
+function forenkla(r) {
+  if (!r || r.pts.length < 12) return null;
+  const { pts, w, h } = r, L = [0];
+  for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const tot = L[L.length - 1];
+  if (tot < 30) return null;
+  const ut = [], q = (v) => Math.max(0, Math.min(63, Math.round(v * 63)));
+  let j = 0;
+  for (let k = 0; k < NP; k++) {
+    const s = (tot * k) / (NP - 1);
+    while (j < pts.length - 2 && L[j + 1] < s) j++;
+    const t = Math.min(1, Math.max(0, (s - L[j]) / Math.max(1e-6, L[j + 1] - L[j])));
+    ut.push([q((pts[j][0] + (pts[j + 1][0] - pts[j][0]) * t) / w), q((pts[j][1] + (pts[j + 1][1] - pts[j][1]) * t) / h)]);
+  }
+  return { bed: bedom(ut), pts: ut };
+}
+// Punkterna ligger i ett rutnät 0–63 över en yta i formatet 4:3.
+function bedom(pts) {
+  const P = pts.map(([x, y]) => [(x * 4) / 3, y]), n = P.length;
+  const cx = P.reduce((a, p) => a + p[0], 0) / n, cy = P.reduce((a, p) => a + p[1], 0) / n;
+  const r = P.map((p) => Math.hypot(p[0] - cx, p[1] - cy)), m = r.reduce((a, b) => a + b, 0) / n;
+  const cv = Math.sqrt(r.reduce((a, b) => a + (b - m) ** 2, 0) / n) / Math.max(1, m);
+  const gap = Math.hypot(P[0][0] - P[n - 1][0], P[0][1] - P[n - 1][1]) / Math.max(1, m);
+  return cv < 0.12 && gap < 0.6 ? 0 : cv < 0.3 ? 1 : 2;
+}
+function cirkelSvg(c) {
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg"), path = document.createElementNS(ns, "path");
+  const P = c.pts.map(([x, y]) => [(x * 4) / 3, y]), f = (p) => p[0].toFixed(1) + " " + p[1].toFixed(1);
+  let d = "M" + f(P[0]);
+  for (let i = 0; i < P.length - 1; i++) {
+    const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
+    d += ` C${f([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6])} ${f([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6])} ${f(p2)}`;
+  }
+  svg.setAttribute("viewBox", "-3 -3 90 69"); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Sökandes cirkel");
+  path.setAttribute("d", d);
+  Object.entries({ fill: "none", stroke: "currentColor", "stroke-width": "2.6", "stroke-linecap": "round", "stroke-linejoin": "round", "vector-effect": "non-scaling-stroke" }).forEach(([k, v]) => path.setAttribute(k, v));
+  svg.append(path);
+  return svg;
+}
+
+// ---------- prövning ----------
+function profil(a) {
+  const P = Object.fromEntries(DIMS.map((d) => [d, 0])), ut = { absurdimo: 0, avslag: 0, delvis: 0 }, skal = { absurdimo: [], avslag: [], delvis: [] };
+  const lagg = (p) => { for (const [d, v] of Object.entries(p || {})) if (d in P) P[d] += v; };
+  const slag = (o) => { for (const [k, v] of Object.entries(o.utslag || {})) if (k in ut) { ut[k] += v; if (o.skal) skal[k].push(o.skal); } };
+  const noter = [], exkl = new Set();
+  let art = null, sok = null;
+  for (const f of a.fragor) {
+    const q = BANK[f.i];
+    if (!q || f.v == null) continue;
+    if (q.typ === "val") {
+      const s = q.svar[f.v]; if (!s) continue;
+      lagg(s.poang); slag(s);
+      if (q.art) art = s;
+    } else if (q.typ === "reglage") {
+      const z = zon(q, f.v); lagg(z.poang); slag(z);
+    } else if (q.typ === "bild") {
+      const v = HASH.get(f.v); if (!v) continue;
+      exkl.add(v.id);
+      for (const d of DIMS) P[d] += (v.ton[d] || 0) * (q.vikt || 2);
+      noter.push({ text: [fyll(q.notering, { titel: v.titel })] });
+    } else if (q.typ === "ord") {
+      if (!f.v) { noter.push({ text: [AN.avstar_ord] }); continue; }
+      const { ord, flera } = forstaOrd(f.v), t = [fyll(q.notering, { ord })], r = tolka(ord);
+      if (flera) t.push(AN.flera_ord);
+      if (r) { lagg(r.poang); slag(r); t.push(r.notering); }
+      else if (!q.arkivsok) { lagg(AN.otolkat.poang); t.push(AN.otolkat.notering); }
+      if (q.arkivsok && !sok) sok = ord;
+      noter.push({ text: t, sok: q.arkivsok ? ord : null });
+    }
+  }
+  if (a.cirkel) lagg(CIRKEL[CIRKELBED[a.cirkel.bed]].poang);
+  const sk = AN.skruv;
+  if (sk && P.skruv >= sk.grans && DIMS.every((d) => P[d] <= P.skruv)) slag(sk);
+  return { P, ut, skal, noter, art, sok, exkl };
+}
+const grundUtgang = (u) => (u.absurdimo >= 2 ? 3 : u.avslag >= 2 ? 2 : u.delvis >= 1 ? 1 : 0);
+// Ett överklagande flyttar avslag mot bifall. Absurdimo lämnar inte tillbaka ärenden.
+const efterOverklag = (u, n) => (u === 3 ? 3 : Math.max(0, u - n));
+
+// Fattar beslutet: utgång, bilagor och vindfrö. Samma frö och samma svar ger samma beslut.
+function fatta(a, visade) {
+  const r = slump(a.fro ^ Math.imul(a.overklag + 1, 0x9e3779b1)), ut = [], grp = new Set();
+  const ta = (v, antal) => { if (v && !ut.includes(v) && !grp.has(v.epok) && ut.length < antal) { ut.push(v); grp.add(v.epok); return true; } return false; };
+  let exkl = new Set();
+  if (a.snabb) {
+    a.utgang = 0;
+    const hj = blanda(VERK.filter((v) => v.vikt === "hjälte" && !visade.has(v.id)), r), n = BES.bifall.antal;
+    const tag = (t) => ta(hj.find((x) => t(x) && !ut.includes(x) && !grp.has(x.epok)), n);
+    tag((v) => v.typ === "foto"); tag((v) => v.typ !== "foto" && v.kanal !== "Absurdimo"); tag((v) => v.kanal === "Absurdimo" || v.avdelning === "Skruven");
+    hj.forEach((v) => ta(v, n));
+  } else {
+    const prof = profil(a), u = efterOverklag(grundUtgang(prof.ut), a.overklag), antal = BES[UTGANG[u]].antal, P = prof.P;
+    a.utgang = u; exkl = prof.exkl;
+    const traff = prof.sok ? arkivtraffar(prof.sok).filter((v) => !visade.has(v.id) && !exkl.has(v.id)) : [];
+    const forced = traff.length ? traff[Math.floor(r() * traff.length)] : null;
+    const rankad = KANDIDATER.filter((v) => !visade.has(v.id) && !exkl.has(v.id)).map((v) => {
+      let s = 0;
+      for (const d of DIMS) s += P[d] * (v.ton[d] || 0);
+      s += v.vikt === "hjälte" ? 1.6 : 0;
+      if (u === 3) s += (v.ton.skruv || 0) * 4;
+      return { v, s: s + r() * 2.2 };
+    }).sort((x, y) => y.s - x.s).map((x) => x.v);
+    const skyddad = new Set();
+    if (u === 3) {
+      const abs = forced && forced.kanal === "Absurdimo" ? forced : rankad.find((v) => v.kanal === "Absurdimo");
+      if (ta(abs, antal)) skyddad.add(abs);
+    }
+    if (ta(forced, antal)) skyddad.add(forced);
+    for (const v of rankad) { if (ut.length >= antal) break; if (u === 3 && v.kanal === "Absurdimo") continue; ta(v, antal); }
+    // Minst ett rörligt verk om sökanden vill ha rörelse, och tvärtom.
+    const rorlig = (v) => v.typ !== "foto";
+    const fixa = (behov, test) => {
+      if (!behov || ut.some(test)) return;
+      const k = ut.findLastIndex((v) => !skyddad.has(v)); if (k < 0) return;
+      grp.delete(ut[k].epok);
+      const alt = rankad.find((x) => test(x) && !ut.includes(x) && !grp.has(x.epok) && !(u === 3 && x.kanal === "Absurdimo"));
+      if (alt) ut[k] = alt;
+      grp.add(ut[k].epok);
+    };
+    fixa(P.rorligt >= P.stilla * 0.6, rorlig);
+    fixa(P.stilla >= P.rorligt * 0.6, (v) => !rorlig(v));
+  }
+  const pool = VERK.filter((v) => !ut.includes(v) && !visade.has(v.id) && !exkl.has(v.id) && v.vikt !== "hjälte");
+  const damm = pool.filter((v) => v.vikt === "damm"), kalla = r() < 0.45 && damm.length ? damm : pool;
+  const vind = kalla.length ? kalla[Math.floor(r() * kalla.length)] : null;
+  a.bilagor = ut.map(nyckel);
+  a.vind = vind ? nyckel(vind) : null;
+  return a;
+}
+const minnas = (a) => { if (!st || st.fro !== a.fro) return; a.bilagor.forEach((h) => { const v = HASH.get(h); if (v) st.visade.add(v.id); }); const v = HASH.get(a.vind); if (v) st.visade.add(v.id); };
+
+// ---------- vyerna ----------
+function visa(node, efter) {
+  const nr = ++visaNr, gammal = app.firstElementChild;
+  const klar = () => { if (nr !== visaNr) return; app.replaceChildren(node); if (efter) efter(node); };
+  if (gammal && !reduce) {
+    gammal.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(-40px) rotate(-1deg)" }], { duration: 220, easing: "ease-in", fill: "forwards" }).onfinish = klar;
+  } else klar();
+  prassel(0.8);
+  window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+}
+const satt = (hash) => { if (location.hash !== hash) history.replaceState(null, "", hash); };
+
+function nyAnsokan() {
+  st = { fro: nyttFro(), dag: dagNu(), snabb: false, overklag: 0, fragor: [], cirkel: null, steg: 0, ritning: null, visade: new Set() };
+  st.fragor = draFragor(st.fro);
+  return st;
+}
+
 function start() {
-  st = ny();
+  st = null;
+  satt(location.hash.startsWith("#beslut") ? "#ansokan" : location.hash);
   const p = papper();
   p.append(huvud(S.blankett, "Ansökan om kreativ insats"),
     el("p", { class: "lead" }, S.inledning),
-    el("p", { class: "small" }, "Uppgifterna sparas inte. Cirkeln diarieförs endast i sökandes webbläsare."),
+    el("p", { class: "small" }, `Frågorna dras ur Verkets frågebank, som omfattar ${BANK.length} frågor. Ansökan undertecknas med en cirkel.`),
+    el("p", { class: "small" }, "Uppgifterna sparas inte. Cirkeln diarieförs endast i beslutets adress."),
     el("div", { class: "actions" },
-      el("button", { type: "button", class: "btn", onclick: () => { st.dnr = nyttDnr(); fraga(); } }, "Påbörja ansökan"),
-      el("button", { type: "button", class: "btn ghost", onclick: forenklat }, "Förenklat förfarande (jag har bråttom)")),
+      el("button", { type: "button", class: "btn", onclick: () => { nyAnsokan(); fraga(); } }, "Påbörja ansökan"),
+      el("button", { type: "button", class: "btn ghost", onclick: () => { nyAnsokan(); forenklat(); } }, "Förenklat förfarande (jag har bråttom)")),
     el("p", { class: "small", style: "margin-top:28px" }, el("span", { class: "prov" }, "Provisorisk föreskrift"),
       "Den som vill se allt på en gång hänvisas till ", el("a", { href: "#registret" }, "Registret"), " eller ", el("a", { href: "#arkivrummet" }, "Arkivrummet"), "."));
-  visa(p);
+  visa(p, (n) => { if (tangentbord) n.querySelector(".btn")?.focus({ preventScroll: true }); });
 }
 
-// ---------- frågor ----------
 function fraga() {
-  const i = st.steg, q = Q[i], p = papper();
-  p.append(huvud(`${S.blankett.split("·")[0].trim()} · ${st.dnr}`, "Ansökan om kreativ insats"));
-  p.append(el("div", { class: "qmeta" }, el("span", {}, `Fråga ${i + 1} av ${Q.length}`),
+  const i = st.steg, n = st.fragor.length, under = i >= n, f = st.fragor[i], q = under ? null : BANK[f.i], p = papper();
+  p.classList.add("ansokan");
+  p.append(huvud(`${blankett()} · ${dnr(st)}`, "Ansökan om kreativ insats"));
+  p.append(el("div", { class: "qmeta" }, el("span", {}, under ? AN.underskrift.rubrik : `Fråga ${i + 1} av ${n}`),
     el("button", { type: "button", class: "link", onclick: forenklat }, "Hoppa till förenklat förfarande")));
   const pr = el("div", { class: "progress", "aria-hidden": "true" });
-  Q.forEach((_, k) => pr.append(el("i", { class: k <= i ? "on" : "" })));
+  for (let k = 0; k <= n; k++) pr.append(el("i", { class: (k <= i ? "on" : "") + (k === n ? " underskrift" : "") }));
   p.append(pr);
-  const fs = el("fieldset", {}, el("legend", {}, q.fraga));
-  if (q.rita) fs.append(ritruta());
-  else {
-    const opts = el("div", { class: "opts" });
-    q.svar.forEach((o, k) => opts.append(el("button", { type: "button", class: "opt", "aria-pressed": st.svar[i] === k ? "true" : "false", onclick: () => valj(k) },
-      el("span", { class: "box" }), el("span", {}, o.text), el("kbd", {}, String(k + 1)))));
-    fs.append(opts);
-  }
-  p.append(fs);
+  const fs = el("fieldset", { class: "q-" + (under ? "underskrift" : q.typ) }, el("legend", {}, under ? AN.underskrift.fraga : q.fraga));
   const nav = el("div", { class: "qnav" },
     i > 0 ? el("button", { type: "button", class: "link", onclick: () => { st.steg--; fraga(); } }, "← Föregående fråga") : el("span"));
-  if (q.rita) nav.append(el("div", { class: "actions", style: "margin:0" },
-    el("button", { type: "button", class: "btn ghost", onclick: () => { st.cirkel = null; lamnaIn(); } }, "Avstår från att rita"),
-    el("button", { type: "button", class: "btn", onclick: lamnaIn }, "Lämna in ansökan")));
-  p.append(nav);
-  visa(p);
+  let fokus = null;
+  if (under) {
+    fs.append(ritruta());
+    nav.append(el("div", { class: "actions", style: "margin:0" },
+      el("button", { type: "button", class: "btn ghost", onclick: () => lamnaIn(true) }, "Avstår från att rita"),
+      el("button", { type: "button", class: "btn", onclick: () => lamnaIn(false) }, "Lämna in ansökan")));
+  } else if (q.typ === "val") {
+    const opts = el("div", { class: "opts" });
+    q.svar.forEach((o, k) => opts.append(el("button", { type: "button", class: "opt", "aria-pressed": f.v === k ? "true" : "false", onclick: () => valj(k) },
+      el("span", { class: "box" }), el("span", {}, o.text), el("kbd", {}, String(k + 1)))));
+    fs.append(opts);
+    fokus = () => tangentbord && (opts.querySelector('[aria-pressed="true"]') || opts.firstChild).focus({ preventScroll: true });
+  } else if (q.typ === "bild") {
+    const g = el("div", { class: "bildval" }), val = bildval(st.fro, f.i);
+    val.forEach((v, k) => g.append(el("button", { type: "button", class: "bv", "aria-pressed": f.v === nyckel(v) ? "true" : "false", "aria-label": `Handling ${k + 1}: ${v.titel}`, onclick: () => valj(nyckel(v), k) },
+      el("span", { class: "nr" }, `Handling ${k + 1}`, el("kbd", {}, String(k + 1))), el("span", { class: "m" }, tumnagel(v)), el("b", {}, v.titel))));
+    fs.append(g);
+    fokus = () => tangentbord && (g.querySelector('[aria-pressed="true"]') || g.firstChild).focus({ preventScroll: true });
+  } else if (q.typ === "reglage") {
+    const { form, inp } = reglage(q, f);
+    fs.append(form);
+    fokus = () => tangentbord && inp.focus({ preventScroll: true });
+  } else {
+    const { form, inp } = ordfalt(q, f);
+    fs.append(form);
+    fokus = () => (tangentbord || matchMedia("(pointer:fine)").matches) && inp.focus({ preventScroll: true });
+  }
+  p.append(fs, nav);
+  visa(p, () => fokus && fokus());
 }
-function valj(k) {
-  st.svar[st.steg] = k; klick();
-  app.querySelectorAll(".opt").forEach((b, j) => b.setAttribute("aria-pressed", j === k ? "true" : "false"));
-  setTimeout(() => { st.steg++; fraga(); }, reduce ? 0 : 340);
+function nasta() { st.steg++; fraga(); }
+function valj(v, k) {
+  st.fragor[st.steg].v = v; klick();
+  app.querySelectorAll(".opt, .bv").forEach((b, j) => b.setAttribute("aria-pressed", j === (k ?? v) ? "true" : "false"));
+  const steg = st.steg;
+  setTimeout(() => { if (st && st.steg === steg) nasta(); }, reduce ? 0 : 340);
+}
+function reglage(q, f) {
+  const sista = st.steg === st.fragor.length - 1;
+  const lage = el("output", { class: "lage", "aria-hidden": "true" }), varde = el("span", { class: "varde" });
+  const inp = el("input", { type: "range", min: "0", max: "100", step: "1", value: String(f.v ?? q.start ?? 50), "aria-label": q.fraga });
+  const spar = el("div", { class: "spar" });
+  q.zoner.slice(0, -1).forEach((z) => spar.append(el("i", { style: `--x:${Math.min(1, (z.till + 0.5) / 100)}`, "aria-hidden": "true" })));
+  spar.append(inp);
+  let nu = null;
+  const upd = (ljud) => {
+    const v = +inp.value, z = zon(q, v), pro = q.visa === "procent";
+    lage.textContent = z.etikett;
+    varde.textContent = pro ? `${v} procent` : "";
+    inp.setAttribute("aria-valuetext", pro ? `${v} procent, ${z.etikett}` : z.etikett);
+    inp.style.setProperty("--p", v + "%");
+    if (ljud && nu && z !== nu) klick();
+    nu = z;
+  };
+  inp.addEventListener("input", () => upd(true));
+  upd(false);
+  const form = el("form", { class: "reglage", onsubmit: (e) => { e.preventDefault(); st.fragor[st.steg].v = +inp.value; klick(); nasta(); } },
+    lage, varde, spar,
+    el("div", { class: "skala", "aria-hidden": "true" }, el("span", {}, q.skala[0]), el("span", {}, q.skala[1])),
+    el("div", { class: "actions" }, el("button", { type: "submit", class: "btn" }, sista ? "Till underskrift" : "Nästa fråga")));
+  return { form, inp };
+}
+function ordfalt(q, f) {
+  const sista = st.steg === st.fragor.length - 1, id = "ord-" + f.i;
+  const inp = el("input", { id, type: "text", maxlength: "20", value: f.v || "", placeholder: q.platshallare || "Ett ord", autocomplete: "off", autocapitalize: "none", spellcheck: "false", enterkeyhint: "done", "aria-label": q.fraga, "aria-describedby": id + "-h" });
+  const rakna = el("span", { class: "rakna", "aria-hidden": "true" }), hint = el("p", { class: "small hint", id: id + "-h" }, "Ett ord. Ordet tolkas mot Verkets nyckelordsregister.");
+  const upd = () => (rakna.textContent = `${inp.value.length} / 20`);
+  inp.addEventListener("input", upd); upd();
+  const form = el("form", { class: "ord", onsubmit: (e) => {
+    e.preventDefault();
+    const v = rensa(inp.value);
+    if (!v) { hint.textContent = "Ange ett ord, eller avstå."; hint.classList.add("fel"); inp.focus(); return; }
+    st.fragor[st.steg].v = v; klick(); nasta();
+  } },
+    el("div", { class: "falt" }, inp, rakna), hint,
+    el("div", { class: "actions" },
+      el("button", { type: "submit", class: "btn" }, "Diarieför ordet"),
+      el("button", { type: "button", class: "btn ghost", onclick: () => { st.fragor[st.steg].v = ""; nasta(); } }, sista ? "Avstår och går till underskrift" : "Avstår")));
+  return { form, inp };
 }
 function ritruta() {
   const wrap = el("div", { class: "rita" }), c = el("canvas", { "aria-label": "Rityta. Rita en cirkel med mus eller finger." }), hint = el("span", { class: "hint" }, "Rita med musen eller fingret");
@@ -76,122 +439,173 @@ function ritruta() {
   requestAnimationFrame(storlek);
   const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top, r.width, r.height]; };
   c.addEventListener("pointerdown", (e) => { ner = true; c.setPointerCapture(e.pointerId); pts.length = 0; const r = c.getBoundingClientRect(); ctx.clearRect(0, 0, r.width, r.height); const [x, y] = pos(e); pts.push([x, y]); ctx.beginPath(); ctx.moveTo(x, y); hint.hidden = true; });
-  c.addEventListener("pointermove", (e) => { if (!ner) return; const [x, y, w, h] = pos(e); pts.push([x, y]); ctx.lineTo(x, y); ctx.stroke(); st.cirkel = { pts: pts.slice(), w, h }; });
+  c.addEventListener("pointermove", (e) => { if (!ner) return; const [x, y, w, h] = pos(e); pts.push([x, y]); ctx.lineTo(x, y); ctx.stroke(); st.ritning = { pts: pts.slice(), w, h }; });
   c.addEventListener("pointerup", () => (ner = false));
+  st.ritning = null;
   return wrap;
-}
-function bedomCirkel() {
-  const c = st.cirkel; if (!c || c.pts.length < 12) return null;
-  const n = c.pts.length, cx = c.pts.reduce((a, p) => a + p[0], 0) / n, cy = c.pts.reduce((a, p) => a + p[1], 0) / n;
-  const r = c.pts.map((p) => Math.hypot(p[0] - cx, p[1] - cy)), m = r.reduce((a, b) => a + b, 0) / n;
-  const cv = Math.sqrt(r.reduce((a, b) => a + (b - m) ** 2, 0) / n) / Math.max(1, m);
-  const gap = Math.hypot(c.pts[0][0] - c.pts[n - 1][0], c.pts[0][1] - c.pts[n - 1][1]) / Math.max(1, m);
-  return cv < .12 && gap < .6 ? CIRKEL.noggrann : cv < .3 ? CIRKEL.fri : CIRKEL.potatis;
-}
-
-// ---------- poäng och urval ----------
-function profil() {
-  const P = Object.fromEntries(DIMS.map((d) => [d, 0]));
-  Q.forEach((q, i) => { if (q.rita || st.svar[i] == null) return; for (const [d, v] of Object.entries(q.svar[st.svar[i]].poang)) P[d] += v; });
-  const c = bedomCirkel(); if (c) for (const [d, v] of Object.entries(c.poang)) P[d] += v;
-  return { P, c };
-}
-function valjUt(P) {
-  const rankad = KANDIDATER.filter((v) => !st.visade.has(v.id)).map((v) => {
-    let s = 0; for (const d of DIMS) s += P[d] * (v.ton[d] || 0);
-    s += v.vikt === "hjälte" ? 1.6 : 0; s += Math.random() * 2.2; return { v, s };
-  }).sort((a, b) => b.s - a.s);
-  const ut = [], grp = new Set();
-  for (const { v } of rankad) { if (ut.length === 3) break; if (grp.has(v.epok)) continue; ut.push(v); grp.add(v.epok); }
-  const rorlig = (v) => v.typ !== "foto";
-  const fixa = (behov, test) => { if (!behov || ut.some(test)) return; const alt = rankad.find((x) => test(x.v) && !ut.includes(x.v) && !grp.has(x.v.epok)); if (alt) ut[2] = alt.v; };
-  fixa(P.rorligt >= P.stilla * .6, rorlig); fixa(P.stilla >= P.rorligt * .6, (v) => !rorlig(v));
-  ut.forEach((v) => st.visade.add(v.id));
-  return { ut, vind: vindfro(ut) };
-}
-function vindfro(ut) {
-  const pool = VERK.filter((v) => !ut.includes(v) && !st.visade.has(v.id) && v.vikt !== "hjälte");
-  const damm = pool.filter((v) => v.vikt === "damm"), kalla = Math.random() < .45 && damm.length ? damm : pool;
-  const v = kalla[Math.floor(Math.random() * kalla.length)]; if (v) st.visade.add(v.id); return v;
 }
 
 // ---------- handläggning ----------
-function lamnaIn() {
-  const p = papper(), steg = ["Ärendet registreras", "Ärendet fördelas på handläggare", "Ärendet bereds", "Beslut fattas"];
-  const ol = el("ol", {}, steg.map((s) => el("li", {}, s)));
-  p.append(huvud(`${S.blankett.split("·")[0].trim()} · ${st.dnr}`, "Ärendet handläggs"), el("div", { class: "processing" }, ol));
+function handlagg(a, steg, sedan) {
+  const p = papper(), ol = el("ol", {}, steg.map((s) => el("li", {}, s)));
+  p.append(huvud(`${blankett()} · ${dnr(a)}`, a.overklag ? "Överklagandet handläggs" : "Ärendet handläggs"), el("div", { class: "processing", role: "status" }, ol));
   visa(p);
-  if (reduce) { besluta(); return; }
+  if (reduce) { sedan(); return; }
   let i = 0;
-  const tick = () => { ol.children[i]?.classList.add("on"); klick(); i++; if (i < steg.length) setTimeout(tick, 480); else setTimeout(besluta, 600); };
+  const tick = () => {
+    if (!p.isConnected) return;
+    ol.children[i]?.classList.add("on"); klick(); i++;
+    if (i < steg.length) setTimeout(tick, 480); else setTimeout(() => p.isConnected && sedan(), 600);
+  };
   setTimeout(tick, 380);
 }
-function forenklat() {
-  st.dnr = st.dnr || nyttDnr();
-  const hj = VERK.filter((v) => v.vikt === "hjälte" && !st.visade.has(v.id)).map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
-  const ut = [], ta = (t) => { const v = hj.find((x) => t(x) && !ut.includes(x)); if (v) ut.push(v); };
-  ta((v) => v.typ === "foto"); ta((v) => v.typ !== "foto" && v.kanal !== "Absurdimo"); ta((v) => v.kanal === "Absurdimo" || v.avdelning === "Skruven");
-  while (ut.length < 3 && hj.length > ut.length) ta(() => true);
-  ut.forEach((v) => st.visade.add(v.id));
-  beslut({ ut, vind: vindfro(ut) }, null, null, true);
+function lamnaIn(utan) {
+  st.cirkel = utan ? null : forenkla(st.ritning);
+  const a = fatta({ fro: st.fro, dag: dagNu(), snabb: false, overklag: 0, fragor: st.fragor.map((f) => ({ ...f })), cirkel: st.cirkel }, st.visade);
+  const H = AN.handlaggning, ord = a.fragor.find((f) => f.t === 3 && f.v);
+  const steg = [...H.gemensamt, ord ? fyll(H.ord, { ord: forstaOrd(ord.v).ord }) : null, a.cirkel ? H.cirkel : null, ...H[UTGANG[a.utgang]]].filter(Boolean);
+  const kod = koda(a);
+  minnas(a);
+  handlagg(a, steg, () => visaKod(kod));
 }
-function besluta() { const { P, c } = profil(); beslut(valjUt(P), P, c, false); }
+function forenklat() {
+  if (!st) nyAnsokan();
+  const a = fatta({ fro: st.fro, dag: dagNu(), snabb: true, overklag: 0, fragor: [], cirkel: null }, st.visade);
+  minnas(a);
+  visaKod(koda(a));
+}
+function overklaga(a, status) {
+  if (a.overklag >= 15) { status.textContent = "Överklagandet avvisas. Beslutet har redan omprövats det högsta tillåtna antalet gånger."; return; }
+  if (!st || st.fro !== a.fro) { st = { fro: a.fro, dag: a.dag, snabb: a.snabb, overklag: a.overklag, fragor: a.fragor, cirkel: a.cirkel, steg: a.fragor.length, visade: new Set() }; minnas(a); }
+  const b = fatta({ ...a, dag: dagNu(), overklag: a.overklag + 1, fragor: a.fragor.map((f) => ({ ...f })) }, st.visade);
+  minnas(b);
+  const kod = koda(b);
+  handlagg(b, ["Överklagandet registreras", "Beslutet omprövas"], () => visaKod(kod));
+}
 
 // ---------- beslut ----------
-function beslut({ ut, vind }, P, cirkel, snabb) {
-  const p = papper(); p.classList.add("beslut");
-  p.append(huvud(`Beslut · ${st.dnr}`, st.overklag ? "Beslut efter överklagande" : "Beslut"));
-  p.append(el("div", { class: "fields" },
-    el("div", {}, el("span", {}, "Diarienummer"), el("b", {}, st.dnr)),
-    el("div", {}, el("span", {}, "Datum"), el("b", {}, idag())),
-    el("div", {}, el("span", {}, "Handläggare"), el("b", {}, S.handlaggare))));
-  const stamp = el("div", { class: "stamp", "aria-label": st.overklag ? "Stämpel: omprövat" : "Stämpel: bifalles" }, st.overklag ? "OMPRÖVAT" : "BIFALLES", el("small", {}, idag()));
-  const tx = el("div", { class: "beslut-text" }, stamp);
-  p.append(tx);
-  if (snabb) {
-    tx.append(el("p", {}, "Sökanden har begärt förenklat förfarande. Verket har inte prövat ansökan i sak."),
-      el("p", {}, "Verket bifogar i stället ett urval ur myndighetens viktigaste handlingar."));
-  } else {
-    const topp = DIMS.filter((d) => P[d] > 0).sort((a, b) => P[b] - P[a]).slice(0, 2);
-    const artQ = Q.findIndex((q) => q.art), art = artQ >= 0 && st.svar[artQ] != null ? Q[artQ].svar[st.svar[artQ]].text : null;
-    tx.append(el("p", {}, "Verket har prövat ansökan och funnit att sökanden uppvisar " +
-      (topp.length === 2 ? `${MOTIV[topp[0]]} samt ${MOTIV[topp[1]]}` : topp.length ? MOTIV[topp[0]] : "inga särskilda behov alls, vilket i sig är anmärkningsvärt") + "."));
-    if (art) tx.append(el("p", {}, art === "Art okänd" ? "Sökandes art har inte kunnat fastställas. Verket bifaller ansökan ändå." : `Sökanden har uppgett sig vara: ${art.toLowerCase()}.`));
-    if (st.overklag) tx.append(el("p", {}, `Beslutet har omprövats efter överklagande (${st.overklag}). Tidigare bilagor har återkallats.`));
-    if (cirkel) tx.append(el("p", {}, cirkel.text));
-    tx.append(el("p", {}, "Ansökan bifalles. Följande handlingar bifogas."));
-    if (cirkel && st.cirkel) {
-      const c = st.cirkel, ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg"), path = document.createElementNS(ns, "path");
-      svg.setAttribute("viewBox", `0 0 ${c.w} ${c.h}`); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Sökandes cirkel");
-      path.setAttribute("d", "M" + c.pts.map((q) => q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" L"));
-      Object.entries({ fill: "none", stroke: "#14181a", "stroke-width": "3", "stroke-linecap": "round" }).forEach(([k, v]) => path.setAttribute(k, v));
-      svg.append(path); tx.append(el("div", { class: "sig" }, svg, el("span", {}, "Sökandes cirkel, diarieförd")));
-    }
-  }
-  p.append(el("h2", {}, "Bilagor"));
-  const lista = [...ut, vind].filter(Boolean), grid = el("div", { class: "bilagor" });
-  ut.forEach((v, k) => grid.append(el("button", { type: "button", class: "bilaga", onclick: () => oppna(lista, k) },
-    el("span", { class: "clip", "aria-hidden": "true" }), el("span", { class: "lbl" }, `Bilaga ${k + 1}`), el("div", { class: "m" }, tumnagel(v)), el("b", {}, v.titel), el("span", { class: "meta" }, metaRad(v)))));
-  p.append(grid);
-  if (vind) p.append(el("button", { type: "button", class: "vind", onclick: () => oppna(lista, lista.length - 1) },
-    el("div", { class: "m" }, tumnagel(vind)),
-    el("div", {}, el("span", { class: "mono small" }, `Bilaga ${lista.length} · Vindfrö`), el("p", { style: "margin:4px 0 2px;font-weight:700" }, vind.titel),
-      el("span", { class: "small" }, "Tilldelat slumpmässigt enligt Verkets föreskrift om oväntade lösningar."))));
-  const kontakt = kontaktRuta(st.dnr); kontakt.hidden = true;
-  p.append(el("div", { class: "actions" },
-    el("button", { type: "button", class: "btn", onclick: () => { kontakt.hidden = !kontakt.hidden; if (!kontakt.hidden) kontakt.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }); } }, "Begär handläggning"),
-    el("button", { type: "button", class: "btn ghost", onclick: () => { st.overklag++; snabb ? forenklat() : besluta(); } }, "Överklaga beslutet"),
-    el("button", { type: "button", class: "btn ghost", onclick: start }, "Ny ansökan"),
-    el("a", { href: "#registret", class: "link" }, "Se hela registret")), kontakt);
+function visaKod(kod) {
+  const a = dekoda(kod);
+  if (!a) { skadad(); return; }
+  satt("#beslut-" + kod);
+  beslut(a, kod);
+}
+function skadad() {
+  const p = papper();
+  p.append(huvud(S.blankett, "Beslutet kunde inte återfinnas"), el("p", { class: "lead" }, AN.skadad),
+    el("div", { class: "actions" }, el("button", { type: "button", class: "btn", onclick: start }, "Ny ansökan"), el("a", { href: "#registret", class: "link" }, "Se hela registret")));
   visa(p);
-  setTimeout(() => { stamp.classList.add("go"); setTimeout(() => { stampel(); p.classList.add("shake"); }, reduce ? 0 : 230); }, reduce ? 0 : 520);
+}
+function beslut(a, kod) {
+  const typ = UTGANG[a.utgang], B = BES[typ], prof = a.snabb ? null : profil(a), nr = dnr(a), dag = datum(a.dag);
+  const adress = location.href.split("#")[0] + "#beslut-" + kod;
+  const p = papper(); p.classList.add("beslut", "utgang-" + typ);
+  p.append(huvud(`Beslut · ${nr}`, a.overklag ? "Beslut efter överklagande" : "Beslut"));
+  p.append(el("div", { class: "fields" },
+    el("div", {}, el("span", {}, "Diarienummer"), el("b", {}, nr)),
+    el("div", {}, el("span", {}, "Datum"), el("b", {}, dag)),
+    el("div", {}, el("span", {}, "Handläggare"), el("b", {}, B.handlaggare || S.handlaggare)),
+    el("div", {}, el("span", {}, "Utgång"), el("b", {}, B.utgang))));
+  const stamp = el("div", { class: "stamp" + (B.stampel.length > 11 ? " lang" : ""), role: "img", "aria-label": "Stämpel: " + B.stampel.toLowerCase() }, B.stampel, el("small", {}, dag));
+  const stamp2 = a.overklag ? el("div", { class: "stamp tva", role: "img", "aria-label": "Stämpel: " + AN.omprovat.stampel.toLowerCase() }, AN.omprovat.stampel, el("small", {}, `${a.overklag}`)) : null;
+  const tx = el("div", { class: "beslut-text" }, stamp, stamp2), sagt = new Set();
+  const stycke = (t) => { if (!t || sagt.has(t)) return; sagt.add(t); tx.append(el("p", {}, t)); };
+  p.append(tx);
+  const lista = a.bilagor.map((h) => HASH.get(h) || null), vind = a.vind != null ? HASH.get(a.vind) || null : null;
+  if (a.snabb) AN.forenklat.forEach(stycke);
+  else {
+    const topp = DIMS.filter((d) => prof.P[d] > 0).sort((x, y) => prof.P[y] - prof.P[x]).slice(0, 2);
+    stycke("Verket har prövat ansökan och funnit att sökanden uppvisar " +
+      (topp.length === 2 ? `${MOTIV[topp[0]]} samt ${MOTIV[topp[1]]}` : topp.length ? MOTIV[topp[0]] : "inga särskilda behov alls, vilket i sig är anmärkningsvärt") + ".");
+    if (prof.art) {
+      const okand = prof.art.text === "Art okänd";
+      stycke(okand ? prof.art.skal + (typ === "bifall" ? " " + AN.art_okand_bifall : "") : `Sökanden har uppgett sig vara: ${prof.art.text.toLowerCase()}.`);
+      if (okand) sagt.add(prof.art.skal);
+    }
+    prof.noter.forEach((n) => {
+      const t = n.text.slice();
+      if (n.sok) { const traff = new Set(arkivtraffar(n.sok)); t.push(lista.some((v) => v && traff.has(v)) ? AN.arkivet.funnet : AN.arkivet.ej_funnet); }
+      stycke(t.join(" "));
+    });
+    if (typ !== "bifall") {
+      const g = [...new Set(prof.skal[typ] || [])].filter((s) => !sagt.has(s));
+      stycke(g.length ? g.join(" ") : (prof.skal[typ] || []).length ? null : B.allmant);
+      if (a.overklag && B.overklagat) stycke(B.overklagat);
+    }
+    if (a.overklag) stycke(fyll(AN.omprovat.text, { n: a.overklag }));
+    stycke(a.cirkel ? CIRKEL[CIRKELBED[a.cirkel.bed]].text : CIRKEL.avstod);
+    stycke(B.slut);
+  }
+  if (a.cirkel) tx.append(el("div", { class: "sig" }, cirkelSvg(a.cirkel), el("span", {}, "Sökandes cirkel, diarieförd")));
+  tx.append(el("p", { class: "lagrum" }, (a.snabb ? BES.bifall : B).lagrum));
+
+  p.append(el("h2", {}, (!a.snabb && B.rubrik_bilagor) || "Bilagor"));
+  const visbar = [...lista, vind].filter(Boolean), grid = el("div", { class: "bilagor n" + lista.length });
+  const etikett = (k) => (a.snabb ? "" : k === 0 && B.etikett_forsta ? B.etikett_forsta : B.etikett || "");
+  lista.forEach((v, k) => {
+    const lbl = el("span", { class: "lbl" }, `Bilaga ${k + 1}`, etikett(k) ? ` · ${etikett(k)}` : "");
+    if (!v) { grid.append(el("div", { class: "bilaga aterkallad" }, el("span", { class: "clip", "aria-hidden": "true" }), lbl, el("div", { class: "m" }), el("b", {}, AN.aterkallad))); return; }
+    const m = el("div", { class: "m" }, tumnagel(v));
+    m.querySelectorAll("img").forEach((i) => (i.loading = "eager"));
+    grid.append(el("button", { type: "button", class: "bilaga" + (typ === "absurdimo" && k === 0 && !a.snabb && v.kanal === "Absurdimo" ? " fran-absurdimo" : ""), onclick: () => oppna(visbar, visbar.indexOf(v)) },
+      el("span", { class: "clip", "aria-hidden": "true" }), lbl, m, el("b", {}, v.titel), el("span", { class: "meta" }, metaRad(v))));
+  });
+  p.append(grid);
+  if (vind) {
+    const m = el("div", { class: "m" }, tumnagel(vind));
+    m.querySelectorAll("img").forEach((i) => (i.loading = "eager"));
+    p.append(el("button", { type: "button", class: "vind", onclick: () => oppna(visbar, visbar.length - 1) }, m,
+      el("div", {}, el("span", { class: "mono small" }, `Bilaga ${lista.length + 1} · Vindfrö`), el("p", { style: "margin:4px 0 2px;font-weight:700" }, vind.titel),
+        el("span", { class: "small" }, "Tilldelat slumpmässigt enligt Verkets föreskrift om oväntade lösningar."))));
+  }
+  const [forsta, ...resten] = AN.overklagande.split(/(?<=\.)\s/);
+  p.append(el("p", { class: "hanvisning" }, el("b", {}, forsta), " ", resten.join(" ")));
+  p.append(el("p", { class: "utskrift" }, "Beslutet finns i diariet under adressen ", el("span", { class: "mono" }, adress)));
+
+  const kontakt = kontaktRuta(nr); kontakt.hidden = true;
+  const status = el("p", { class: "delstatus", role: "status", "aria-live": "polite" });
+  p.append(
+    el("div", { class: "actions" },
+      el("button", { type: "button", class: "btn", "aria-expanded": "false", onclick: (e) => { kontakt.hidden = !kontakt.hidden; e.currentTarget.setAttribute("aria-expanded", String(!kontakt.hidden)); if (!kontakt.hidden) kontakt.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }); } }, "Begär handläggning"),
+      el("button", { type: "button", class: "btn ghost", onclick: () => overklaga(a, status) }, "Överklaga beslutet")),
+    el("div", { class: "actions sekundar" },
+      el("button", { type: "button", class: "btn ghost liten", onclick: () => kopiera(adress, status) }, "Kopiera beslutets adress"),
+      el("button", { type: "button", class: "btn ghost liten", onclick: () => window.print() }, "Skriv ut beslutet"),
+      el("button", { type: "button", class: "link", onclick: start }, "Ny ansökan"),
+      el("a", { href: "#registret", class: "link" }, "Se hela registret")),
+    status, kontakt);
+  visa(p);
+  setTimeout(() => {
+    if (!p.isConnected) return;
+    stamp.classList.add("go");
+    setTimeout(() => { stampel(); p.classList.add("shake"); }, reduce ? 0 : 230);
+    if (stamp2) setTimeout(() => { if (!p.isConnected) return; stamp2.classList.add("go"); setTimeout(stampel, reduce ? 0 : 230); }, reduce ? 0 : 620);
+  }, reduce ? 0 : 520);
+}
+async function kopiera(adress, status) {
+  try {
+    await navigator.clipboard.writeText(adress);
+    status.replaceChildren("Adressen har kopierats. Den som öppnar adressen tar del av samma beslut.");
+    klick();
+  } catch (e) {
+    const f = el("input", { class: "adressfalt", type: "text", readonly: true, value: adress, "aria-label": "Beslutets adress", onfocus: (ev) => ev.target.select() });
+    status.replaceChildren("Adressen kunde inte kopieras automatiskt. Markera och kopiera den nedan.", f);
+    f.focus(); f.select();
+  }
 }
 
 export function render(root) {
   app = root;
-  if (st.steg === 0 && !st.dnr) start(); else start();
+  start();
+}
+// Ett delat beslut: #beslut-<kod>
+export function delat(root, kod) {
+  app = root;
+  visaKod(kod);
 }
 export function tangent(e) {
-  const q = app && app.querySelector(".opts");
-  if (q && /^[1-9]$/.test(e.key)) { const b = q.querySelectorAll(".opt")[+e.key - 1]; if (b) b.click(); }
+  if (!app || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!/^[1-9]$/.test(e.key)) return;
+  const b = app.querySelectorAll(".opts .opt, .bildval .bv")[+e.key - 1];
+  if (b) b.click();
 }
