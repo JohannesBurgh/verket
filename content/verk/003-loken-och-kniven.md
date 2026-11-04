@@ -14,4 +14,4 @@ farg: {nyans: 48, mattnad: 0.31, ljushet: 0.32}
 ton: {lek: 1, stilla: 1, manniska: 0.6, skruv: 0.9, konst: 0.6}
 original: "08.jpg"
 ---
-Samma serie som One more onion.
+En man kastar sig mot en kniv som ska till att skära i en lök. Bordslampan ger hårt ljus uppifrån. Samma serie som One more onion.

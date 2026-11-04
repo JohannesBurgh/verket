@@ -13,3 +13,4 @@ farg: {nyans: 8, mattnad: 0.17, ljushet: 0.52}
 ton: {lek: 1, stilla: 1, manniska: 0.8, skruv: 0.9}
 original: "_MG_8888.JPG"
 ---
+En man i mönstrad tröja och mössa, fotograferad underifrån med vidvinkel. Munnen är vidöppen. Bakom syns vita garderobsdörrar.

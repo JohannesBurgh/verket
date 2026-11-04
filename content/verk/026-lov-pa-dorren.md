@@ -13,3 +13,4 @@ farg: {nyans: 279, mattnad: 0.09, ljushet: 0.23}
 ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
 original: "CRW_2184.jpg"
 ---
+En hand håller en stickpropp intill ett hål i väggen. Tapeten har brustit runt hålet och bildar något som liknar ett löv. En ledning sticker ut ur revan.

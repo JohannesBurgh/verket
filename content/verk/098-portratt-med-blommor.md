@@ -13,3 +13,4 @@ farg: {nyans: 353, mattnad: 0.38, ljushet: 0.34}
 ton: {allvar: 0.4, lek: 0.3, stilla: 1, manniska: 1, uppdrag: 0.6}
 original: "_DSC1201-2.jpg"
 ---
+Porträtt av en kvinna med uppsatt rödblont hår och blommig blus. Blicken är riktad förbi kameran. Bakgrunden är mörk med inslag av magenta.

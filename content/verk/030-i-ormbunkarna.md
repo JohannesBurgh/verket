@@ -13,3 +13,4 @@ farg: {nyans: 198, mattnad: 0.47, ljushet: 0.18}
 ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
 original: "CRW_2287.jpg"
 ---
+En person i mörk jacka står bland ormbunkar i skymningen. Ljuset är blått och svagt. Ansiktet är vänt bort från kameran.

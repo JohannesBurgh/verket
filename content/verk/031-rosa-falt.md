@@ -13,3 +13,4 @@ farg: {nyans: 327, mattnad: 0.12, ljushet: 0.76}
 ton: {allvar: 0.5, lek: 0.6, stilla: 1, manniska: 0.8, skruv: 1, konst: 1}
 original: "CRW_2304.jpg"
 ---
+Ett fält av högt gräs och blommor, färgat rosa och kraftigt överexponerat. En gestalt går i fältet med ryggen mot kameran. Framför den skymtar något vitt som inte har kunnat bestämmas.

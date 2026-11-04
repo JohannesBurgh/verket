@@ -13,3 +13,4 @@ farg: {nyans: 16, mattnad: 0.37, ljushet: 0.3}
 ton: {allvar: 0.4, lek: 0.3, stilla: 1, manniska: 1, uppdrag: 0.6}
 original: "Youtube Festival_184320_Original-topaz-denoise-sharpen.jpeg"
 ---
+En man i keps ler framför en skylt för YouTube Festival. På båda sidor står stora blomsteruppsättningar.
