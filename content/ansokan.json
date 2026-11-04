@@ -1,48 +1,189 @@
 {
-  "_hjalp": "Frågorna i ansökan. Varje svar ger poäng till dimensioner. Dimensionerna finns också på varje verk under 'ton'. Tillåtna: allvar, lek, stilla, rorligt, scen, manniska, ljus, skruv, uppdrag, konst.",
+  "_hjalp": "Ansökan. Frågebanken under 'fragor' omfattar 15 frågor. Varje besök drar fem enligt 'urval' (antal per svarstyp), styrt av ett frö. Därefter undertecknar sökanden med en cirkel. Poängen går till samma tio dimensioner som 'ton' på verken: allvar, lek, stilla, rorligt, scen, manniska, ljus, skruv, uppdrag, konst. Nya frågor läggs SIST i listan, annars kan redan delade beslut tolkas fel.",
+  "_svarstyper": "val: flera svar att välja mellan. reglage: ett reglage 0 till 100, indelat i zoner ('till' är zonens övre gräns). bild: tre bilder ur arkivet, poängen tas från den valda bildens ton gånger 'vikt'. ord: ett fritt ord som tolkas mot listan 'tolkning'. Med 'arkivsok' letar Verket också efter ordet bland verkens titlar och bifogar det verk som hittas.",
+  "_utslag": "Ett svar kan ha 'utslag' som styr beslutstypen, och 'skal' som är skälet som skrivs i beslutet. Absurdimo vinner vid 2 eller mer, därefter avslag vid 2 eller mer, därefter delvis bifall vid 1 eller mer. Annars bifall.",
+  "urval": { "val": 2, "reglage": 1, "bild": 1, "ord": 1 },
   "fragor": [
     {
+      "typ": "val",
       "fraga": "Vilket av följande föremål tar sökanden helst med sig till ett möte?",
       "svar": [
-        { "text": "En död råtta", "poang": { "skruv": 2, "allvar": 1, "stilla": 1.5, "konst": 1 } },
+        { "text": "En död råtta", "poang": { "skruv": 2, "allvar": 1, "stilla": 1.5, "konst": 1 }, "utslag": { "absurdimo": 1 }, "skal": "Sökanden avser att medföra en död råtta till mötet." },
         { "text": "En megafon", "poang": { "lek": 2, "skruv": 1, "rorligt": 1.5 } },
         { "text": "En stråkkvartett", "poang": { "scen": 2, "allvar": 1, "rorligt": 1, "ljus": 0.5 } },
-        { "text": "En presentation med 47 bilder", "poang": { "uppdrag": 2, "rorligt": 1 } }
+        { "text": "En presentation med 47 bilder", "poang": { "uppdrag": 2, "rorligt": 1 }, "utslag": { "avslag": 2 }, "skal": "Sökanden avser att medföra en presentation med 47 bilder. Verket har inte funnit utrymme för den i sitt schema." }
       ]
     },
     {
-      "fraga": "Ange ärendets brådska.",
-      "svar": [
-        { "text": "Igår", "poang": { "uppdrag": 2, "rorligt": 0.5 } },
-        { "text": "Före midsommar", "poang": { "manniska": 1, "allvar": 0.5, "lek": 0.5 } },
-        { "text": "När andan faller på", "poang": { "konst": 2, "stilla": 1, "skruv": 0.5 } }
-      ]
-    },
-    {
+      "typ": "val",
       "fraga": "Hur ofta gråter sökanden till reklamfilm?",
       "svar": [
         { "text": "Aldrig", "poang": { "lek": 2, "skruv": 0.5 } },
+        { "text": "Sökanden ser inte reklamfilm", "poang": { "stilla": 1, "allvar": 0.5 }, "utslag": { "avslag": 1 }, "skal": "Sökanden har uppgett att sökanden inte ser reklamfilm. Frågan har därför inte kunnat prövas." },
         { "text": "Ibland, i smyg", "poang": { "allvar": 1, "lek": 1, "manniska": 0.5 } },
         { "text": "Varje gång, även på bensinmacken", "poang": { "allvar": 2, "manniska": 1.5, "ljus": 0.5 } }
       ]
     },
     {
+      "typ": "val",
       "fraga": "Sökandes art.",
       "art": true,
       "svar": [
         { "text": "Kreatör eller regissör", "poang": { "konst": 2, "skruv": 0.5 } },
         { "text": "Beställare av kreativa tjänster", "poang": { "uppdrag": 1.5, "rorligt": 1, "konst": 0.5 } },
         { "text": "Kulturinstitution", "poang": { "scen": 2, "allvar": 0.5 } },
-        { "text": "Privatperson med för mycket tid", "poang": { "lek": 2, "skruv": 1 } },
-        { "text": "Art okänd", "poang": {} }
+        { "text": "Privatperson med för mycket tid", "poang": { "lek": 2, "skruv": 1 }, "utslag": { "absurdimo": 1 }, "skal": "Sökanden har uppgett sig ha för mycket tid." },
+        { "text": "Art okänd", "poang": {}, "utslag": { "avslag": 1 }, "skal": "Sökandes art har inte kunnat fastställas." }
       ]
     },
-    { "fraga": "Rita en cirkel. Cirkeln diarieförs.", "rita": true }
+    {
+      "typ": "val",
+      "fraga": "Vilket ljus avses?",
+      "svar": [
+        { "text": "Novemberljus genom ett fönster", "poang": { "ljus": 1.5, "stilla": 1, "allvar": 1 } },
+        { "text": "Motljus, gärna för mycket", "poang": { "ljus": 2.5, "konst": 0.5 } },
+        { "text": "Scenljus och lite rök", "poang": { "scen": 2, "ljus": 1 } },
+        { "text": "Lysrör", "poang": { "uppdrag": 1, "skruv": 1.5 }, "utslag": { "delvis": 1 }, "skal": "Ansökan avslås i den del som avser lysrör." }
+      ]
+    },
+    {
+      "typ": "val",
+      "fraga": "Vem eller vad ska förekomma i bild?",
+      "svar": [
+        { "text": "Människor, på nära håll", "poang": { "manniska": 2.5, "allvar": 0.5 } },
+        { "text": "Ingen. Bara rummet.", "poang": { "stilla": 2, "konst": 1 } },
+        { "text": "Ett djur med oklart ärende", "poang": { "skruv": 2, "lek": 1 }, "utslag": { "absurdimo": 2 }, "skal": "Sökanden har begärt ett djur med oklart ärende. Ärendet har bedömts som oklart även för Verket." },
+        { "text": "En hel ensemble", "poang": { "scen": 2, "rorligt": 1, "manniska": 1 } }
+      ]
+    },
+    {
+      "typ": "val",
+      "fraga": "Hur förhåller sig sökanden till planering?",
+      "svar": [
+        { "text": "Allt finns i ett kalkylark", "poang": { "uppdrag": 2.5 } },
+        { "text": "Vi löser det på plats", "poang": { "lek": 1.5, "rorligt": 1 } },
+        { "text": "Det ska kännas oplanerat, enligt plan", "poang": { "konst": 1.5, "skruv": 1 } },
+        { "text": "Sökanden har inte tänkt så långt", "poang": { "lek": 1, "skruv": 0.5 }, "utslag": { "avslag": 2 }, "skal": "Sökanden har uppgett att ärendet inte har tänkts igenom. Verket har inte velat föregå sökanden." }
+      ]
+    },
+    {
+      "typ": "val",
+      "fraga": "Vad ska mottagaren känna efteråt?",
+      "svar": [
+        { "text": "Att något har hänt", "poang": { "allvar": 1.5, "konst": 1 } },
+        { "text": "Ett lätt obehag", "poang": { "skruv": 2.5 }, "utslag": { "absurdimo": 1 }, "skal": "Sökanden har begärt ett lätt obehag hos mottagaren. Verket kan inte garantera att obehaget blir lätt." },
+        { "text": "Lust att köpa biljett", "poang": { "scen": 1.5, "uppdrag": 1.5 } },
+        { "text": "Ingenting, men på ett bra sätt", "poang": { "stilla": 1.5, "konst": 1 } }
+      ]
+    },
+    {
+      "typ": "val",
+      "fraga": "Ange önskat antal tagningar.",
+      "svar": [
+        { "text": "En", "poang": { "uppdrag": 1, "stilla": 1 }, "utslag": { "delvis": 1 }, "skal": "Ansökan avslås i den del som avser antalet tagningar. Verket beviljar en tagning och en säkerhetstagning." },
+        { "text": "Tre", "poang": { "uppdrag": 1, "allvar": 0.5 } },
+        { "text": "Så många som behövs", "poang": { "konst": 2, "allvar": 0.5 } },
+        { "text": "Det beror på vädret", "poang": { "ljus": 2, "stilla": 0.5 } }
+      ]
+    },
+    {
+      "typ": "reglage",
+      "fraga": "Ange ärendets brådska.",
+      "skala": ["Igår", "Aldrig"],
+      "start": 50,
+      "zoner": [
+        { "till": 10, "etikett": "Igår", "poang": { "uppdrag": 2.5, "rorligt": 0.5 }, "utslag": { "delvis": 1 }, "skal": "Ansökan avslås i den del som avser leverans igår." },
+        { "till": 30, "etikett": "I dag", "poang": { "uppdrag": 2 } },
+        { "till": 52, "etikett": "Snarast", "poang": { "uppdrag": 1, "manniska": 0.5, "rorligt": 0.5 } },
+        { "till": 72, "etikett": "Före midsommar", "poang": { "manniska": 1, "allvar": 0.5, "lek": 0.5 } },
+        { "till": 92, "etikett": "När andan faller på", "poang": { "konst": 2, "stilla": 1, "skruv": 0.5 } },
+        { "till": 100, "etikett": "Aldrig", "poang": { "stilla": 2, "konst": 1 }, "utslag": { "avslag": 2 }, "skal": "Sökanden har angett att ärendet ska vara slutfört aldrig. Verket har därför inte funnit skäl att pröva det nu." }
+      ]
+    },
+    {
+      "typ": "reglage",
+      "fraga": "Hur mycket bör det hända i bild?",
+      "skala": ["Ingenting", "Allt samtidigt"],
+      "start": 50,
+      "zoner": [
+        { "till": 10, "etikett": "Ingenting", "poang": { "stilla": 3, "konst": 0.5 } },
+        { "till": 35, "etikett": "Lite, långsamt", "poang": { "stilla": 2, "allvar": 0.5 } },
+        { "till": 65, "etikett": "Måttligt", "poang": { "stilla": 1, "rorligt": 1 } },
+        { "till": 92, "etikett": "Mycket", "poang": { "rorligt": 2, "lek": 0.5 } },
+        { "till": 100, "etikett": "Allt samtidigt", "poang": { "rorligt": 3, "lek": 1, "skruv": 1 }, "utslag": { "absurdimo": 1 }, "skal": "Sökanden har begärt att allt ska hända samtidigt." }
+      ]
+    },
+    {
+      "typ": "reglage",
+      "fraga": "Hur stor del av budgeten är avsatt för oväntade lösningar?",
+      "skala": ["0 procent", "100 procent"],
+      "visa": "procent",
+      "start": 20,
+      "zoner": [
+        { "till": 0, "etikett": "Ingen alls", "poang": { "uppdrag": 1.5 }, "utslag": { "avslag": 2 }, "skal": "Budgeten för oväntade lösningar har angetts till noll procent." },
+        { "till": 25, "etikett": "En försiktig andel", "poang": { "uppdrag": 1, "allvar": 0.5 } },
+        { "till": 60, "etikett": "En väsentlig andel", "poang": { "konst": 1, "lek": 0.5 } },
+        { "till": 99, "etikett": "Merparten", "poang": { "konst": 1.5, "skruv": 1 } },
+        { "till": 100, "etikett": "Hela budgeten", "poang": { "skruv": 2, "konst": 1, "lek": 1 }, "utslag": { "absurdimo": 1 }, "skal": "Sökanden har avsatt hela budgeten för oväntade lösningar." }
+      ]
+    },
+    {
+      "typ": "bild",
+      "fraga": "Vilken av följande handlingar beskriver bäst sökandes måndag?",
+      "vikt": 2.5,
+      "notering": "Sökanden har uppgett att handlingen {titel} beskriver sökandes måndag. Verket har noterat uppgiften utan att pröva den."
+    },
+    {
+      "typ": "bild",
+      "fraga": "Vilken av följande handlingar bör hänga i Verkets väntrum?",
+      "vikt": 2.5,
+      "notering": "Sökanden har föreslagit att handlingen {titel} hängs i Verkets väntrum. Förslaget har överlämnats till lokalförsörjningen."
+    },
+    {
+      "typ": "ord",
+      "fraga": "Beskriv ärendet med ett ord.",
+      "platshallare": "Ett ord",
+      "notering": "Sökanden har beskrivit ärendet med ordet {ord}."
+    },
+    {
+      "typ": "ord",
+      "fraga": "Ange ett föremål som bör förekomma i bild.",
+      "platshallare": "Ett föremål",
+      "arkivsok": true,
+      "notering": "Sökanden har begärt att {ord} ska förekomma i bild."
+    }
   ],
+  "tolkning": [
+    { "ord": ["absurdimo"], "poang": { "skruv": 3, "lek": 1 }, "utslag": { "absurdimo": 2 }, "notering": "Ordet har tolkats som en begäran om överlämnande.", "skal": "Sökanden har begärt Absurdimo vid namn." },
+    { "ord": ["kaffe", "fika", "te", "kaka", "bulle", "semla"], "poang": { "stilla": 1, "manniska": 1.5, "lek": 0.5 }, "notering": "Ordet har tolkats som ett behov av paus." },
+    { "ord": ["dans", "balett", "koreografi", "rörelse", "hopp"], "poang": { "scen": 2, "rorligt": 2 }, "notering": "Ordet har tolkats som en begäran om rörelse." },
+    { "ord": ["teater", "scen", "opera", "föreställning", "premiär", "ridå", "applåd"], "poang": { "scen": 3, "allvar": 0.5 }, "notering": "Ordet har hänförts till Verkets scenverksamhet." },
+    { "ord": ["kärlek", "närhet", "familj", "vänskap", "barn", "mamma", "pappa", "hem"], "poang": { "manniska": 2.5, "allvar": 1 }, "notering": "Ordet har tolkats som ett behov av människor." },
+    { "ord": ["ljus", "sol", "motljus", "solnedgång", "gryning", "skymning", "natt", "mörker", "eld"], "poang": { "ljus": 3, "stilla": 0.5 }, "notering": "Ordet har hänförts till Verkets ljusfrågor." },
+    { "ord": ["reklam", "kampanj", "lansering", "budget", "deadline", "leverans", "kund", "försäljning", "kpi"], "poang": { "uppdrag": 3 }, "notering": "Ordet har tolkats som ett uppdrag." },
+    { "ord": ["kaos", "fest", "glädje", "lek", "kul", "rolig", "party", "bus"], "poang": { "lek": 2.5, "rorligt": 1 }, "notering": "Ordet har tolkats som lek. Leken har godkänts." },
+    { "ord": ["sorg", "död", "döden", "allvar", "ångest", "saknad", "tid", "evighet"], "poang": { "allvar": 3, "konst": 1 }, "notering": "Ordet har tolkats som allvar." },
+    { "ord": ["konst", "poesi", "dröm", "abstrakt", "känsla", "själ", "tystnad"], "poang": { "konst": 3, "stilla": 0.5 }, "notering": "Ordet har tolkats som konstnärlig längtan." },
+    { "ord": ["kanin", "råtta", "potatis", "gurka", "absurd", "konstig", "märklig", "gasmask", "korv", "mygga", "skägg", "tomte"], "poang": { "skruv": 3, "lek": 1 }, "utslag": { "absurdimo": 1 }, "notering": "Ordet har föranlett en särskild bedömning.", "skal": "Ordet har bedömts falla utanför Verkets ordinarie verksamhet." },
+    { "ord": ["ingenting", "inget", "nada", "nej", "vetej", "vet inte"], "poang": { "stilla": 1 }, "utslag": { "avslag": 2 }, "notering": "Verket har tagit sökanden på orden.", "skal": "Ett ärende som avser ingenting kan inte bifallas." },
+    { "ord": ["film", "video", "foto", "fotografi", "bild", "kamera", "showreel"], "poang": { "rorligt": 1, "stilla": 1, "konst": 0.5 }, "notering": "Verket noterar att sökanden har vänt sig till rätt myndighet." },
+    { "ord": ["ai", "generativ", "robot", "maskin", "algoritm"], "poang": { "uppdrag": 1, "konst": 1, "skruv": 0.5 }, "notering": "Verket åtar sig även uppdrag med generativ AI. Ordet har tolkats därefter." },
+    { "ord": ["hjälp", "snälla", "akut", "brådskande", "asap"], "poang": { "uppdrag": 2 }, "utslag": { "delvis": 1 }, "notering": "Ordet har tolkats som brådska.", "skal": "Ansökan avslås i den del som avser omedelbar hjälp. Verket handlägger ärendena i den ordning de kommer in." }
+  ],
+  "skruv": { "_hjalp": "Om skruv blir sökandens starkaste dimension med minst så här många poäng ges utslaget nedan.", "grans": 5, "utslag": { "absurdimo": 1 }, "skal": "Sökandes behov av lätt obehag har bedömts som betydande." },
+  "otolkat": { "notering": "Ordet har inte kunnat tolkas. Det har diarieförts i befintligt skick.", "poang": { "konst": 1, "skruv": 0.5 } },
+  "flera_ord": "Sökanden har angett flera ord. Verket har prövat det första.",
+  "avstar_ord": "Sökanden har avstått från att svara med ett ord. Tystnaden har diarieförts.",
+  "arkivet": {
+    "funnet": "En handling som motsvarar föremålet har påträffats i arkivet. Handlingen bifogas.",
+    "ej_funnet": "Föremålet har inte påträffats i arkivet."
+  },
+  "underskrift": { "fraga": "Rita en cirkel. Cirkeln diarieförs.", "rubrik": "Underskrift" },
   "cirkel": {
     "noggrann": { "text": "Cirkeln bedöms som noggrann.", "poang": { "stilla": 1.5, "allvar": 1 } },
     "fri": { "text": "Cirkeln bedöms som fri men godtagbar.", "poang": { "lek": 1.5, "konst": 1, "skruv": 0.5 } },
-    "potatis": { "text": "Cirkeln bedöms som i det närmaste en potatis.", "poang": { "lek": 2, "skruv": 1.5, "konst": 0.5 } }
+    "potatis": { "text": "Cirkeln bedöms som i det närmaste en potatis.", "poang": { "lek": 2, "skruv": 1.5, "konst": 0.5 } },
+    "avstod": "Sökanden har avstått från att underteckna med cirkel. Ansökan har prövats ändå."
   },
   "motiveringar": {
     "allvar": "påtaglig brist på allvar",
@@ -55,5 +196,63 @@
     "skruv": "ett måttligt till kraftigt behov av lätt obehag",
     "uppdrag": "ett dokumenterat behov av leverans i tid",
     "konst": "obehandlad konstnärlig längtan"
-  }
+  },
+  "handlaggning": {
+    "gemensamt": ["Ärendet registreras", "Ärendet fördelas på handläggare"],
+    "ord": "Ordet {ord} tolkas",
+    "cirkel": "Cirkeln mäts",
+    "bifall": ["Ärendet bereds", "Beslut fattas"],
+    "delvis": ["Ärendet bereds", "Ansökan delas", "Beslut fattas"],
+    "avslag": ["Ärendet bereds", "Hänvisningar tas fram", "Beslut fattas"],
+    "absurdimo": ["Ärendet bereds", "Ärendet bedöms sakna motsvarighet i Verkets föreskrifter", "Ärendet överlämnas"]
+  },
+  "beslut": {
+    "bifall": {
+      "utgang": "Bifall",
+      "stampel": "BIFALLES",
+      "antal": 3,
+      "slut": "Ansökan bifalles. Följande handlingar bifogas.",
+      "lagrum": "Beslutet har fattats med stöd av 3 § Verkets föreskrifter (VOL 2026:1) om oväntade lösningar."
+    },
+    "delvis": {
+      "utgang": "Delvis bifall",
+      "stampel": "BIFALLES DELVIS",
+      "antal": 2,
+      "allmant": "Verket har efter omprövning funnit att ansökan kan bifallas till viss del.",
+      "slut": "Ansökan bifalles delvis. Handlingar bifogas i den del ansökan har bifallits.",
+      "lagrum": "Beslutet har fattats med stöd av 4 § Verkets föreskrifter (VOL 2026:1) om oväntade lösningar.",
+      "rubrik_bilagor": "Bilagor, i den del ansökan har bifallits"
+    },
+    "avslag": {
+      "utgang": "Avslag",
+      "stampel": "AVSLÅS",
+      "antal": 3,
+      "etikett": "Hänvisning",
+      "allmant": "Verket har inte funnit skäl att bifalla ansökan.",
+      "slut": "Ansökan avslås. Sökanden hänvisas i stället till följande handlingar i Verkets arkiv.",
+      "lagrum": "Beslutet har fattats med stöd av 7 § andra stycket Verkets föreskrifter (VOL 2026:1) om oväntade lösningar.",
+      "rubrik_bilagor": "Bilagor, med hänvisning"
+    },
+    "absurdimo": {
+      "utgang": "Överlämnat",
+      "stampel": "ÖVERLÄMNAS",
+      "antal": 3,
+      "etikett_forsta": "Från Absurdimo",
+      "etikett": "För kännedom",
+      "allmant": "Ärendet har bedömts falla utanför Verkets ordinarie verksamhet.",
+      "slut": "Verket har funnit att ärendet inte kan prövas i vanlig ordning. Ärendet överlämnas till Absurdimo, som har bifogat en handling. Verket bifogar därutöver två handlingar för kännedom.",
+      "overklagat": "Absurdimo har tagit del av överklagandet och inte funnit skäl att återlämna ärendet.",
+      "lagrum": "Beslutet har fattats med stöd av 12 § Verkets föreskrifter (VOL 2026:1) om oväntade lösningar.",
+      "handlaggare": "Absurdimo"
+    }
+  },
+  "omprovat": { "stampel": "OMPRÖVAT", "text": "Beslutet har omprövats efter överklagande ({n}). Tidigare bilagor har återkallats." },
+  "forenklat": [
+    "Sökanden har begärt förenklat förfarande. Verket har inte prövat ansökan i sak.",
+    "Verket bifogar i stället ett urval ur myndighetens viktigaste handlingar."
+  ],
+  "art_okand_bifall": "Verket bifaller ansökan ändå.",
+  "overklagande": "Hur man överklagar. Beslutet kan överklagas. Överklagandet görs genom att sökanden trycker på knappen Överklaga beslutet. Verket omprövar då beslutet omgående och utan vidare utredning.",
+  "aterkallad": "Handlingen har återkallats ur arkivet.",
+  "skadad": "Beslutet kunde inte återfinnas i diariet. Adressen kan ha skadats vid överföringen."
 }
