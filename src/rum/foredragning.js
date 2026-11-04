@@ -249,11 +249,12 @@ export function skapaRumsforedragning(R) {
     const sh = skott[jNu];
     let skala = 1;
     if (malKort && s !== malKort) {
-      _v.setFromMatrixPosition(s.mesh.matrixWorld); _f.subVectors(fokusPunkt, camera.position); const avst = _f.length(); _f.divideScalar(avst || 1);
+      _v.setFromMatrixPosition(s.mesh.matrixWorld); _f.setFromMatrixPosition(malKort.mesh.matrixWorld).sub(camera.position); const avst = _f.length(); _f.divideScalar(avst || 1);
       _w.subVectors(_v, camera.position); const langs = _w.dot(_f);
       if (langs > .05 && langs < avst - .12) {
-        const sida = _w.addScaledVector(_f, -langs).length(), halv = langs * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.25;
-        if (sida < halv + Math.max(s.bas.x, s.bas.y) * .6) skala = 0;
+        // skymmer kortet det som visas, sett från kameran?
+        const sida = _w.addScaledVector(_f, -langs).length(), halv = Math.max(malKort.bas.x, malKort.bas.y) * .62 * langs / avst;
+        if (sida < halv + Math.max(s.bas.x, s.bas.y) * .62) skala = 0;
       }
     }
     const dim = malKort && s !== malKort ? lerp(1, .5, e) : 1;

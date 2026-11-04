@@ -11,6 +11,9 @@ const spelaren = (page) => page.locator(".fd-rum");
 const fd = (page) => page.locator(".fd");
 const avsnitt = (page) => fd(page).getAttribute("data-avsnitt");
 
+// Genomgångarna görs i ett mindre fönster: rummet ritas i mjukvara på testdatorerna, och färre pixlar går fortare.
+const mindre = (page) => page.setViewportSize({ width: 1024, height: 640 });
+
 async function oppna(page, fro) {
   await page.goto(`./#arkivrummet-foredragning-${fro}`);
   await expect(spelaren(page)).toBeVisible();
@@ -54,8 +57,10 @@ test.describe("Föredragningen i Arkivrummet", () => {
     await expect(spelaren(page)).toBeVisible();
   });
 
-  test("kameran går mellan korten, rummet byts för varje paragraf, och urvalet är detsamma som utan rummet", async ({ page, slump }, info) => {
+  test("kameran går mellan korten, rummet byts för varje paragraf, och urvalet är detsamma som utan rummet", async ({ page, slump, isMobile }, info) => {
+    test.skip(isMobile, "Genomgången görs på dator. Mobilens utseende prövas för sig.");
     test.setTimeout(300_000);
+    await mindre(page);
     const fro = froFor(slump);
     await oppna(page, fro);
     await pausa(page);
@@ -96,7 +101,9 @@ test.describe("Föredragningen i Arkivrummet", () => {
     expect(sedda.map((a) => a.live), "Samma föredragning i rummet som utan").toEqual(utan);
   });
 
-  test("Utan rummet fortsätter på samma ställe, och tillbaka", async ({ page, slump }) => {
+  test("Utan rummet fortsätter på samma ställe, och tillbaka", async ({ page, slump, isMobile }) => {
+    test.skip(isMobile, "Prövas på dator.");
+    await mindre(page);
     const fro = froFor(slump);
     await oppna(page, fro);
     await pausa(page);
