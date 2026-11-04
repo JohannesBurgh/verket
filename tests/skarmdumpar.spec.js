@@ -1,7 +1,7 @@
 // Skärmdumpar av varje vy, på dator och mobil, så att Johan kan se sajten utan att köra något.
 // Hamnar i tests/utdata/skarmdumpar/<dator|mobil>/ och i artefakten "skarmdumpar" på GitHub.
 import { test, expect, lugnt, skarmdump } from "./stod/fixtur.js";
-import { fyllI } from "./stod/ansokan.js";
+import { besvara, fyllI, ritaCirkel, vantaPaBeslut, UTGANGAR } from "./stod/ansokan.js";
 import { ARENDEN } from "./stod/innehall.js";
 
 test.describe("Skärmdumpar", () => {
@@ -9,25 +9,42 @@ test.describe("Skärmdumpar", () => {
     test.skip(info.project.name === "lugn", "Skärmdumpar tas på dator och mobil.");
   });
 
-  test("ansökan: start, fråga, cirkel och beslut", async ({ page, slump }, info) => {
+  test("ansökan: start, frågorna, cirkeln och beslutet", async ({ page, slump }, info) => {
     await page.goto("./#ansokan");
     await lugnt(page);
     await skarmdump(page, info, "01-ansokan-start");
     await page.getByRole("button", { name: "Påbörja ansökan" }).click();
     await expect(page.locator(".qmeta")).toContainText("Fråga 1 av");
-    await lugnt(page, 500);
-    await skarmdump(page, info, "02-ansokan-fraga");
-    // Svara på allt utom ritningen, rita sedan och ta en bild innan ansökan lämnas in.
-    while (!(await page.locator(".rita canvas").count())) {
-      const nr = (await page.locator(".qmeta").textContent()).match(/Fråga (\d+)/)[1];
-      const alt = page.locator(".opt");
-      await alt.nth(Math.floor(slump() * (await alt.count()))).click();
-      await expect(page.locator(".qmeta")).not.toContainText(`Fråga ${nr} av`);
-    }
-    await lugnt(page, 400);
-    await fyllI(page, { slump });
+    // En bild av varje slags fråga: val, reglage, bild och ord.
+    const sedda = new Set();
+    await besvara(page, {
+      slump,
+      vidFraga: async (typ) => {
+        if (sedda.has(typ)) return;
+        sedda.add(typ);
+        await lugnt(page, 500);
+        await skarmdump(page, info, `02-ansokan-fraga-${typ}`);
+      },
+    });
+    // Underskriften, med cirkeln ritad men inte inlämnad.
+    await ritaCirkel(page);
+    await lugnt(page, 300);
+    await skarmdump(page, info, "02-ansokan-underskrift");
+    await page.getByRole("button", { name: "Lämna in ansökan" }).click();
+    await vantaPaBeslut(page);
     await lugnt(page, 600);
     await skarmdump(page, info, "03-ansokan-beslut");
+  });
+
+  test("ansökan: de fyra beslutstyperna", async ({ page, slump }, info) => {
+    test.setTimeout(150_000);
+    for (const mal of UTGANGAR) {
+      await page.goto("./#ansokan");
+      await page.getByRole("button", { name: "Påbörja ansökan" }).click();
+      await fyllI(page, { slump, mal, rita: true });
+      await lugnt(page, 600);
+      await skarmdump(page, info, `03-ansokan-beslut-${mal}`);
+    }
   });
 
   test("registret och visaren", async ({ page }, info) => {

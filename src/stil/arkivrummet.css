@@ -39,3 +39,7 @@
   .rum .rumnamn{left:auto;max-width:calc(100% - 200px)}
   .rum .rumnamn small{display:block;line-height:1.45}
 }
+/* De smalaste telefonerna: dockan och Blås ska rymmas utan att skrollas fram (uppdrag 12) */
+@media (max-width:370px){
+  .docka button{padding:10px 4px;font-size:10px;letter-spacing:0}
+}

@@ -296,7 +296,8 @@ function fatta(a, visade) {
     fixa(P.rorligt >= P.stilla * 0.6, rorlig);
     fixa(P.stilla >= P.rorligt * 0.6, (v) => !rorlig(v));
   }
-  const pool = VERK.filter((v) => !ut.includes(v) && !visade.has(v.id) && !exkl.has(v.id) && v.vikt !== "hjälte");
+  // Vindfröet är också en bilaga: aldrig ur samma epok som de andra.
+  const pool = VERK.filter((v) => !ut.includes(v) && !grp.has(v.epok) && !visade.has(v.id) && !exkl.has(v.id) && v.vikt !== "hjälte");
   const damm = pool.filter((v) => v.vikt === "damm"), kalla = r() < 0.45 && damm.length ? damm : pool;
   const vind = kalla.length ? kalla[Math.floor(r() * kalla.length)] : null;
   a.bilagor = ut.map(nyckel);
@@ -308,12 +309,24 @@ const minnas = (a) => { if (!st || st.fro !== a.fro) return; a.bilagor.forEach((
 // ---------- vyerna ----------
 function visa(node, efter) {
   const nr = ++visaNr, gammal = app.firstElementChild;
-  const klar = () => { if (nr !== visaNr) return; app.replaceChildren(node); if (efter) efter(node); };
+  const klar = () => { if (nr !== visaNr) return; app.replaceChildren(node); VISADE.add(node); if (efter) efter(node); };
   if (gammal && !reduce) {
     gammal.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(-40px) rotate(-1deg)" }], { duration: 220, easing: "ease-in", fill: "forwards" }).onfinish = klar;
   } else klar();
   prassel(0.8);
   window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+}
+// Kör fn när arket p har kommit på plats. Det gamla arket glider ut först, och på en upptagen
+// enhet kan det dröja. Har besökaren hunnit vidare till en annan vy körs ingenting.
+const VISADE = new WeakSet();
+function nar(p, fn, ms = 0) {
+  const nr = visaNr;
+  const prova = () => {
+    if (nr !== visaNr) return;
+    if (!p.isConnected) { if (!VISADE.has(p)) setTimeout(prova, 60); return; } // på väg in, eller redan lämnat
+    fn();
+  };
+  setTimeout(prova, ms);
 }
 const satt = (hash) => { if (location.hash !== hash) history.replaceState(null, "", hash); };
 
@@ -436,9 +449,12 @@ function ritruta() {
   wrap.append(c, hint);
   const pts = []; let ner = false, ctx;
   const storlek = () => { const r = wrap.getBoundingClientRect(), d = Math.min(devicePixelRatio, 2); c.width = r.width * d; c.height = r.height * d; ctx = c.getContext("2d"); ctx.scale(d, d); ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#14181a"; };
-  requestAnimationFrame(storlek);
+  // Ytan mäts när den syns. Arket glider in först, så storleken är inte känd när rutan skapas.
+  // Ändras storleken (telefonen vrids) ritas strecket om.
+  const ritaOm = () => { if (pts.length < 2) return; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); pts.forEach(([x, y]) => ctx.lineTo(x, y)); ctx.stroke(); };
+  new ResizeObserver(() => { if (wrap.isConnected) { storlek(); ritaOm(); } }).observe(wrap);
   const pos = (e) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top, r.width, r.height]; };
-  c.addEventListener("pointerdown", (e) => { ner = true; c.setPointerCapture(e.pointerId); pts.length = 0; const r = c.getBoundingClientRect(); ctx.clearRect(0, 0, r.width, r.height); const [x, y] = pos(e); pts.push([x, y]); ctx.beginPath(); ctx.moveTo(x, y); hint.hidden = true; });
+  c.addEventListener("pointerdown", (e) => { if (!ctx || !c.width) storlek(); ner = true; c.setPointerCapture(e.pointerId); pts.length = 0; const r = c.getBoundingClientRect(); ctx.clearRect(0, 0, r.width, r.height); const [x, y] = pos(e); pts.push([x, y]); ctx.beginPath(); ctx.moveTo(x, y); hint.hidden = true; });
   c.addEventListener("pointermove", (e) => { if (!ner) return; const [x, y, w, h] = pos(e); pts.push([x, y]); ctx.lineTo(x, y); ctx.stroke(); st.ritning = { pts: pts.slice(), w, h }; });
   c.addEventListener("pointerup", () => (ner = false));
   st.ritning = null;
@@ -453,11 +469,10 @@ function handlagg(a, steg, sedan) {
   if (reduce) { sedan(); return; }
   let i = 0;
   const tick = () => {
-    if (!p.isConnected) return;
     ol.children[i]?.classList.add("on"); klick(); i++;
-    if (i < steg.length) setTimeout(tick, 480); else setTimeout(() => p.isConnected && sedan(), 600);
+    if (i < steg.length) nar(p, tick, 480); else nar(p, sedan, 600);
   };
-  setTimeout(tick, 380);
+  nar(p, tick, 380);
 }
 function lamnaIn(utan) {
   st.cirkel = utan ? null : forenkla(st.ritning);
@@ -575,11 +590,10 @@ function beslut(a, kod) {
       el("a", { href: "#registret", class: "link" }, "Se hela registret")),
     status, kontakt);
   visa(p);
-  setTimeout(() => {
-    if (!p.isConnected) return;
+  nar(p, () => {
     stamp.classList.add("go");
     setTimeout(() => { stampel(); p.classList.add("shake"); }, reduce ? 0 : 230);
-    if (stamp2) setTimeout(() => { if (!p.isConnected) return; stamp2.classList.add("go"); setTimeout(stampel, reduce ? 0 : 230); }, reduce ? 0 : 620);
+    if (stamp2) nar(p, () => { stamp2.classList.add("go"); setTimeout(stampel, reduce ? 0 : 230); }, reduce ? 0 : 620);
   }, reduce ? 0 : 520);
 }
 async function kopiera(adress, status) {

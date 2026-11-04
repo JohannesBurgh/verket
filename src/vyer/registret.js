@@ -50,7 +50,16 @@ export function render(app, oppnaId) {
     el("label", { class: "sok" }, sokfalt, antal)), grid);
   app.replaceChildren(p);
   rita();
-  if (oppnaId && byId[oppnaId]) { const l = urval(); oppnaVerk(l.includes(byId[oppnaId]) ? l : VERK, (l.includes(byId[oppnaId]) ? l : VERK).indexOf(byId[oppnaId])); }
+  if (oppnaId) visaVerk(oppnaId);
+}
+// Öppnar ett verk i visaren, i Registrets ordning. Används också när en adress #verk-… klistras in
+// medan Registret redan visas. Står verket utanför filtret bläddrar visaren i hela registret.
+export function visaVerk(id) {
+  const v = byId[id];
+  if (!v) return false;
+  const l = urval(), lista = l.includes(v) ? l : VERK.slice().sort((a, b) => ordning(a) - ordning(b) || a.id.localeCompare(b.id));
+  oppnaVerk(lista, lista.indexOf(v));
+  return true;
 }
 function oppnaVerk(lista, i) {
   oppna(lista, i, { onStep: (v) => history.replaceState(null, "", "#verk-" + v.id) });

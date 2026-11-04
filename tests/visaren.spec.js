@@ -92,6 +92,18 @@ test.describe("Visaren", () => {
     await visar(page, k);
   });
 
+  test("en adress som klistras in medan Registret visas öppnar verket", async ({ page, slump }) => {
+    const [a, b] = [Math.floor(slump() * N), Math.floor(slump() * N)];
+    // Adressfältet ändras utan sidladdning, som när någon klistrar in en länk.
+    await page.evaluate((id) => (location.hash = `#verk-${id}`), ORDNING[a].id);
+    await expect(visare(page)).toBeVisible();
+    await visar(page, a);
+    // Och en till medan visaren redan är öppen.
+    await page.evaluate((id) => (location.hash = `#verk-${id}`), ORDNING[b].id);
+    await visar(page, b);
+    await expect(page.locator(".grid > button")).toHaveCount(N);
+  });
+
   test("varje verk går att visa", async ({ page, isMobile }) => {
     test.skip(isMobile, "Det räcker att bläddra igenom allt på dator.");
     test.setTimeout(120_000);

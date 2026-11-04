@@ -1,5 +1,6 @@
 // Verket för oväntade lösningar. Startpunkt och vägvisare.
 import "./style.css";
+import "./stil/meny.css";
 import { S, reduce } from "./data.js";
 import * as ansokan from "./vyer/ansokan.js";
 import * as registret from "./vyer/registret.js";
@@ -26,7 +27,8 @@ async function route() {
   if (sistaVy === "arkivrummet" && vy !== "arkivrummet" && rummet) (await rummet).stoppa();
   app.classList.toggle("full", vy === "arkivrummet");
   fot.hidden = vy === "arkivrummet";
-  if (vy === "verk" && sistaVy === "registret" && app.querySelector(".grid")) { sistaVy = "registret"; return; }
+  // Registret visas redan: öppna verket i visaren utan att rita om sidan.
+  if (vy === "verk" && sistaVy === "registret" && app.querySelector(".grid")) { registret.visaVerk(arg); return; }
   sistaVy = vy === "verk" ? "registret" : vy;
   switch (vy) {
     case "registret": registret.render(app); break;

@@ -76,7 +76,7 @@ function bygg() {
     el("div", { class: "hud" }, el("div", { class: "tidslinje" }, absKnapp, arText, tl), docka));
 
   // ---- scen ----
-  const kv = skapaKvalitet();
+  const kv = skapaKvalitet(renderer.getContext());
   renderer.setPixelRatio(kv.dpr);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const PAPPER = skapaPapper();
@@ -261,7 +261,7 @@ function bygg() {
     if (r === "mork") FRO.forEach((s) => { s.fram = 0; });
     zoom = 1;
     if (R.pan) { const p = klampa(R.tillPan(uNu)); if (!koreo) panX = p; panMal = klampa(R.tillPan(fokusAr != null ? posAr(fokusAr) : uNu)); }
-    rotXMal = r === "mork" ? R.lutning : r !== "rulle" ? 0 : null; rotYMal = r === "falt" || r === "mork" ? 0 : null;
+    rotXMal = r === "mork" ? R.lutning : r !== "rulle" ? 0 : null; rotYMal = r === "falt" || r === "mork" || r === "rulle" ? 0 : null; // trumman vrids bara runt sin egen axel
     fokus();
     if (koreo) {
       const kort = (d) => Math.atan2(Math.sin(d), Math.cos(d)), dx = kort((rotXMal ?? rotX) - rotX), dy = kort((rotYMal ?? rotY) - rotY);
@@ -430,7 +430,9 @@ function bygg() {
   let sist = performance.now(), raf = 0, aktiv = false, ljudRakna = 0;
   function ruta(nu) {
     raf = requestAnimationFrame(ruta);
-    const ra = (nu - sist) / 1000, dt = Math.min(.05, ra); sist = nu; klocka += dt;
+    // Tiden följer klockan även när rutorna är få, så att en övergång tar lika lång tid på en svag dator.
+    // Ett steg är högst en kvarts sekund. Har fliken varit dold börjar klockan om (se visibilitychange nedan).
+    const ra = (nu - sist) / 1000, dt = Math.min(.25, Math.max(0, ra)); sist = nu; klocka += dt;
     const k = 1 - Math.exp(-dt * (reduce ? 30 : 3.4)), kq = 1 - Math.exp(-dt * (reduce ? 30 : 4));
     if (!visareOppen()) aktuell = null;
     const lugn = aktuell || fokusAr != null ? .15 : 1;
@@ -457,6 +459,8 @@ function bygg() {
       miljo.falt += ((rum === "falt" ? 1 : 0) - miljo.falt) * k; miljo.mork += ((rum === "mork" ? 1 : 0) - miljo.mork) * k;
     }
     if (ko.klar(klocka)) FRO.forEach((s) => { s.flyg = null; });
+    // syns i DOM medan korten flyttas mellan rummen (används av testerna)
+    if (rot.hasAttribute("data-overgang") !== !!ko.aktiv) rot.toggleAttribute("data-overgang", !!ko.aktiv);
     world.rotation.set(rotX, rotY, 0, "YXZ"); world.position.x = -panX;
     world.updateMatrixWorld();
     const mo = miljo.mork, mk = mo * mo * (3 - 2 * mo);
@@ -512,7 +516,8 @@ function bygg() {
       // skuggan faller bort från ljuset
       _wq.copy(world.quaternion).multiply(m.quaternion).invert(); _c.copy(_l).applyQuaternion(_wq);
       const gap = lerp(.16, .05, mk), sk = s.skugga;
-      if (_c.z > .12) {
+      // i bunten ligger korten tätt, och skuggorna skulle bara ritas ovanpå varandra
+      if (_c.z > .12 && !(s.flyg && s.flyg.iBunt)) {
         const ox = Math.max(-.3, Math.min(.3, -_c.x / _c.z * gap)), oy = Math.max(-.3, Math.min(.3, -_c.y / _c.z * gap));
         sk.visible = true; sk.position.set(ox / m.scale.x, oy / m.scale.y, -s.tjock - gap);
         sk.scale.set(1 + (.3 + gap) / s.bas.x, 1 + (.3 + gap) / s.bas.y, 1);
@@ -525,6 +530,7 @@ function bygg() {
     ritaTL();
     if (kv.mat(ra, ko.aktiv || klara < antalBilder * .85)) tillampa();
   }
+  addEventListener("visibilitychange", () => { sist = performance.now(); });
   bytRum("falt", true);
   return {
     rot,

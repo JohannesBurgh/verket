@@ -79,8 +79,9 @@ export async function tabbaTill(page, namn, max = 40) {
   throw new Error(`Hittade inte "${namn}" med Tab efter ${max} tryck.`);
 }
 
-// Ingen sida ska kunna skrollas i sidled på mobil.
+// Ingen sida ska kunna skrollas i sidled på mobil. Jämförs med skärmens bredd (clientWidth):
+// innerWidth växer med sidan på mobil, när webbläsaren zoomar ut för att få plats med allt.
 export async function ingenSidledsskroll(page) {
-  const { bred, vy } = await page.evaluate(() => ({ bred: document.documentElement.scrollWidth, vy: innerWidth }));
+  const { bred, vy } = await page.evaluate(() => ({ bred: document.documentElement.scrollWidth, vy: document.documentElement.clientWidth }));
   expect(bred, "Sidan ska inte gå att skrolla i sidled").toBeLessThanOrEqual(vy + 1);
 }

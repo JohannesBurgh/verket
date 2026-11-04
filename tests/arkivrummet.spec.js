@@ -36,8 +36,20 @@ async function oppnaRummet(page) {
   await page.waitForTimeout(1800);
 }
 
-async function arRitat(page, vad) {
-  const bild = await yta(page).screenshot();
+// Väntar tills korten har landat i rummet efter ett byte (rummet sätter data-overgang under flytten).
+async function landat(page) {
+  await expect(page.locator(".rum")).not.toHaveAttribute("data-overgang", /.*/, { timeout: 20_000 });
+  await page.waitForTimeout(800);
+}
+
+// bild: en färdig skärmdump av hela vyn, som ytan skärs ut ur. Annars fotograferas ytan.
+async function arRitat(page, vad, helaVyn = null) {
+  let bild;
+  if (helaVyn) {
+    const b = await yta(page).boundingBox(), { width, height } = await sharp(helaVyn).metadata();
+    const s = width / page.viewportSize().width, x = Math.max(0, Math.round(b.x * s)), y = Math.max(0, Math.round(b.y * s));
+    bild = await sharp(helaVyn).extract({ left: x, top: y, width: Math.min(width - x, Math.round(b.width * s)), height: Math.min(height - y, Math.round(b.height * s)) }).png().toBuffer();
+  } else bild = await yta(page).screenshot();
   const { andel, farger } = await analys(bild);
   expect(andel, `${vad}: andel av ytan med innehåll`).toBeGreaterThan(0.02);
   expect(farger, `${vad}: antal färger (bilder ska synas, inte bara ytor)`).toBeGreaterThan(150);
@@ -46,10 +58,17 @@ async function arRitat(page, vad) {
 
 test.describe("Arkivrummet", () => {
   test("varje rum i dockan ritar något", async ({ page }, info) => {
-    test.setTimeout(120_000);
     await oppnaRummet(page);
     const n = await rumknappar(page).count();
+    // Varje rum har en koreograferad övergång. Tiden räknas per rum, så att ett nytt rum får plats.
+    test.setTimeout(60_000 + n * 30_000);
     expect(n, "Dockan ska ha rum").toBeGreaterThan(0);
+    // Alla rum och Blås syns i dockan, även på smala skärmar.
+    const w = await page.evaluate(() => document.documentElement.clientWidth);
+    for (const b of await page.locator(".docka button").all()) {
+      const r = await b.boundingBox();
+      expect(r.x >= 0 && r.x + r.width <= w, `${await b.textContent()} ska synas i dockan`).toBe(true);
+    }
     const bilder = [];
     for (let i = 0; i < n; i++) {
       const knapp = rumknappar(page).nth(i);
@@ -59,9 +78,9 @@ test.describe("Arkivrummet", () => {
         await expect(knapp).toHaveAttribute("aria-pressed", "true");
         await expect(page.locator('.docka [data-rum][aria-pressed="true"]')).toHaveCount(1);
         await expect(page.locator(".rumnamn b")).toHaveText(namn);
-        await page.waitForTimeout(2200);
-        bilder.push(await arRitat(page, namn));
-        await skarmdump(page, info, `09-arkivrummet-${i + 1}-${await knapp.getAttribute("data-rum")}`, { helsida: false });
+        await landat(page);
+        const vyn = await skarmdump(page, info, `09-arkivrummet-${i + 1}-${await knapp.getAttribute("data-rum")}`, { helsida: false });
+        bilder.push(await arRitat(page, namn, vyn));
       });
     }
     // Rummen ska se olika ut.
@@ -84,7 +103,7 @@ test.describe("Arkivrummet", () => {
     const fore = await page.locator('.docka [data-rum][aria-pressed="true"]').getAttribute("data-rum");
     await page.getByRole("button", { name: "Blås" }).click();
     await expect(page.locator('.docka [data-rum][aria-pressed="true"]')).not.toHaveAttribute("data-rum", fore, { timeout: 5000 });
-    await page.waitForTimeout(2200);
+    await landat(page);
     await arRitat(page, "Efter Blås");
   });
 
@@ -106,6 +125,20 @@ test.describe("Arkivrummet", () => {
     await page.keyboard.press("Escape");
     await expect(ar).not.toContainText("klicka igen");
     await arRitat(page, "Efter årsfokus");
+  });
+
+  test("full återgivning, med efterbehandling, ritar också", async ({ page }) => {
+    // Utan grafikkort börjar rummet förenklat. Besökaren kan ändå välja full återgivning.
+    await oppnaRummet(page);
+    const knapp = page.locator(".atergivning");
+    if ((await knapp.getAttribute("aria-pressed")) !== "true") await knapp.click();
+    await expect(knapp).toHaveAttribute("aria-pressed", "true");
+    await expect(knapp).toHaveText("Återgivning: full");
+    await page.waitForTimeout(1500);
+    await arRitat(page, "Full återgivning");
+    // Valet sparas och gäller nästa gång.
+    await page.reload();
+    await expect(page.locator(".atergivning")).toHaveText("Återgivning: full");
   });
 
   test("Absurdimo kan döljas och visas", async ({ page }) => {

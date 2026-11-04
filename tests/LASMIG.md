@@ -30,8 +30,9 @@ Skärmdumparna hamnar i `tests/utdata/skarmdumpar/`.
 - **Testerna körs mot bygget**, alltså det som publiceras. Ärenden med `utkast: true` räknas inte.
 - **Konsolen vaktas.** Ett sidfel, ett konsolfel eller en saknad lokal fil fäller testet (`stod/fixtur.js`). Typsnitt och YouTube-bilder hämtas utifrån och får misslyckas utan att testet fälls. YouTube-spelaren byts mot en tom ruta.
 - **Slumpen har ett frö.** Varje körning skriver ut `VAKT_FRO=<tal>`. Samma tal ger samma urval i ansökan: `VAKT_FRO=123 npm test`. Fröet syns också i GitHub-sammanfattningen och kan anges när arbetsflödet körs för hand.
-- **Ansökan prövas många gånger** per körning, eftersom urvalet är slumpat. Reglerna står i `stod/ansokan.js` (`kontrolleraBeslut`).
-- **Arkivrummet** fotograferas och pixlarna räknas med sharp: ytan ska ha innehåll och många färger, och två rum i följd ska se olika ut. Rummen hämtas från dockan, så ett nytt rum prövas utan ändringar här.
+- **Ansökan prövas många gånger** per körning, eftersom urvalet är slumpat. Reglerna står i `stod/ansokan.js` (`kontrolleraBeslut`). De fyra frågetyperna (val, reglage, bild, ord) besvaras med mus och med tangentbord. Var och en av de fyra beslutstyperna framkallas med svar som styr mot den: svar utan utslag och ett ord ur nyckelordsregistret i `content/ansokan.json`. Ett delat beslut (`#beslut-<kod>`) öppnas i en annan webbläsare och ska se likadant ut.
+- **Arkivrummet** fotograferas och pixlarna räknas med sharp: ytan ska ha innehåll och många färger, och två rum i följd ska se olika ut. Rummen hämtas från dockan, så ett nytt rum prövas utan ändringar här. Under en övergång mellan rum har `.rum` attributet `data-overgang`, och testerna väntar tills det är borta.
+- **Utan grafikkort.** GitHub Actions ritar med en mjukvarurenderare (SwiftShader). Arkivrummet känner igen den och börjar med förenklad återgivning, precis som på en svag dator hos en besökare. Den fulla återgivningen prövas i ett eget test.
 
 ## Miljöer
 

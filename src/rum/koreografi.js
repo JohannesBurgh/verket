@@ -55,12 +55,13 @@ export function skapaKoreografi({ world, camera }) {
     buntPlats(f.plats, aktiv ? aktiv.n : 1, _p, _bq);
     if (nu < f.t1) {
       const t = klamp((nu - f.t0) / TID.samla), e = ut(t);
+      f.iBunt = t >= 1;
       bage(f.p0, _p, e, .7, m.position);
       m.quaternion.copy(f.q0).slerp(_bq, e);
       f.bp.copy(m.position); f.bq.copy(m.quaternion);
       return false;
     }
-    if (!f.utdelad) { f.utdelad = true; f.bp.copy(_p); f.bq.copy(_bq); f.ljud = true; }
+    if (!f.utdelad) { f.utdelad = true; f.iBunt = false; f.bp.copy(_p); f.bq.copy(_bq); f.ljud = true; }
     const t = klamp((nu - f.t1) / TID.dela), e = ease(t);
     bage(f.bp, s.mal || s.tp, e, 1.2, m.position);
     m.quaternion.copy(f.bq).slerp(s.tq, e);

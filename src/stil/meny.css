@@ -1,0 +1,19 @@
+/* Uppdrag 12. Menyn på mobil: allt ska synas utan att skrollas fram.
+   Ljudknappen flyttar upp bredvid namnet, menyvalen läggs i rader under. */
+
+/* Pappret glider in med en liten vridning. Den får inte göra sidan bredare än skärmen,
+   för då zoomar mobilen ut hela sidan och lämnar den så. */
+#app{overflow-x:clip}
+
+@media (max-width:760px){
+  .bar{gap:8px;padding-bottom:8px}
+  .brand{max-width:calc(100% - 78px)}
+  .brand b{overflow-wrap:anywhere}
+  .nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:2px;width:100%;max-width:none;overflow:visible}
+  .nav a{padding:8px 4px;font-size:13px;text-align:center;white-space:nowrap}
+  .ljud{position:absolute;top:calc(15px + env(safe-area-inset-top,0px));right:max(18px,env(safe-area-inset-right,0px));margin:0;padding:6px 8px}
+}
+@media (max-width:370px){
+  .nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .nav a{padding:8px 1px;font-size:12px}
+}
