@@ -41,7 +41,7 @@ public/media/
   bilder/          Bilderna, nedskalade
   film/            Egna filmfiler
 inkorg/            Släpp nytt material här och kör npm run intag
-scripts/           Intaget och kontrollen
+scripts/           Intaget, kontrollen och Redigeringsbordet (scripts/admin/)
 src/               Själva sajten (kod). Behöver sällan röras.
 ```
 
@@ -51,6 +51,23 @@ src/               Själva sajten (kod). Behöver sällan röras.
 2. Kör `npm run intag`. Bilderna skalas ned, datum läses ur kamerans metadata och en fil skapas per verk i `content/verk/`.
 3. Justera titel, avdelning och vikt i de nya filerna om du vill.
 4. Kör `npm run kontroll`, som säger till om något saknas.
+
+## Redigeringsbordet
+
+Ett verktyg för att ändra verken utan att öppna filerna. Det finns bara på din egen dator och kommer aldrig med på den publicerade sajten.
+
+1. Kör `npm run dev`.
+2. Öppna **http://localhost:5173/admin.html**.
+
+Där kan du:
+
+- se alla verk som rutnät och sätta vikt med ett klick: **hjälte**, **frö**, **damm** eller **dold** (dold = `synlig: false`). Ett klick på "Ångra" i rutan som dyker upp tar tillbaka det.
+- klicka på en bild för att ändra titel, datum, epok, avdelning, ton och text. Spara med knappen eller Ctrl S (Cmd S på Mac). Bara de rader som ändrats skrivs om i filen.
+- dra in bilder var som helst i fönstret. De läggs i `inkorg/` och intaget körs direkt. Sätt sedan titel, epok, avdelning, ton och vikt på de nya verken.
+- välja fliken **Ärende**, klicka på verk i den ordning de ska visas och kopiera färdiga `::verk`-rader till en fil i `content/arenden/`.
+- se resultatet av `npm run kontroll` uppe till höger. Den körs om av sig själv när något ändras.
+
+Bordet svarar bara på `localhost`. Det går alltså inte att nå från en annan dator, inte ens med `npm run dev -- --host`.
 
 ## Ett verk
 
