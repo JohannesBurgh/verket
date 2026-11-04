@@ -7,11 +7,22 @@ import * as registret from "./vyer/registret.js";
 import * as arenden from "./vyer/arenden.js";
 import { stang, oppen } from "./visare.js";
 import { arPa, satt, klick } from "./ljud.js";
+import { EN, t, vag, las, andraSpraket } from "./sprak.js";
 
 const app = document.getElementById("app");
 document.getElementById("brand-namn").textContent = S.namn;
 document.getElementById("brand-under").textContent = S.undertitel;
 const fot = document.getElementById("fotnot"); fot.textContent = S.fotnot;
+
+// Menyn på sidans språk. Den engelska sidan har redan rätt namn i HTML, men koden är den som gäller.
+document.querySelectorAll(".nav a[data-r]").forEach((a) => { a.href = vag(a.dataset.r); if (EN) a.textContent = t(a.textContent.trim()); });
+document.querySelector(".brand").href = vag("ansokan");
+if (EN) { document.querySelector(".nav").setAttribute("aria-label", t("Huvudmeny")); document.getElementById("visare").setAttribute("aria-label", t("Handling")); }
+// Språkvalet leder till samma vy på det andra språket.
+const sprakval = document.querySelector(".sprakval");
+const ritaSprakval = () => { if (sprakval) sprakval.href = andraSpraket(); };
+// Adressen kan ändras utan att sidan får veta det (visaren, beslutet, föredragningens frö). Räkna om vid klick.
+if (sprakval) ["pointerenter", "focus", "click"].forEach((h) => sprakval.addEventListener(h, ritaSprakval));
 
 // Arkivrummet (3D) laddas först när någon går dit, så att resten av sajten är snabb.
 let rummet = null;
@@ -19,8 +30,8 @@ const laddaRummet = () => (rummet ||= import("./vyer/arkivrummet.js"));
 
 let sistaVy = null;
 async function route() {
-  const h = decodeURIComponent(location.hash.slice(1)) || "ansokan";
-  const [vy, ...rest] = h.split("-"), arg = rest.join("-");
+  const { vy: lastVy, arg } = las(), vy = lastVy || "ansokan";
+  ritaSprakval();
   if (oppen() && vy !== "verk") stang();
   const namn = vy === "verk" ? "registret" : vy === "arende" ? "arenden" : vy === "beslut" ? "ansokan" : vy;
   document.querySelectorAll(".nav a").forEach((a) => (a.dataset.r === namn ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
@@ -41,7 +52,8 @@ async function route() {
     case "beslut": ansokan.delat(app, arg); break;
     default: ansokan.render(app);
   }
-  document.title = vy === "ansokan" || !vy ? S.namn : `${{ registret: "Registret", verk: "Registret", arenden: "Ärenden", arende: "Ärende", bestallare: "För beställare", arkivrummet: "Arkivrummet", foredragning: "Föredragningen", beslut: "Beslut" }[vy] || ""} · ${S.namn}`;
+  const rubrik = { registret: t("Registret"), verk: t("Registret"), arenden: t("Ärenden"), arende: t("Ärende"), bestallare: t("För beställare"), arkivrummet: t("Arkivrummet"), foredragning: t("Föredragningen"), beslut: t("Beslut") }[vy];
+  document.title = rubrik ? `${rubrik} · ${S.namn}` : S.namn;
   if (vy !== "verk") window.scrollTo({ top: 0, behavior: "auto" });
 }
 addEventListener("hashchange", route);
@@ -49,7 +61,8 @@ route();
 
 addEventListener("keydown", (e) => {
   if (oppen() || /input|textarea/i.test(document.activeElement?.tagName || "")) return;
-  if (!location.hash || location.hash === "#ansokan") ansokan.tangent(e);
+  const { vy } = las();
+  if (!vy || vy === "ansokan") ansokan.tangent(e);
 });
 
 // Höjden på menyraden, så att Arkivrummet fyller resten av skärmen.
@@ -58,7 +71,7 @@ new ResizeObserver(() => document.documentElement.style.setProperty("--barh", ba
 
 // Ljud av/på
 const lb = document.getElementById("ljud");
-const ritaLjud = () => { lb.setAttribute("aria-pressed", arPa() ? "true" : "false"); lb.textContent = arPa() ? "Ljud på" : "Ljud av"; };
+const ritaLjud = () => { lb.setAttribute("aria-pressed", arPa() ? "true" : "false"); lb.textContent = arPa() ? t("Ljud på") : t("Ljud av"); };
 lb.addEventListener("click", () => { satt(!arPa()); ritaLjud(); klick(); });
 ritaLjud();
 

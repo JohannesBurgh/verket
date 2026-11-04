@@ -12,6 +12,8 @@ Sajten har fem delar:
 | **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet, Väggen och Mörkrummet, med en tidslinje som andas. Knappen "Återgivning" stänger av efterbehandlingen på svaga enheter. |
 | **För beställare** | Det torra: verksamhet, uppdragsgivare, kontakt. |
 
+Allt finns också på engelska, på `…/en/` (se *Den engelska versionen* nedan).
+
 All text och allt material ligger som vanliga filer i mappen `content/`. Det finns ingen databas och inget inloggningssystem att hålla reda på.
 
 ---
@@ -35,6 +37,7 @@ Claude ändrar filerna, kör kontrollen och publicerar.
 content/
   verket.md        Sajtens namn, kontaktuppgifter, inledning och texten "För beställare"
   ansokan.json     Frågorna i ansökan, svaren och poängen
+  en/              Den engelska versionen: samma struktur, bara texterna
   verk/            Ett verk per fil (foto, film eller YouTube)
   arenden/         En projektresa per fil
   bilder.json      Vilka storlekar varje bild finns i (skapas av intaget, rör inte)
@@ -149,6 +152,30 @@ utkast: true                 # syns i npm run dev, publiceras inte
 - **Publicera ett utkast:** ta bort raden `utkast: true` (eller skriv `utkast: false`). Allt annat än `false` räknas som utkast, så ett felskrivet värde hellre döljer ärendet än publicerar det.
 
 I utkasten står frågor till dig som `[JOHAN: …]`. På ärendets sida blir de numrerade (F1, F2 …) och samlas längst ned i ett *Föreläggande om komplettering*. Svara gärna med ett röstmemo där du säger numret före varje svar, lägg det i `inkorg/` och be Claude föra in svaren. `npm run kontroll` varnar om ett publicerat ärende fortfarande har obesvarade `[JOHAN: …]`.
+
+## Den engelska versionen
+
+Sajten finns också på engelska, som *The Office for Unexpected Solutions*, på adressen `…/en/`. Språkvalet ligger i menyn, längst till höger ("English" och "Svenska"). Det leder till samma vy på det andra språket: ett öppet verk, ett ärende, en föredragning eller ett beslut följer med.
+
+Verkfilerna i `content/verk/` delas mellan språken. Det engelska ligger i `content/en/`:
+
+```
+content/en/
+  verket.md        namn, inledning, fotnot och texten under For Clients
+  gransnitt.json   knappar, rubriker och meddelanden: svensk text till vänster, engelsk till höger
+  ansokan.json     ansökans frågor, svar och beslutstexter (bara texterna, se nedan)
+  verk.yml         verkens titlar och texter, avdelningarnas och epokernas namn
+  arenden/         ett ärende på engelska, med samma filnamn som det svenska
+```
+
+- **Nytt verk.** Lägg till titel och text under `verk:` i `content/en/verk.yml`. Tills dess visas den svenska titeln. Be gärna Claude: *"Översätt de nya verken till engelska."*
+- **Ansökan.** Den engelska filen innehåller bara texterna. Poäng, utslag och zonernas gränser hämtas alltid från `content/ansokan.json`, så ett beslut blir detsamma på båda språken. Ordningen på frågor, svar och zoner måste vara densamma i båda filerna. Nyckelorden under `tolkning` fungerar på båda sidorna: "coffee" tolkas som "kaffe" och tvärtom.
+- **Ärenden.** Ett ärende utan engelsk fil visas på svenska, med en upplysning om att det inte har översatts. Diarienummer och omslag hämtas från det svenska ärendet. Utkasten är dina arbetspapper och står på svenska även på den engelska sidan.
+- **Delade beslut.** Ett beslut har samma kod på båda språken. `#beslut-<kod>` och `#decision-<kod>` visar samma bilagor, med titlar på sidans språk.
+- **Adresserna** är engelska på den engelska sidan (`#register`, `#cases`, `#case-nordisk-saga`, `#work-057-rattan`, `#decision-…`). De svenska fungerar också där.
+- **Delning.** Bygget gör engelska delningsbilder och delningssidor: `…/en/case/nordisk-saga/`.
+- **Kontrollen.** `npm run kontroll` säger till om något saknar översättning: texter i koden, verk, avdelningar, epoker och ärenden. Den varnar också för tankstreck i de engelska texterna. Det som saknas visas på svenska, så sajten går aldrig sönder av en saknad översättning.
+- **Utveckling.** `npm run dev` visar den engelska sidan på http://localhost:5173/en/.
 
 ## Kontaktuppgifter
 

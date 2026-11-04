@@ -3,9 +3,25 @@ import arkiv from "virtual:arkiv";
 import STORLEKAR from "../content/bilder.json";
 import "./stil/bilder.css";
 
-export const A = arkiv;
-export const S = arkiv.verket;
-export const VERK = arkiv.verk.filter((v) => v.synlig);
+import { EN, t, epokNamn } from "./sprak.js";
+
+// På den engelska sidan (/en/) läggs texterna i content/en/ ovanpå de svenska.
+// Kontaktuppgifter, adress och allt som styr logiken kommer alltid från den svenska filen.
+const E = arkiv.en;
+export const S = EN ? { ...arkiv.verket, ...E.verket, bestallare: E.verket.bestallare || arkiv.verket.bestallare } : arkiv.verket;
+// sv_ansokan styr logiken på båda sidorna. en_ord är de engelska nyckelorden, som tolkas även på den svenska sidan.
+export const A = { ...arkiv, verket: S, ansokan: EN ? E.ansokan : arkiv.ansokan, sv_ansokan: arkiv.ansokan, en_ord: (E.ansokan.tolkning || []).map((r) => r.ord || []) };
+// Den engelska sidan ligger en mapp ned, så bilderna hämtas ett steg upp.
+const ROT = EN ? "../" : "";
+const medRot = (p) => (p ? ROT + p : p);
+// Verkfilerna delas mellan språken. Titel och text tas från content/en/verk.yml när de finns.
+// sv = den svenska titeln, som fortfarande går att söka på. textSprak = språket texten faktiskt är skriven på.
+export const VERK = arkiv.verk.filter((v) => v.synlig).map((v) => {
+  const x = { ...v, bild: medRot(v.bild), video: medRot(v.video), sv: v.titel, textSprak: "sv" };
+  if (!EN) return x;
+  const e = E.verk[v.id] || {};
+  return { ...x, titel: e.titel || v.titel, text: e.text || v.text, textSprak: e.text || !v.text ? "en" : "sv" };
+});
 export const byId = Object.fromEntries(VERK.map((v) => [v.id, v]));
 export const DIMS = ["allvar", "lek", "stilla", "rorligt", "scen", "manniska", "ljus", "skruv", "uppdrag", "konst"];
 // I förhandsvisningen (Claude-artefakten) går det inte att bädda in YouTube eller hämta deras tumnaglar.
@@ -34,12 +50,13 @@ export function el(tag, attrs = {}, ...kids) {
 
 export const arRunt = (v) => (v.ar == null ? null : Math.floor(v.ar));
 export function when(v) {
-  if (v.kanal === "Absurdimo" && !v.datum) return "år ej fastställt";
-  if (!v.datum) return "Odaterad";
-  return v.datum.slice(0, 4) + (v.gissat ? " (uppskattat)" : "");
+  if (v.kanal === "Absurdimo" && !v.datum) return t("år ej fastställt");
+  if (!v.datum) return t("Odaterad");
+  return v.datum.slice(0, 4) + (v.gissat ? " " + t("(uppskattat)") : "");
 }
 export function metaRad(v) {
-  return /\d{4}/.test(v.epok) && !v.gissat ? v.epok : `${v.epok} · ${when(v)}`;
+  const e = epokNamn(v.epok);
+  return /\d{4}/.test(v.epok) && !v.gissat ? e : `${e} · ${when(v)}`;
 }
 export function ytBild(v) {
   return `https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`;
@@ -47,7 +64,7 @@ export function ytBild(v) {
 
 // Bildkällor: storlekarna som intaget tagit fram (content/bilder.json), i AVIF och WebP med JPEG som reserv.
 function kallor(v) {
-  const post = v.bild && STORLEKAR[v.bild.replace(/^media\//, "")];
+  const post = v.bild && STORLEKAR[v.bild.replace(/^(\.\.\/)?media\//, "")];
   if (!post) return null;
   const mapp = v.bild.replace(/[^/]+$/, "storlek/"), namn = v.bild.replace(/^.*\/|\.[^.]+$/g, "");
   const set = (ext) => post.b.map(([w]) => `${ext === "jpg" && w === post.j ? v.bild : `${mapp}${namn}-${w}.${ext}`} ${w}w`).join(", ");
@@ -101,12 +118,12 @@ export function huvud(form, titel) {
 }
 export function kontaktRuta(dnr) {
   const rad = (k, v, href) =>
-    el("div", { class: "row" }, el("span", {}, k), v ? (href ? el("a", { href }, v) : el("span", { class: "mono" }, v)) : el("span", { class: "mono" }, "[läggs in i content/verket.md]"));
+    el("div", { class: "row" }, el("span", {}, k), v ? (href ? el("a", { href }, v) : el("span", { class: "mono" }, v)) : el("span", { class: "mono" }, t("[läggs in i content/verket.md]")));
   return el("div", { class: "kontakt" },
-    el("p", { style: "margin:0 0 6px;font-weight:700" }, "Handläggning begärs per e-post eller telefon."),
-    rad("E-post", S.epost, S.epost ? "mailto:" + S.epost + (dnr ? "?subject=" + encodeURIComponent("Ärende " + dnr) : "") : null),
-    rad("Telefon", S.telefon, S.telefon ? "tel:" + S.telefon.replace(/\s/g, "") : null),
+    el("p", { style: "margin:0 0 6px;font-weight:700" }, t("Handläggning begärs per e-post eller telefon.")),
+    rad(t("E-post"), S.epost, S.epost ? "mailto:" + S.epost + (dnr ? "?subject=" + encodeURIComponent(t("Ärende {dnr}", { dnr })) : "") : null),
+    rad(t("Telefon"), S.telefon, S.telefon ? "tel:" + S.telefon.replace(/\s/g, "") : null),
     S.instagram ? rad("Instagram", S.instagram, "https://instagram.com/" + S.instagram.replace(/^@/, "")) : null,
-    dnr ? rad("Ange", dnr) : null);
+    dnr ? rad(t("Ange"), dnr) : null);
 }
 export const idag = () => new Date().toISOString().slice(0, 10);

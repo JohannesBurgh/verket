@@ -46,8 +46,11 @@ for (const f of fs.existsSync(AR) ? fs.readdirSync(AR).filter((f) => f.endsWith(
   for (const f of fs.readdirSync(VERK).filter((f) => f.endsWith(".md"))) { const b = matter(fs.readFileSync(path.join(VERK, f), "utf8")).data.bild; if (b && fs.existsSync(path.join(MEDIA, b)) && !komplett(b, reg[b])) n++; }
   if (n) varn.push(`${n} bilder saknar storlekar (AVIF, WebP). Kör npm run bildstorlekar.`); }
 try { JSON.parse(fs.readFileSync("content/ansokan.json", "utf8")); } catch (e) { fel.push("content/ansokan.json: felaktig JSON (" + e.message + ")"); }
+// Den engelska versionen (uppdrag 9): content/en/.
+const engelska = (await import("./sprakkontroll.mjs")).kontrolleraEngelska();
+fel.push(...engelska.fel); varn.push(...engelska.varn);
 varn.forEach((v) => console.log("varning: " + v));
 fel.forEach((v) => console.log("FEL: " + v));
 const arendeRad = `${antalArenden} ärenden` + (antalUtkast ? `, varav ${antalUtkast} utkast som inte publiceras` : "");
-console.log(fel.length ? `\n${fel.length} fel.` : `\nAllt i ordning. ${ids.size} verk. ${arendeRad}.`);
+console.log(fel.length ? `\n${fel.length} fel.` : `\nAllt i ordning. ${ids.size} verk. ${arendeRad}. ${engelska.rad}`);
 process.exit(fel.length ? 1 : 0);

@@ -68,3 +68,41 @@ export function sokRegistret(q, filter = () => true) {
   const s = q.trim().toLowerCase();
   return VERK.filter((v) => filter(v) && (!s || (v.titel + " " + v.epok + " " + (v.kanal || "") + " " + (v.datum || "")).toLowerCase().includes(s)));
 }
+
+// ---------- den engelska sidan (uppdrag 9) ----------
+// content/en/ läses på samma sätt som scripts/sprak.mjs gör, så att testerna vet vad den engelska sidan borde visa.
+const EN_MAPP = path.join(CONTENT, "en");
+const lasEn = (p, tolk) => {
+  const f = path.join(EN_MAPP, p);
+  if (!fs.existsSync(f)) return null;
+  const t = fs.readFileSync(f, "utf8");
+  return tolk === "json" ? JSON.parse(t) : tolk === "yaml" ? matter.engines.yaml.parse(t) || {} : matter(t);
+};
+const ENVERK = lasEn("verk.yml", "yaml") || {};
+const ORD = lasEn("gransnitt.json", "json") || {};
+const ENANS = lasEn("ansokan.json", "json") || {};
+export const EN = {
+  verket: { ...VERKET, ...(lasEn("verket.md")?.data || {}) },
+  /** Gränssnittets text på engelska, som t() på sajten. */
+  t: (sv, v) => { const s = ORD[sv] || sv; return v ? s.replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m)) : s; },
+  /** Verkets titel på engelska. */
+  titel: (v) => ENVERK.verk?.[v.id]?.titel || v.titel,
+  avdelning: (a) => ENVERK.avdelningar?.[a] || a,
+  epok: (e) => ENVERK.epoker?.[e] || e,
+  beslut: Object.fromEntries(Object.entries(ANSOKAN.beslut).map(([k, b]) => [k, { ...b, ...(ENANS.beslut?.[k] || {}) }])),
+  underskrift: ENANS.underskrift?.rubrik || ANSOKAN.underskrift.rubrik,
+  arende: (id) => lasEn(`arenden/${id}.md`)?.data || null,
+};
+
+// Samma text som metaRad() på den engelska sidan.
+export function metaRadEn(v) {
+  const nar = v.kanal === "Absurdimo" && !v.datum ? EN.t("år ej fastställt") : !v.datum ? EN.t("Odaterad") : v.datum.slice(0, 4) + (v.gissat ? " " + EN.t("(uppskattat)") : "");
+  return /\d{4}/.test(v.epok) && !v.gissat ? EN.epok(v.epok) : `${EN.epok(v.epok)} · ${nar}`;
+}
+// Hittar verket bakom en bilaga på den engelska sidan.
+export function hittaVerkEn(titel, meta) {
+  let kand = VERK.filter((v) => EN.titel(v) === titel?.trim());
+  if (kand.length > 1 && meta) kand = kand.filter((v) => metaRadEn(v) === meta.trim());
+  if (kand.length !== 1) throw new Error(`Kan inte avgöra vilket verk som visas på den engelska sidan: "${titel}" (${kand.length} träffar).`);
+  return kand[0];
+}
