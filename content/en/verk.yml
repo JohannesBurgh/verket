@@ -15,6 +15,11 @@ avdelningar:
 
 # Epokerna. Till vänster det svenska namnet i verkfilerna.
 epoker:
+  "Generativ AI, 2025": "Generative AI, 2025"
+  "Produktfoto, Dialogbox": "Product photography, Dialogbox"
+  "Lärobok, generativ AI, 2025": "Textbook, generative AI, 2025"
+  "Evenemang, 2025–2026": "Events, 2025–2026"
+  "Marketing Levels, 2022–2026": "Marketing Levels, 2022–2026"
   "Abstrakt, 2011": "Abstract, 2011"
   "Absurdimo": "Absurdimo"
   "Dans": "Dance"
@@ -437,3 +442,217 @@ verk:
   v01-riksteaterns-logga-animerad:
     titel: "Riksteatern’s logo, animated"
     text: "Animated by myself. The clip is played here."
+  106-generated-image-august-28-2025-5-01pm:
+    titel: "The restaurant, draft"
+  107-dsc3153:
+    titel: "The cards"
+  108-dsc2962:
+    titel: "Conversation at the table"
+  109-modig-2025-marketing-foundations-book-fi:
+    titel: "The categories"
+  110-260211-cmo-club-frukosttraff-ai-seo-med-:
+    titel: "The breakfast meeting"
+  111-dsc2387:
+    titel: "The woman and the dog"
+  112-dsc3062:
+    titel: "Games night"
+  113-modig-2025-customer-behavior-ebook-001:
+    titel: "The authors"
+  114-modig-2025-marketing-foundations-book-fi:
+    titel: "Marketing Foundations, cover"
+  115-dsc3877:
+    titel: "The guests"
+  116-druva-thumb-1:
+    titel: "En druva i solen"
+  117-11-d-4-final:
+    titel: "Meeat Burgers, logotype"
+  118-dsc3256:
+    titel: "The Dialogbox"
+  119-generated-image-august-29-2025-2-21pm-1:
+    titel: "Father and son eating"
+  120-dsc3802:
+    titel: "Two guests"
+  121-bella-thumb-2:
+    titel: "The red skirts"
+  122-dsc4087:
+    titel: "The couple with the book"
+  123-app-bokning-a-close-up-of-a-person-holdi:
+    titel: "The booking on the phone"
+  124-crw-0740:
+    titel: "The cap"
+  125-thumb-storytelling-eng:
+    titel: "Cover, Storytelling"
+  126-modig-2025-customer-behavior-ebook-3-001:
+    titel: "The heads"
+  127-dsc3562:
+    titel: "The couple"
+  128-dsc2637-redigera-2:
+    titel: "The Dialogbox on the table"
+  129-thumb-affarsstrategi:
+    titel: "Cover, Business strategy"
+  130-vardet-thumb-1:
+    titel: "Värdet av konst, the reading"
+  131-dsc1722-edit:
+    titel: "The lecture"
+  132-black-and-white-glossy-interior-photog-e:
+    titel: "The gallery"
+  133-dsc2929:
+    titel: "She listens"
+  134-dsc0576:
+    titel: "The wedding cake"
+  135-an-interior-of-a-swedish-upper-class-ham:
+    titel: "Meeat Burgers, dinner"
+  136-ba7a0736:
+    titel: "The woman with the glasses"
+  137-vardet-thumb-2:
+    titel: "Värdet av konst, the book"
+  138-plint-a3a4378:
+    titel: "Plint, the vaulting box"
+  139-modig-2025-customer-behavior-ebook-4-001:
+    titel: "Hands raised"
+  140-exterior-generated-image-september-01-20:
+    titel: "Meeat Burgers, the facade"
+  141-bella-thumb-1:
+    titel: "Bella Figura, the rehearsal"
+  142-a-busy-industrial-port-with-containers-9:
+    titel: "The harbour"
+  143-thumb-certified-brand-strategist:
+    titel: "Cover, Certified Brand Strategist"
+  144-perfektion1-tyst-teater:
+    titel: "Perfektion"
+  145-perfektion2-tyst-teater:
+    titel: "Perfektion II"
+  146-abstract-glossy-black-and-white-photog-0:
+    titel: "The marble stairs II"
+  147-dsc1737:
+    titel: "The lecturer"
+  148-a-father-and-son-having-a-beautiful-mo-4:
+    titel: "Father and son by the window"
+  149-modig-2025-marketing-foundations-book-fi:
+    titel: "The dark side of sales"
+  150-crw-6491:
+    titel: "The embrace"
+  151-gen4-add-logotype-img-2-to-the-white-bri:
+    titel: "Meeat Burgers, the wall"
+  152-mg-7155:
+    titel: "The smile"
+  153-crw-2898:
+    titel: "Two in evening light"
+  154-dsc1819:
+    titel: "The audience"
+  155-dsc1763:
+    titel: "The notes"
+  156-6e63453154593abde29c4185b76ccbf4-copy-1:
+    titel: "The restaurant, the booths"
+  157-conversation-starter-1:
+    titel: "The conversation card"
+  158-butterfly-thumb-1:
+    titel: "Madame Butterfly, the costume"
+  159-jorge-castro-16-9-ml-logga:
+    titel: "The lecturer at the screen"
+  160-black-and-white-glossy-lifestyle-photo-6:
+    titel: "The villa by the pool"
+  161-modig-2025-customer-behavior-ebook-2-001:
+    titel: "The hands that meet"
+  162-modig-2025-customer-behavior-ebook-6-001:
+    titel: "The rainbow in the hand"
+  163-crw-8991:
+    titel: "Siesta, black and white"
+  164-mg-3401:
+    titel: "The frogs III"
+  165-black-and-white-glossy-image-of-two-ex-c:
+    titel: "The handshake"
+  166-dsc3661:
+    titel: "The glasses and the book"
+  167-mg-0909:
+    titel: "Portrait in a blue wig"
+  168-crw-8991:
+    titel: "Siesta, in colour"
+  169-modig-2025-marketing-foundations-book-fi:
+    titel: "The diamond"
+  170-generated-image-september-01-2025-1-19pm:
+    titel: "Blosserum, the smile"
+  171-dsc3897:
+    titel: "Three with the book"
+  172-modig-2025-customer-behavior-ebook-5-001:
+    titel: "The customer journey in five steps"
+  173-generated-image-august-28-2025-4-57pm:
+    titel: "Meeat Burgers, the kitchen"
+  174-editorial-lifestyle-magazine-cover-bl-5f:
+    titel: "The house by the sea"
+  175-mg-0515:
+    titel: "Blue wigs"
+  176-dsc3310:
+    titel: "The question card"
+  177-abstract-glossy-black-and-white-photog-0:
+    titel: "The marble stairs"
+  178-crw-8095:
+    titel: "The man in the blue shirt"
+  179-mg-3297:
+    titel: "The frogs"
+  180-plint-mg-0022:
+    titel: "Plint, from above"
+  181-color-logo-with-background:
+    titel: "Blosserum, logotype"
+  182-mg-3335:
+    titel: "The frogs II"
+  183-plint-mg-0140:
+    titel: "Plint, the wall bars"
+  184-talk-58144:
+    titel: "The contract"
+  185-84a3195-fotograf-johan-soderberg:
+    titel: "Virpi Pahkinen II"
+  186-dsc3578:
+    titel: "The opening"
+  v02-allt-som-ar-vart-reportage:
+    titel: "Allt som är värt, report"
+  v03-almedalen-sketch:
+    titel: "Almedalen, sketch"
+  v04-bella-figura-intervju:
+    titel: "Bella Figura, interview"
+  v05-bella-figura-reptrailer:
+    titel: "Bella Figura, repertoire trailer"
+  v06-clio-filmtrailer:
+    titel: "Clio, film trailer"
+  v07-clio-i-klassrummet:
+    titel: "Clio in the classroom"
+  v08-demokratins-granser-vinjett:
+    titel: "Demokratins gränser, ident"
+  v09-dimensioner-bakom-kulisserna:
+    titel: "Dimensioner, behind the scenes"
+  v10-evaluating-digital-sources:
+    titel: "Evaluating digital sources"
+  v11-fatta-metoo:
+    titel: "FATTA, #metoo"
+  v12-fotografiska-lanseringsfilm:
+    titel: "Fotografiska, launch film"
+  v13-historia-pa-15-sekunder:
+    titel: "History in 15 seconds"
+  v14-in-the-middle-somewhat-elevated-reptrail:
+    titel: "In the Middle, Somewhat Elevated, repertoire trailer"
+  v15-karlekstrailer:
+    titel: "Love trailer"
+  v16-knaster-trailer:
+    titel: "Knaster, trailer"
+  v17-marketing-levels-partners-kapitel-0:
+    titel: "Marketing Levels Partners, chapter 0"
+  v18-nina-simone-projektion:
+    titel: "Nina Simone (projection)"
+  v19-nour-el-refai-en-komisk-depression-proje:
+    titel: "Nour El Refai, En komisk depression (projection)"
+  v20-perfektion-livesandning:
+    titel: "Perfektion, live broadcast"
+  v21-run-for-your-life-kompendium:
+    titel: "Run for your life, compendium"
+  v22-salong-apart:
+    titel: "Salong Apart"
+  v23-skimrande:
+    titel: "Skimrande"
+  v24-sveakbt-reel:
+    titel: "SveaKBT, reel"
+  v25-utdrag-ur-forestallningar:
+    titel: "Excerpts from performances"
+  v26-vardet-av-konst-lanseringsfest:
+    titel: "Värdet av konst, launch party"
+  v27-waiting:
+    titel: "Waiting"

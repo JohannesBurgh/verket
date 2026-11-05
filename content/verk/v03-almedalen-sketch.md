@@ -1,14 +1,14 @@
 ---
 titel: "Almedalen, sketch"
-datum: null
+datum: "2017-06-17"
 typ: video
 video: "film/v03-almedalen-sketch.mp4"
 format: 1.778
-epok: ""
-avdelning: "Övrigt"
+epok: "Teater"
+avdelning: "Skruven"
 vikt: "frö"
 synlig: true
-ton: {rorligt: 1}
+ton: {rorligt: 1, skruv: 1, lek: 0.8}
 bild: "bilder/v03-almedalen-sketch.jpg"
 dom: "ja"
 original: "RIKSTEASTERN-FACEBOOK-VIRALT-KLIPP-ALMEDALEN_sketch_170617.mp4"

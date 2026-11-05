@@ -1,15 +1,15 @@
 ---
-titel: "‎Modig (2025) Marketing Foundations BOOK FINAL 1.‎001"
-datum: null
+titel: "Kategorierna"
+datum: "2025"
 typ: foto
 bild: "bilder/109-modig-2025-marketing-foundations-book-fi.jpg"
 format: 1.778
-epok: ""
-avdelning: "Övrigt"
+epok: "Lärobok, generativ AI, 2025"
+avdelning: "Uppdragen"
 vikt: "damm"
 synlig: true
 farg: {nyans: 0, mattnad: 0, ljushet: 0.97}
-ton: {stilla: 1}
+ton: {konst: 0.8, uppdrag: 1, skruv: 0.4, stilla: 1}
 original: "‎Modig (2025) Marketing Foundations BOOK_FINAL_1.‎001.jpeg"
 dom: "kanske"
 kalla: "GenAi användning"
