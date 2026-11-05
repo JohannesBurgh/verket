@@ -1,7 +1,7 @@
 ---
 titel: "Clio"
-diarienummer: "VOL 2017/0401"
-period: "2017–2022"
+diarienummer: "VOL 2018/0401"
+period: "2018–2022"
 status: "Avgjort"
 omslag: "film-fotografiskas-kok-i-360"
 ingress: "Film i ett helt digitalt läromedel för grundskolan. Film som för eleverna ut ur klassrummet."
@@ -9,7 +9,7 @@ ingress: "Film i ett helt digitalt läromedel för grundskolan. Film som för el
 
 ## Inkom
 
-Clio är Bonnier Educations satsning på ett helt digitalt läromedel. Bonnier köpte 2015 Danmarks största digitala läromedelsförlag och började göra en svensk version. Johan sökte tjänsten som videoproducent 2017 och arbetade i det internationella kreativa teamet, med huvudkontor i Köpenhamn. Den svenska delen satt i DN-skrapan, cirka 90 personer, varav ett 70-tal redaktörer.
+Clio är Bonnier Educations satsning på ett helt digitalt läromedel. Bonnier köpte 2015 Danmarks största digitala läromedelsförlag och började göra en svensk version. Johan sökte tjänsten som videoproducent och arbetade från 2018 i det internationella kreativa teamet, med huvudkontor i Köpenhamn. Den svenska delen satt i DN-skrapan, cirka 90 personer, varav ett 70-tal redaktörer.
 
 Filmerna ingick i samma läromedel, för alla skolans ämnen och framför allt årskurs 4 till 9. Johan arbetade mest med samhällsorienterande ämnen.
 
@@ -21,7 +21,7 @@ Filmen i Clio var sällan en förklaring. Den skulle vidga klassrummet och föra
 
 ## Material
 
-Spies in the east är introt till ett arbetsområde i engelska där eleverna under flera lektioner spelade spioner. De fick olika roller och olika information, som de bara kunde locka ur varandra genom att tala engelska. I den här filmen får de sitt uppdrag. Sedan följde 360-bilder med ledtrådar och interaktiva filmer med olika slut.
+Spies in the east är introt till ett arbetsområde i engelska där eleverna under flera lektioner spelade spioner i Östtyskland under kalla kriget. De fick olika roller och olika information, som de bara kunde locka ur varandra genom att tala engelska. I den här filmen får de sitt uppdrag. Sedan följde 360-bilder med ledtrådar och interaktiva filmer med olika slut.
 
 Fotografiskas kök i 360° är ett virtuellt studiebesök i Fotografiskas ekologiska kök, gjort i samarbete med Fotografiska. Det spelades in med en hyrd 360-kamera i 8K, det senaste för sin tid, just när Oculus hade släppt sin första version för film. Introt är filmat med en 360-kamera under Johans drönare.
 
