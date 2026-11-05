@@ -15,4 +15,4 @@ dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_OPERAN"
 datum_gissat: true
 ---
-En svartvit bild från en lanseringsfest. En person läser högt för en samling åhörare med glas i händerna. Rummet är fullt.
+En svartvit bild från en lanseringsfest. Någon talar i mikrofon inför en samling gäster. Rummet är fullt.
