@@ -11,7 +11,7 @@ adress: "https://johannesburgh.github.io/verket/"
 # Verket på delningsbilden för startsidan (filnamnet utan .md). Tomt = det första hjälteverket.
 delningsverk: ""
 # Kontaktuppgifter. Lämna tomt ("") så visas en platshållare.
-epost: ""
+epost: "mr.southmountain@gmail.com"
 telefon: ""
 instagram: ""
 # Inledningen på ansökans första sida.

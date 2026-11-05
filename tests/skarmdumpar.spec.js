@@ -88,7 +88,7 @@ test.describe("Skärmdumpar", () => {
     await bild("./en/#application", "20-en-ansokan-start");
     await bild("./en/#register", "21-en-registret", { helsida: false });
     await bild("./en/#cases", "22-en-arenden");
-    await bild("./en/#case-nordisk-saga", "23-en-arende");
+    await bild("./en/#case-riksteatern", "23-en-arende");
     await bild("./en/#clients", "24-en-bestallare");
     await page.goto("./en/#application");
     await page.getByRole("button", { name: "Simplified procedure (I am in a hurry)" }).click();

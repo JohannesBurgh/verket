@@ -1,6 +1,6 @@
 ---
 titel: "Deejay Spider, Intellect"
-datum: null
+datum: "2025"
 typ: youtube
 youtube: "RZVAW8F49tI"
 bild: "bilder/film-deejay-spider-intellect.jpg"

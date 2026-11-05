@@ -1,22 +1,19 @@
 ---
 titel: "Värdet av konst"
-diarienummer: "VOL UTK 2026/11"
+diarienummer: "VOL 2025/1209"
 period: "december 2025"
 status: "Avgjort"
-utkast: true
 omslag: "v26-vardet-av-konst-lanseringsfest"
-ingress: "Lanseringen av boken Värdet av konst, i film och stillbild."
+ingress: "Releasefilm för boken Värdet av konst, filmad på releasefesten."
 ---
 
 ## Inkom
 
-Ärendet gäller lanseringsfesten för boken Värdet av konst. Filmens filnamn anger datumet 2025-12-09.
-
-[JOHAN: Vem gav ut boken, och vem beställde filmen och bilderna?]
+Boken är skriven av Erik Modig, grundare av Marketing Levels, tillsammans med sin fru Karolina. Johan gjorde releasefilmen för sociala medier, filmad på releasefesten. Inte mer än så.
 
 ## Beredning
 
-[JOHAN: Var du ensam på plats? Filmade och fotograferade du samtidigt?]
+Johan var ensam på plats och filmade och fotograferade samtidigt.
 
 ## Material
 
@@ -24,4 +21,4 @@ ingress: "Lanseringen av boken Värdet av konst, i film och stillbild."
 
 ## Beslut
 
-[JOHAN: Hur användes filmen och bilderna efteråt?]
+Filmen och bilderna användes i sociala medier, på Erik och Karolinas egna konton.

@@ -1,7 +1,6 @@
 ---
 titel: "In memoriam"
-datum: "2013"
-datum_gissat: true
+datum: "2022"
 typ: youtube
 youtube: "DQP2ugerrtk"
 bild: "bilder/film-in-memoriam.jpg"
