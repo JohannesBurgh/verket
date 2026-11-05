@@ -2,6 +2,16 @@
 
 Stora, fristående uppdrag för Claude Code på webben (claude.ai/code). Varje uppdrag körs i en egen session, på en egen gren, och lämnas som en pull request som Johan godkänner eller slänger. Uppdragen i våg 1 kan köras samtidigt.
 
+## Läget (5 november 2026)
+
+Uppdrag 1 till 13 är utförda och publicerade. Det som återstår är Johans:
+
+- **Kontaktuppgifter:** `epost` och `telefon` i `content/verket.md` är tomma och visas som platshållare.
+- **Ärendeutkasten** (11 stycken, `utkast: true`) har frågor märkta `[JOHAN: …]`. Svara med röstmemo eller text, så skriver Claude in svaren och publicerar ärendet.
+- **Långa filmer till YouTube:** elva filmer är för långa för att ligga på sajten. Ladda upp dem som olistade på YouTube och lägg länkarna i `inkorg/youtube.txt`. Listan: Hinduismen (Bonnier), Fotografiska med Mattias Klum, Eduflix: Vad är en diktatur, Så här styrs USA, Utforskandet av rymden, Decemberfestivalen, Mooms-teatern, Run for your life (projektfilm), Mask & Kostym, Madame Butterfly (GöteborgsOperan), Längtan är min resa.
+- **Originalbilder:** de äldre fotona är 720 pixlar breda. `npm run bildstorlekar -- --lista` visar vilka original som bör läggas i inkorgen.
+- **Storlek:** sajten är cirka 600 MB av GitHub Pages 1 GB. Nya långa filmer ska till YouTube, inte till `public/media/film/`.
+
 ## Så startar Johan ett uppdrag
 
 Öppna claude.ai/code, välj repot `verket` och klistra in (byt N mot uppdragets nummer):
