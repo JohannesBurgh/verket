@@ -118,7 +118,7 @@ export function huvud(form, titel) {
 }
 export function kontaktRuta(dnr) {
   const rad = (k, v, href) =>
-    el("div", { class: "row" }, el("span", {}, k), v ? (href ? el("a", { href }, v) : el("span", { class: "mono" }, v)) : el("span", { class: "mono" }, t("[läggs in i content/verket.md]")));
+    el("div", { class: "row" }, el("span", {}, k), v ? (href ? el("a", { href }, v) : el("span", { class: "mono" }, v)) : el("span", { class: "mono" }, t("Uppgiften kompletteras.")));
   return el("div", { class: "kontakt" },
     el("p", { style: "margin:0 0 6px;font-weight:700" }, t("Handläggning begärs per e-post eller telefon.")),
     rad(t("E-post"), S.epost, S.epost ? "mailto:" + S.epost + (dnr ? "?subject=" + encodeURIComponent(t("Ärende {dnr}", { dnr })) : "") : null),
