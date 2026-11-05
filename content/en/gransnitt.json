@@ -1,6 +1,5 @@
 {
   "_hjalp": "Gränssnittets texter på engelska. Till vänster den svenska texten exakt som den står i koden, till höger den engelska. {namn} är ett värde som fylls i och ska stå kvar. | delar en rubrik i rader. Saknas en text visas den svenska. npm run kontroll listar de texter som saknas och de som inte längre används.",
-
   "Ansökan": "Application",
   "Ärenden": "Cases",
   "Registret": "The Register",
@@ -13,7 +12,6 @@
   "Ljud av": "Sound off",
   "Ärende": "Case",
   "Beslut": "Decision",
-
   "år ej fastställt": "year not established",
   "Odaterad": "Undated",
   "(uppskattat)": "(estimated)",
@@ -23,14 +21,12 @@
   "Ärende {dnr}": "Case {dnr}",
   "Telefon": "Telephone",
   "Ange": "Quote",
-
   "Föregående": "Previous",
   "Nästa": "Next",
   "Nästa →": "Next →",
   "← Förra": "← Previous",
   "Stäng": "Close",
   "Spela på YouTube": "Play on YouTube",
-
   "”{s}”": "“{s}”",
   "Sökandes cirkel": "The applicant’s circle",
   "Ansökan om kreativ insats": "Application for Creative Intervention",
@@ -91,7 +87,6 @@
   "Adressen har kopierats. Den som öppnar adressen tar del av samma beslut.": "The address has been copied. Anyone who opens the address will be served the same decision.",
   "Beslutets adress": "Address of the decision",
   "Adressen kunde inte kopieras automatiskt. Markera och kopiera den nedan.": "The address could not be copied automatically. Select and copy it below.",
-
   "Avgjort": "Decided",
   "Under handläggning": "Pending",
   "Utkast": "Draft",
@@ -106,16 +101,12 @@
   "← Alla ärenden": "← All cases",
   "Ansök om kreativ insats": "Apply for creative intervention",
   "Upplysningar · Utgåva 2026:1": "Information · Edition 2026:1",
-
   "förenklat förfarande": "simplified procedure",
   "Öppna ärendet": "Open the case",
   "Ärende {dnr}, {titel}. Ett papper från {namn} med en stämpel.": "Case {dnr}, {titel}. A document from {namn} with a stamp.",
-
   "Arkivrummet kan inte visas på den här enheten.": "The Archive Room cannot be displayed on this device.",
   "Webbläsaren saknar stöd för tredimensionell återgivning. Samtliga handlingar finns i ": "The browser does not support three-dimensional rendering. All documents are available in ",
-  "Arkivrummet, ett tredimensionellt rum med alla handlingar": "The Archive Room, a three-dimensional room containing all documents",
   "[ handlingarna hämtas ]": "[ documents are being retrieved ]",
-  "Tidslinje. Klicka på ett år för att lyfta fram det.": "Timeline. Click a year to bring it forward.",
   "Fältet": "The Field",
   "Rullen": "The Reel",
   "Molnet": "The Cloud",
@@ -141,7 +132,6 @@
   "Handlingar som inte har framkallats": "Documents that have not been developed",
   "anses inte ha inkommit.": "are deemed not to have been received.",
   "Ljus tänds först när ärendet är avgjort.": "Lights go on once the case is decided.",
-
   "Fotografi": "Photography",
   "Stillbild. Ur arkivet, i den ordning fröet anger.": "Still image. From the archive, in the order given by the seed.",
   "Rörlig bild": "Moving image",
@@ -198,7 +188,6 @@
   "Adressen kopierad": "Address copied",
   "{a} av {b}": "{a} of {b}",
   "Föredragningen förbereds · {a} av {b} handlingar": "The presentation is being prepared · {a} of {b} documents",
-
   "Allt": "All",
   "Stilla": "Still",
   "Rörligt": "Moving",
@@ -210,5 +199,21 @@
   "Inga handlingar matchar sökningen.": "No documents match the search.",
   "{n} st": "{n} items",
   "Sök titel, år, kanal …": "Search title, year, channel …",
-  "Sök i registret": "Search the Register"
+  "Sök i registret": "Search the Register",
+  "hjälte": "hero",
+  "film": "film",
+  "Slag": "Kind",
+  "Avdelning": "Department",
+  "Förteckning": "Register",
+  "Föredra utan rummet": "Present without the room",
+  "Föredra i Arkivrummet": "Present in the Archive Room",
+  "Stanna i rummet": "Stay in the room",
+  "Utan rummet": "Without the room",
+  "I Arkivrummet": "In the Archive Room",
+  "Föredragningen i Arkivrummet": "The Presentation in the Archive Room",
+  "Arkivrummet, ett tredimensionellt rum med alla handlingar. Pilarna flyttar blicken. Enter öppnar handlingen mitt i bild.": "The Archive Room, a three-dimensional room holding all records. The arrow keys move the view. Enter opens the record in the centre.",
+  "Tidslinje. Klicka på ett år för att lyfta fram det. Med tangentbordet: pilarna väljer år, Enter öppnar en handling från året.": "Timeline. Click a year to bring it forward. With the keyboard: the arrows select a year, Enter opens a record from that year.",
+  "Föredragningen, spelad här i rummet": "The Presentation, played here in the room",
+  "Föredra arkivet": "Present the archive",
+  "Inget år valt": "No year selected"
 }

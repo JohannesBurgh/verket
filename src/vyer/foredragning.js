@@ -4,13 +4,17 @@
 // Sekvensen är en tidslinje av avsnitt, mätt i slag (80 slag i minuten). Allt som rör sig är
 // Web Animations som går att pausa och spola, och ljudet syntetiseras med WebAudio mot samma klocka.
 // Med prefers-reduced-motion blir det ett lugnt bildspel: samma urval, bara toningar.
+//
+// Samma föredragning kan också spelas inne i Arkivrummet (#arkivrummet-foredragning-<frö>).
+// Då står spelaren för klockan, ljudet, texterna och kontrollerna, och rummet för bilderna
+// (se src/rum/foredragning.js). Ett frö ger samma föredragning på båda ställena.
 import "../stil/foredragning.css";
 import { VERK, S, el, kanalFarg, metaRad, ytBild, PREVIEW, idag } from "../data.js";
 import { oppna, oppen as visareOppen } from "../visare.js";
 import { arPa } from "../ljud.js";
 import { t, vag, las, arVy } from "../sprak.js";
 
-const BPM = 80, SLAG = 60 / BPM, MS = SLAG * 1000;
+export const BPM = 80, SLAG = 60 / BPM, MS = SLAG * 1000;
 const POOL = VERK.filter((v) => v.vikt !== "damm");
 const PEKSKARM = matchMedia("(hover: none)").matches;
 const EASE = "cubic-bezier(.2,.8,.2,1)";
@@ -18,7 +22,7 @@ const EASE = "cubic-bezier(.2,.8,.2,1)";
 // ---------- frö ----------
 const TECKEN = "abcdefghjkmnpqrstuvwxyz23456789";
 export const nyttFro = () => Array.from({ length: 5 }, () => TECKEN[Math.floor(Math.random() * TECKEN.length)]).join("");
-const tvatta = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 16);
+export const tvatta = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 16);
 function slump(fro) {
   let h = 2166136261;
   for (const c of fro) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); }
@@ -205,11 +209,11 @@ function bakgrund(src) {
   im.src = src;
   return c;
 }
-function lapp(k, s, rad, extra) {
+export function lapp(k, s, rad, extra, slag0 = 0.75) {
   const l = el("div", { class: "fd-lapp" }, el("span", { class: "mono" }, t("Bilaga {nr} av {n}", { nr: s.nr, n: k.plan.verk.length })), el("b", {}, s.v.titel), el("span", { class: "mono" }, rad), extra || null);
-  return k.inn(l, 0.75, "lapp", 0.7);
+  return k.inn(l, slag0, "lapp", 0.7);
 }
-function stampel(text, liten) {
+export function stampel(text, liten) {
   return el("div", { class: "fd-stampel", "aria-hidden": "true" }, text, liten ? el("small", {}, liten) : null);
 }
 // En film som stillbild, tonad i kanalens färger. Cyan markerar rörlig bild.
@@ -365,9 +369,10 @@ const BYGG = {
     const p = k.plan, knapp = (text, fn, primar) => el("button", { type: "button", class: "fd-knapp" + (primar ? " primar" : ""), onclick: fn }, text);
     const knappar = el("div", { class: "fd-slutknappar" },
       knapp(t("Föredra igen"), () => k.styr.omstart(), true),
-      knapp(t("Ny föredragning"), () => { location.hash = vag("foredragning", nyttFro()); }),
+      knapp(t("Ny föredragning"), () => { location.hash = k.styr.adress(nyttFro()); }),
+      knapp(k.styr.iRummet ? t("Föredra utan rummet") : t("Föredra i Arkivrummet"), () => k.styr.byt()),
       knapp(t("Kopiera adressen"), (e) => k.styr.kopiera(e.currentTarget)),
-      el("a", { class: "fd-knapp", href: vag("registret") }, t("Till Registret")));
+      k.styr.iRummet ? el("a", { class: "fd-knapp", href: vag("arkivrummet") }, t("Stanna i rummet")) : el("a", { class: "fd-knapp", href: vag("registret") }, t("Till Registret")));
     k.inn(knappar, 4, "upp", 0.8);
     k.ticks.push((lok) => { const av = lok < 4 * SLAG; if (knappar.inert !== av) knappar.inert = av; });
     const kontakt = [S.epost && el("a", { href: "mailto:" + S.epost }, S.epost), S.telefon && el("a", { href: "tel:" + S.telefon.replace(/\s/g, "") }, S.telefon)].filter(Boolean);
@@ -456,6 +461,9 @@ const LJUD = {
 
 // ---------- spelaren ----------
 let aktivt = null;
+// Byter man mellan föredragningen och Arkivrummet fortsätter den där den var.
+let fortsatt = null;
+const adressFor = (iRummet, fro) => (iRummet ? vag("arkivrummet", "foredragning-" + fro) : vag("foredragning", fro));
 
 export function render(app, arg) {
   // Adressen kan ha hunnit ändras medan modulen laddades. Det är den som gäller.
@@ -471,9 +479,16 @@ export function render(app, arg) {
 export function stoppa() { if (aktivt) { aktivt.stoppa(); aktivt = null; } }
 addEventListener("hashchange", () => { if (aktivt && !arVy("foredragning")) stoppa(); });
 
-function spelare(app, fro) {
+// Föredragningen inne i Arkivrummet. vard: { rot, bygg, forbered }.
+//  rot       elementet som spelaren läggs i (rummet)
+//  bygg      egna byggare för avsnittstyper (verken visas som kort i rummet, inte som bilder)
+//  forbered  ett löfte som uppfylls när rummets handlingar är hämtade
+export function iRummet(fro, vard) { return spelare(null, tvatta(fro) || nyttFro(), vard); }
+
+function spelare(app, fro, vard = null) {
   const lugn = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const plan = manus(fro, lugn), N = plan.seg.length;
+  const adress = (f) => adressFor(!!vard, f);
 
   // ---- DOM ----
   const scen = el("div", { class: "fd-scen" });
@@ -491,13 +506,14 @@ function spelare(app, fro) {
   const tid = el("span", { class: "fd-tid mono", "aria-hidden": "true" });
   const visaKnapp = knapp("fd-k fd-valfri", t("Visa handlingen"), "◻", () => visaHandling());
   const kopiKnapp = knapp("fd-k fd-valfri", t("Kopiera adressen"), "⧉", (e) => kopiera(e.currentTarget));
+  const bytKnapp = knapp("fd-k fd-byt", vard ? t("Utan rummet") : t("I Arkivrummet"), vard ? "▭" : "◫", () => byt());
   const avsluta = knapp("fd-k", t("Avsluta"), "✕", () => avsluta_());
   const kontroll = el("div", { class: "fd-kontroll" }, spar,
-    el("div", { class: "fd-knappar" }, bakat, paus, fram, tid, el("span", { class: "fd-fro mono fd-valfri" }, t("Frö {fro}", { fro: plan.fro })), visaKnapp, kopiKnapp, avsluta));
-  const rot = el("section", { class: "fd" + (lugn ? " fd-lugn" : ""), "aria-label": t("Föredragningen"), "aria-roledescription": t("föredragning"), tabindex: "-1" },
-    el("h1", { class: "dold" }, t("Föredragningen") + " " + plan.dnr), scen, el("div", { class: "fd-korn", "aria-hidden": "true" }), el("div", { class: "fd-vinjett", "aria-hidden": "true" }), laddar, ljudtips, live, kontroll);
-  document.documentElement.classList.add("fd-aktiv");
-  app.replaceChildren(rot);
+    el("div", { class: "fd-knappar" }, bakat, paus, fram, tid, el("span", { class: "fd-fro mono fd-valfri" }, t("Frö {fro}", { fro: plan.fro })), visaKnapp, kopiKnapp, bytKnapp, avsluta));
+  const rot = el("section", { class: "fd" + (lugn ? " fd-lugn" : "") + (vard ? " fd-rum" : ""), "aria-label": vard ? t("Föredragningen i Arkivrummet") : t("Föredragningen"), "aria-roledescription": t("föredragning"), tabindex: "-1" },
+    el("h1", { class: "dold" }, (vard ? t("Föredragningen i Arkivrummet") : t("Föredragningen")) + " " + plan.dnr), scen, el("div", { class: "fd-korn", "aria-hidden": "true" }), el("div", { class: "fd-vinjett", "aria-hidden": "true" }), laddar, ljudtips, live, kontroll);
+  if (vard) vard.rot.append(rot);
+  else { document.documentElement.classList.add("fd-aktiv"); app.replaceChildren(rot); }
   rot.focus({ preventScroll: true });
 
   // ---- klocka och avsnitt ----
@@ -505,12 +521,12 @@ function spelare(app, fro) {
   const nu = () => (spelar ? Math.min(plan.total, bas + (performance.now() - t0) / 1000) : bas);
   const segVid = (t) => { let i = 0; while (i < N - 1 && t >= plan.seg[i + 1].start) i++; return i; };
   const animationer = () => scen.getAnimations({ subtree: true });
-  const styr = { omstart: () => { soka(0); spela(); }, kopiera: (b) => kopiera(b) };
+  const styr = { omstart: () => { soka(0); spela(); }, kopiera: (b) => kopiera(b), adress, iRummet: !!vard, byt: () => byt() };
 
   function bygg(i, lok, overgang) {
     const s = plan.seg[i], k = verktyg(plan);
     k.styr = styr;
-    const node = BYGG[s.typ](s, k);
+    const node = (vard?.bygg?.[s.typ] || BYGG[s.typ])(s, k);
     node.dataset.typ = s.typ;
     const gamla = [...scen.children];
     if (overgang && lugn && gamla.length) {
@@ -563,8 +579,13 @@ function spelare(app, fro) {
   }
   function avsluta_() {
     if (!igang) return;
-    if (aktiv === N - 1) { location.hash = vag("ansokan"); return; }
+    if (aktiv === N - 1) { location.hash = vard ? vag("arkivrummet") : vag("ansokan"); return; }
     soka(plan.seg[N - 1].start); spela();
+  }
+  // Till Arkivrummet eller tillbaka, på samma ställe i föredragningen.
+  function byt() {
+    fortsatt = { fro: plan.fro, t: nu(), spelar: spelar || !igang };
+    location.hash = adressFor(!vard, plan.fro);
   }
   function visaHandling() {
     const s = plan.seg[aktiv]; if (!s?.v) return;
@@ -572,7 +593,7 @@ function spelare(app, fro) {
     oppna(plan.verk, plan.verk.indexOf(s.v));
   }
   async function kopiera(b) {
-    const url = location.href.split("#")[0] + vag("foredragning", plan.fro);
+    const url = location.href.split("#")[0] + adress(plan.fro);
     let ok = false;
     try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {
       const f = el("input", { value: url, "aria-hidden": "true", style: "position:fixed;opacity:0" }); document.body.append(f); f.select();
@@ -667,7 +688,7 @@ function spelare(app, fro) {
   spar.addEventListener("pointercancel", () => (drar = false));
 
   // ---- förberedelse: bilderna hämtas innan föredragningen börjar ----
-  const kallor = [...new Set(plan.verk.map(stillbild).filter(Boolean))];
+  const kallor = vard ? [] : [...new Set(plan.verk.map(stillbild).filter(Boolean))];
   let klara = 0;
   const visaLaddning = () => { laddar.textContent = t("Föredragningen förbereds · {a} av {b} handlingar", { a: klara, b: kallor.length }); };
   visaLaddning();
@@ -676,16 +697,26 @@ function spelare(app, fro) {
     const klar = () => { klara++; visaLaddning(); res(); };
     im.onload = () => (im.decode ? im.decode().catch(() => {}).then(klar) : klar()); im.onerror = klar; im.src = src;
   });
-  Promise.race([Promise.all(kallor.map(hamta)), new Promise((r) => setTimeout(r, 6000))]).then(() => {
+  // I rummet är det rummet som hämtar bilderna. Där räcker det att vänta på det.
+  const forberedd = vard ? vard.forbered : Promise.all(kallor.map(hamta));
+  if (vard) laddar.textContent = "Föredragningen förbereds";
+  Promise.race([forberedd, new Promise((r) => setTimeout(r, 6000))]).then(() => {
     if (!levande) return;
     laddar.classList.add("klar");
     igang = true; startTid = performance.now();
-    soka(0); spela();
+    const f = fortsatt && fortsatt.fro === plan.fro ? fortsatt : null; fortsatt = null;
+    soka(f ? f.t : 0);
+    if (!f || f.spelar) spela(); else { rot.classList.add("paus"); uppdateraPaus(); }
   });
   raf = requestAnimationFrame(loop);
 
   return {
-    plan, rot,
+    plan, rot, lugn,
+    // läget just nu, för rummet: tiden, avsnittet och om föredragningen spelar
+    get tid() { return nu(); },
+    get avsnitt() { return aktiv; },
+    get spelar() { return spelar; },
+    get igang() { return igang; },
     stoppa() {
       levande = false; spelar = false; cancelAnimationFrame(raf); clearTimeout(uiTimer);
       for (const a of animationer()) a.cancel();
@@ -693,7 +724,7 @@ function spelare(app, fro) {
       removeEventListener("click", vackLjud);
       removeEventListener("keyup", vackLjud);
       document.removeEventListener("visibilitychange", synlighet);
-      document.documentElement.classList.remove("fd-aktiv");
+      if (!vard) document.documentElement.classList.remove("fd-aktiv");
       if (ctx && master) { malVolym = -1; master.gain.setTargetAtTime(0, ctx.currentTime, 0.02); }
       rot.remove();
     },

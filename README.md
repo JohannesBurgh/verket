@@ -2,14 +2,15 @@
 
 Johan O Söderbergs portfolio. En fiktiv myndighet där besökaren ansöker om kreativ insats och får ett beslut med bilagor ur arkivet.
 
-Sajten har fem delar:
+Sajten har sex delar:
 
 | Del | Vad den gör |
 |---|---|
 | **Ansökan** | Fem frågor, en cirkel att rita, handläggning och beslut. Svaren styr vilka verk som bifogas. |
 | **Ärenden** | Projektresor: från idé via skisser och material till färdigt verk. |
 | **Registret** | Allt material på papper, ordnat efter år, med sök och filter. |
-| **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet, Väggen och Mörkrummet, med en tidslinje som andas. Knappen "Återgivning" stänger av efterbehandlingen på svaga enheter. Med tangentbord: pilarna flyttar blicken, Enter öppnar handlingen mitt i bild, siffrorna 1 till 5 byter rum. |
+| **Arkivrummet** | Samma material i 3D: Fältet, Rullen, Molnet, Väggen och Mörkrummet, med en tidslinje som andas. Knappen "Återgivning" stänger av efterbehandlingen på svaga enheter. Med tangentbord: pilarna flyttar blicken, Enter öppnar handlingen mitt i bild, siffrorna 1 till 5 byter rum. "Föredra arkivet" spelar Föredragningen inne i rummet: kameran åker mellan korten i takt med sekvensen. |
+| **Föredragningen** | Verket föredrar sitt arkiv i en självspelande sekvens. Adressen `#foredragning-<frö>` ger alltid samma föredragning, och `#arkivrummet-foredragning-<frö>` samma föredragning i Arkivrummet. |
 | **För beställare** | Det torra: verksamhet, uppdragsgivare, kontakt. |
 
 Allt finns också på engelska, på `…/en/` (se *Den engelska versionen* nedan).

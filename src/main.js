@@ -52,13 +52,14 @@ async function route() {
     case "arenden": arenden.lista(app); break;
     case "arende": egen = arenden.arende(app, arg); break;
     case "bestallare": arenden.bestallare(app); break;
-    case "arkivrummet": (await laddaRummet()).render(app); break;
+    case "arkivrummet": (await laddaRummet()).render(app, arg); break;
     case "foredragning": (await import("./vyer/foredragning.js")).render(app, arg); break;
     case "beslut": egen = ansokan.delat(app, arg); break;
     default: ansokan.render(app);
   }
   const rubrik = { registret: t("Registret"), verk: t("Registret"), arenden: t("Ärenden"), arende: t("Ärende"), bestallare: t("För beställare"), arkivrummet: t("Arkivrummet"), foredragning: t("Föredragningen"), beslut: t("Beslut") }[vy];
-  document.title = egen ? `${egen} · ${S.namn}` : rubrik ? `${rubrik} · ${S.namn}` : S.namn;
+  const iRummet = vy === "arkivrummet" && arg.startsWith("foredragning");
+  document.title = egen ? `${egen} · ${S.namn}` : iRummet ? `${t("Föredragningen i Arkivrummet")} · ${S.namn}` : rubrik ? `${rubrik} · ${S.namn}` : S.namn;
   if (vy !== "verk") window.scrollTo({ top: 0, behavior: "auto" });
 }
 addEventListener("hashchange", route);
