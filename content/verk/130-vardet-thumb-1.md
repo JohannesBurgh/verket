@@ -1,5 +1,5 @@
 ---
-titel: "Värdet av konst, uppläsningen"
+titel: "Värdet av konst, talet"
 datum: "2025-12"
 typ: foto
 bild: "bilder/130-vardet-thumb-1.jpg"
