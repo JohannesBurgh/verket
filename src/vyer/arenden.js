@@ -23,7 +23,8 @@ export function lista(app) {
   const p = papper();
   p.append(huvud("Ärendeförteckning", "Ärenden"),
     el("p", { class: "lead" }, "Utvalda projekt, från första idé via skisser och material till färdigt verk. Ärenden under handläggning fylls på efter hand."));
-  p.append(el("ul", { class: "arendelista" }, PUBLICERADE.map(rad)));
+  // Rubriken behövs för rubrikordningen (h1, h2, h3) men syns inte: listan talar för sig själv.
+  p.append(el("h2", { class: "dold" }, "Förteckning"), el("ul", { class: "arendelista" }, PUBLICERADE.map(rad)));
   if (UTKAST.length) {
     const fragor = UTKAST.reduce((s, a) => s + antalFragor(a), 0);
     p.append(el("section", { class: "utkastdel", "aria-labelledby": "utkast-rubrik" },
@@ -51,7 +52,8 @@ function rad(a) {
 
 export function arende(app, id) {
   const a = ARENDEN.find((x) => x.id === id);
-  if (!a) return lista(app);
+  // Ett okänt ärende: förteckningen visas, och adressen säger det.
+  if (!a) { history.replaceState(null, "", "#arenden"); lista(app); return "Ärenden"; }
   const fragor = [];
   const p = papper(); p.classList.add("arende");
   if (a.utkast) p.classList.add("ar-utkast");
@@ -80,6 +82,7 @@ export function arende(app, id) {
   if (fragor.length) p.append(forelaggande(a, fragor));
   p.append(el("div", { class: "actions" }, el("a", { href: "#arenden", class: "btn ghost" }, "← Alla ärenden"), el("a", { href: "#ansokan", class: "btn" }, "Ansök om kreativ insats")));
   app.replaceChildren(p);
+  return a.titel;
 }
 function alla(kropp) {
   return [...kropp.querySelectorAll(".bilagerad")].flatMap((r) => r.dataset.verk.split(" ").map((x) => byId[x]).filter(Boolean));

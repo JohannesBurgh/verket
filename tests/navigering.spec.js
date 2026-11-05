@@ -27,6 +27,33 @@ test.describe("Navigering", () => {
   test("en okänd adress visar ansökan", async ({ page }) => {
     await page.goto("./#finns-inte");
     await expect(page.getByRole("heading", { level: 1, name: "Ansökan om kreativ insats" })).toBeVisible();
+    // Adressen rättas, så att menyn visar var man är (uppdrag 11).
+    await expect(page).toHaveURL(/#ansokan$/);
+    await expect(page.locator('.nav a[aria-current="page"]')).toHaveAttribute("data-r", "ansokan");
+    // En adress som inte går att avkoda får inte stoppa sajten.
+    await page.goto("./#%E0%A4%A");
+    await expect(page.getByRole("heading", { level: 1, name: "Ansökan om kreativ insats" })).toBeVisible();
+  });
+
+  test("hopplänken leder förbi menyn", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Tangentbord prövas på dator.");
+    await page.goto("./#registret");
+    await expect(page.locator(".grid > button").first()).toBeVisible();
+    await page.keyboard.press("Tab");
+    const hopp = page.getByRole("link", { name: "Till innehållet" });
+    await expect(hopp).toBeFocused();
+    await expect(hopp).toBeInViewport();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("heading", { level: 1, name: "Registret" })).toBeFocused();
+    await expect(page).toHaveURL(/#registret$/);
+  });
+
+  test("ett ärende har sitt namn i sidans titel", async ({ page }) => {
+    await page.goto("./#arenden");
+    const lank = page.locator(".arendelista a").first();
+    const namn = (await lank.locator("h3").innerText()).trim();
+    await lank.click();
+    await expect(page).toHaveTitle(new RegExp(`^${namn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} · `));
   });
 
   test("fotnoten syns överallt utom i Arkivrummet", async ({ page }) => {

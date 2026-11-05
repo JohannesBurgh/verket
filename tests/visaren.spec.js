@@ -104,6 +104,33 @@ test.describe("Visaren", () => {
     await expect(page.locator(".grid > button")).toHaveCount(N);
   });
 
+  // Uppdrag 11: visaren är en dialog. Tabb stannar i den och sidan bakom går inte att nå.
+  test("tabb stannar i visaren, och fokus går tillbaka när den stängs", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Tangentbord prövas på dator.");
+    const forsta = page.locator(".grid > button").first();
+    await forsta.focus();
+    await page.keyboard.press("Enter");
+    await expect(visare(page)).toBeVisible();
+    await expect(visare(page)).toHaveAccessibleName(ORDNING[0].titel);
+    await expect(page.locator("#app")).toHaveJSProperty("inert", true);
+    for (let i = 0; i < 12; i++) {
+      await page.keyboard.press(i % 3 ? "Tab" : "Shift+Tab");
+      expect(await page.evaluate(() => document.getElementById("visare").contains(document.activeElement)), "Fokus ska stanna i visaren").toBe(true);
+    }
+    await page.keyboard.press("Escape");
+    await expect(visare(page)).toBeHidden();
+    await expect(page.locator("#app")).toHaveJSProperty("inert", false);
+    await expect(forsta).toBeFocused();
+  });
+
+  test("en adress till ett verk som inte finns stänger visaren", async ({ page }) => {
+    await page.locator(".grid > button").first().click();
+    await expect(visare(page)).toBeVisible();
+    await page.evaluate(() => (location.hash = "#verk-finns-inte"));
+    await expect(visare(page)).toBeHidden();
+    await expect(page).toHaveURL(/#registret$/);
+  });
+
   test("varje verk går att visa", async ({ page, isMobile }) => {
     test.skip(isMobile, "Det räcker att bläddra igenom allt på dator.");
     test.setTimeout(120_000);

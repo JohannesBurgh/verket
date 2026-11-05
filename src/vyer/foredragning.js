@@ -493,7 +493,7 @@ function spelare(app, fro) {
   const kontroll = el("div", { class: "fd-kontroll" }, spar,
     el("div", { class: "fd-knappar" }, bakat, paus, fram, tid, el("span", { class: "fd-fro mono fd-valfri" }, "Frö " + plan.fro), visaKnapp, kopiKnapp, avsluta));
   const rot = el("section", { class: "fd" + (lugn ? " fd-lugn" : ""), "aria-label": "Föredragningen", "aria-roledescription": "föredragning", tabindex: "-1" },
-    scen, el("div", { class: "fd-korn", "aria-hidden": "true" }), el("div", { class: "fd-vinjett", "aria-hidden": "true" }), laddar, ljudtips, live, kontroll);
+    el("h1", { class: "dold" }, "Föredragningen " + plan.dnr), scen, el("div", { class: "fd-korn", "aria-hidden": "true" }), el("div", { class: "fd-vinjett", "aria-hidden": "true" }), laddar, ljudtips, live, kontroll);
   document.documentElement.classList.add("fd-aktiv");
   app.replaceChildren(rot);
   rot.focus({ preventScroll: true });

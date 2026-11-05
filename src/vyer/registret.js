@@ -1,6 +1,6 @@
 // Registret: samtliga handlingar på papper, ordnade efter år.
-import { VERK, el, papper, huvud, tumnagel, arRunt, byId } from "../data.js";
-import { oppna } from "../visare.js";
+import { VERK, el, papper, huvud, tumnagel, arRunt, byId, when } from "../data.js";
+import { oppna, oppen, stang } from "../visare.js";
 
 const AVD = ["Alla avdelningar", ...[...new Set(VERK.map((v) => v.avdelning))].sort((a, b) => a.localeCompare(b, "sv"))];
 const LAGE = [["alla", "Allt"], ["stilla", "Stilla"], ["rorligt", "Rörligt"], ["absurdimo", "Absurdimo"]];
@@ -22,13 +22,13 @@ export function render(app, oppnaId) {
   const nFoto = VERK.filter((v) => v.typ === "foto").length;
   p.append(huvud("Registret · Samtliga handlingar", "Registret"),
     el("p", { class: "lead" }, `${VERK.length} handlingar, varav ${nFoto} fotografier och ${VERK.length - nFoto} filmer. Ordnade efter år. Klicka för att öppna, bläddra med pilarna.`));
-  const grid = el("div", { class: "grid" }), antal = el("span", { class: "small mono" });
+  const grid = el("div", { class: "grid" }), antal = el("span", { class: "small mono", role: "status" });
   const rita = () => {
     const l = urval(); grid.replaceChildren(); let senast = null;
     l.forEach((v, k) => {
       const r = rubrik(v);
       if (r !== senast) { grid.append(el("div", { class: "ar-grupp" }, String(r))); senast = r; }
-      const b = el("button", { type: "button", "aria-label": `${v.titel}, ${v.datum || "odaterad"}`, onclick: () => oppnaVerk(l, k) }, tumnagel(v));
+      const b = el("button", { type: "button", "aria-label": `${v.titel}, ${when(v).toLowerCase()}${v.vikt === "hjälte" ? ", hjälte" : ""}${v.typ !== "foto" ? ", film" : ""}`, onclick: () => oppnaVerk(l, k) }, tumnagel(v));
       if (v.vikt === "hjälte") b.append(el("span", { class: "w", title: "Hjälte" }, "★"));
       if (v.typ !== "foto") b.append(el("span", { class: "k" }, "▶"));
       grid.append(b);
@@ -36,8 +36,8 @@ export function render(app, oppnaId) {
     if (!l.length) grid.append(el("p", { class: "tom" }, "Inga handlingar matchar sökningen."));
     antal.textContent = `${l.length} st`;
   };
-  const knappar = (lista, nu, satt) => {
-    const g = el("div", { class: "filters", role: "group" });
+  const knappar = (namn, lista, nu, satt) => {
+    const g = el("div", { class: "filters", role: "group", "aria-label": namn });
     lista.forEach(([k, t]) => g.append(el("button", { type: "button", "aria-pressed": k === nu() ? "true" : "false", onclick: (e) => {
       satt(k); g.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", b === e.currentTarget ? "true" : "false")); rita(); } }, t)));
     return g;
@@ -45,8 +45,8 @@ export function render(app, oppnaId) {
   const sokfalt = el("input", { type: "search", id: "reg-sok", placeholder: "Sök titel, år, kanal …", value: sok, "aria-label": "Sök i registret" });
   sokfalt.addEventListener("input", () => { sok = sokfalt.value; rita(); });
   p.append(el("div", { class: "verktyg" },
-    knappar(LAGE, () => lage, (k) => (lage = k)),
-    knappar(AVD.map((a) => [a, a]), () => avd, (k) => (avd = k)),
+    knappar("Slag", LAGE, () => lage, (k) => (lage = k)),
+    knappar("Avdelning", AVD.map((a) => [a, a]), () => avd, (k) => (avd = k)),
     el("label", { class: "sok" }, sokfalt, antal)), grid);
   app.replaceChildren(p);
   rita();
@@ -56,7 +56,8 @@ export function render(app, oppnaId) {
 // medan Registret redan visas. Står verket utanför filtret bläddrar visaren i hela registret.
 export function visaVerk(id) {
   const v = byId[id];
-  if (!v) return false;
+  // Ett okänt eller dolt verk: stäng visaren och stå kvar i Registret.
+  if (!v) { if (oppen()) stang(); history.replaceState(null, "", "#registret"); return false; }
   const l = urval(), lista = l.includes(v) ? l : VERK.slice().sort((a, b) => ordning(a) - ordning(b) || a.id.localeCompare(b.id));
   oppnaVerk(lista, lista.indexOf(v));
   return true;

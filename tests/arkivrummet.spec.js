@@ -115,7 +115,7 @@ test.describe("Arkivrummet", () => {
     await page.keyboard.press("ArrowRight");
     await expect(ar).toContainText("klicka igen för att släppa");
     // Antalet handlingar för året stämmer med innehållet.
-    const [, y, n] = (await ar.textContent()).match(/^(\d{4}) · (\d+) handlingar/);
+    const [, y, n] = (await ar.textContent()).match(/^(\d{4}) · (\d+) handling(?:ar)?/);
     const vantat = VERK.filter((v) => v.ar != null && !(v.kanal === "Absurdimo" && !v.datum) && Math.floor(v.ar) === +y).length;
     expect(+n, `Antal handlingar ${y}`).toBe(vantat);
     await page.keyboard.press("ArrowRight");
@@ -171,6 +171,33 @@ test.describe("Arkivrummet", () => {
     await expect(visare.locator(".vcap b")).toHaveText(traff.titel);
     await visare.getByRole("button", { name: "Stäng" }).click();
     await expect(visare).toBeHidden();
+  });
+
+  // Uppdrag 11: rummet går att använda med bara tangentbordet.
+  test("med tangentbord: Enter öppnar en handling, mellanslag på en knapp blåser inte", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Tangentbord prövas på dator.");
+    await oppnaRummet(page);
+    await yta(page).focus();
+    await page.keyboard.press("ArrowRight");
+    await page.waitForTimeout(800);
+    await page.keyboard.press("Enter");
+    const visare = page.getByRole("dialog");
+    await expect(visare).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(visare).toBeHidden();
+    await expect(yta(page)).toBeFocused();
+    // Tidslinjen säger vilket år den står på.
+    const tl = page.getByRole("slider", { name: /Tidslinje/ });
+    await tl.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(tl).toHaveAttribute("aria-valuetext", /^\d{4} · \d+ handling/);
+    // Mellanslag på en rumsknapp väljer det rummet. Blås, som annars ligger på mellanslag, ska inte ske.
+    const knapp = rumknappar(page).nth(1);
+    await knapp.focus();
+    await page.keyboard.press(" ");
+    await expect(knapp).toHaveAttribute("aria-pressed", "true");
+    await landat(page);
+    await expect(knapp).toHaveAttribute("aria-pressed", "true");
   });
 
   test("rummet stannar när man går ut och ritar igen när man kommer tillbaka", async ({ page }, info) => {
