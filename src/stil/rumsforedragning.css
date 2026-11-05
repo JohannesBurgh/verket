@@ -1,0 +1,77 @@
+/* Uppdrag 10: Föredragningen i Arkivrummet.
+   Föredragningens kontroller och texter ligger ovanpå rummet. Verken är korten själva;
+   ovanpå dem ligger bara sökarens hörn, lappen och stämplarna. */
+
+/* knappen i rummet: lime, eftersom den går att klicka på */
+.rum .foredra{position:absolute;top:54px;left:max(16px,env(safe-area-inset-left,0px));z-index:3;
+  font:400 10.5px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--hand);background:rgba(18,28,33,.82);border:1px solid rgba(212,255,63,.45);padding:8px 10px}
+.rum .foredra::before{content:"▶";margin-right:7px;font-family:var(--f-body)}
+.rum .foredra:hover,.rum .foredra:focus-visible{background:var(--hand);color:var(--hand-ink);border-color:var(--hand)}
+
+/* medan föredragningen pågår göms rummets egna reglage */
+.rum.foredrar .hud,.rum.foredrar .tips,.rum.foredrar .foredra,.rum.foredrar .svep{display:none}
+
+/* spelaren ligger i rummet, inte över hela sidan */
+.fd.fd-rum{position:absolute;inset:0;top:0;z-index:4;background:transparent}
+.fd.fd-rum .fd-korn,.fd.fd-rum .fd-vinjett{display:none}
+.fd.fd-rum .fd-laddar{color:var(--hand);letter-spacing:.2em}
+.fd.fd-rum .fd-ljudtips{top:auto;left:50%;translate:-50% 0;bottom:calc(var(--fd-ui) + 14px);background:rgba(18,28,33,.82)}
+.fd.fd-rum .fd-kontroll{background:linear-gradient(rgba(8,11,12,0),rgba(8,11,12,.78) 50%)}
+.rf-tona{position:absolute;inset:0;background:#05080a;opacity:0;pointer-events:none}
+
+/* texterna: papperen läggs åt sidan så att rummet syns bakom */
+.fd.fd-rum .fd-seg[data-typ="oppning"],.fd.fd-rum .fd-seg[data-typ="rubrik"],.fd.fd-rum .fd-seg[data-typ="kontakt"]{
+  place-items:end start;padding:0 0 calc(var(--fd-ui) + 22px) max(20px,4cqw)}
+.fd.fd-rum .paper.fd-ark{width:min(600px,calc(100cqw - 40px));max-height:calc(100cqh - var(--fd-ui) - 80px);
+  box-shadow:0 2px 4px rgba(0,0,0,.35),0 40px 80px -20px rgba(0,0,0,.85)}
+.fd.fd-rum .paper.fd-flik{width:min(500px,calc(100cqw - 40px));padding-top:26px;padding-bottom:30px}
+.fd.fd-rum .fd-stor{font-size:clamp(34px,5.6cqw,68px);margin-bottom:18px}
+.fd.fd-rum .fd-stor.fd-mellan{font-size:clamp(28px,4.2cqw,50px)}
+.fd.fd-rum .fd-rubrik{font-size:clamp(36px,6cqw,76px)}
+.fd.fd-rum .fd-rubrik.lang{font-size:clamp(28px,4.4cqw,54px)}
+.fd.fd-rum .fd-falt{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fd.fd-rum .fd-falt div:nth-child(2){border-right:0}
+.fd.fd-rum .fd-falt div:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+.fd.fd-rum .fd-dnr{text-shadow:0 1px 3px #000,0 0 22px rgba(0,0,0,.9)}
+/* uppgifterna och slutet står direkt i rummet, med lite mörker bakom */
+.fd.fd-rum .fd-seg[data-typ="uppgift"],.fd.fd-rum .fd-seg[data-typ="slut"]{background:radial-gradient(ellipse 70% 65% at 50% 46%,rgba(8,11,12,.8),rgba(8,11,12,.5));
+  animation:rf-mork .9s ease both}
+@keyframes rf-mork{from{opacity:0}}
+.fd.fd-rum .fd-liggare .r b,.fd.fd-rum .fd-slut{text-shadow:0 2px 18px rgba(0,0,0,.6)}
+
+/* sökaren: hörn som följer kortet på skärmen */
+.rf-sokare{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;will-change:transform;z-index:2}
+.rf-inne{position:absolute;inset:0}
+.rf-horn{position:absolute;width:18px;height:18px;border:0 solid rgba(232,236,236,.6)}
+.rf-horn.a{left:-11px;top:-11px;border-width:1.5px 0 0 1.5px}.rf-horn.b{right:-11px;top:-11px;border-width:1.5px 1.5px 0 0}
+.rf-horn.c{left:-11px;bottom:-11px;border-width:0 0 1.5px 1.5px}.rf-horn.d{right:-11px;bottom:-11px;border-width:0 1.5px 1.5px 0}
+.rf-film .rf-horn,.rf-abs .rf-horn{width:22px;height:22px;border-color:var(--cyan)}
+.rf-film .rf-horn.a,.rf-abs .rf-horn.a{border-width:2px 0 0 2px}.rf-film .rf-horn.b,.rf-abs .rf-horn.b{border-width:2px 2px 0 0}
+.rf-film .rf-horn.c,.rf-abs .rf-horn.c{border-width:0 0 2px 2px}.rf-film .rf-horn.d,.rf-abs .rf-horn.d{border-width:0 2px 2px 0}
+.rf-abs .rf-horn{border-color:var(--magenta)}
+.rf-sokare .fd-rec,.rf-sokare .fd-tc{top:-36px;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.rf-abs .fd-rec,.rf-abs .fd-tc{color:var(--magenta)}
+.rf-sokare .fd-stampel{right:5%;bottom:7%;color:#e2392e;font-size:clamp(18px,2.8cqw,32px)}
+.rf-snabb .fd-stampel{right:auto;bottom:auto;left:6%;top:8%;font-size:clamp(20px,3.4cqw,40px)}
+.rf-hjalte .fd-stampel{font-size:clamp(22px,3.4cqw,40px)}
+.rf-sokare .fd-absetikett{left:-14px;bottom:-26px;max-width:min(420px,calc(100% + 6px))}
+
+/* Absurdimo: rummet syns genom avbrottet */
+.fd.fd-rum .fd-avbrott{background:transparent}
+.fd.fd-rum .fd-avbrottstext{top:64px}
+
+@media (max-width:600px){
+  .rum.foredrar .rumnamn small{display:none}
+}
+@media (max-width:520px){
+  .rum .foredra{top:46px;padding:7px 8px;font-size:9.5px}
+  .fd.fd-rum .fd-seg[data-typ="oppning"],.fd.fd-rum .fd-seg[data-typ="rubrik"],.fd.fd-rum .fd-seg[data-typ="kontakt"]{padding-left:16px;padding-right:16px}
+  .fd.fd-rum .paper.fd-ark{width:calc(100cqw - 32px)}
+}
+@media (max-width:700px){
+  .fd.fd-rum .fd-k.fd-byt .lang{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .fd.fd-rum .fd-seg[data-typ="uppgift"],.fd.fd-rum .fd-seg[data-typ="slut"]{animation:none}
+}

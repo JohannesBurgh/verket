@@ -1,0 +1,29 @@
+/* Uppdrag 11. Granskning: tillgänglighet och små rättelser som gäller hela sajten. */
+
+/* Text som bara är till för skärmläsare: syns inte, men läses upp. */
+.dold{position:absolute !important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* Hopplänken: första tabbstoppet, syns bara när den har fokus. */
+.hoppa{position:fixed;left:max(12px,env(safe-area-inset-left,0px));top:calc(10px + env(safe-area-inset-top,0px));z-index:60;
+  background:var(--hand);color:var(--hand-ink);font-weight:700;font-size:14px;padding:10px 14px;text-decoration:none;
+  transform:translateY(-200%);transition:transform .15s var(--ease)}
+.hoppa:focus-visible{transform:none;outline:2px solid var(--hand-ink);outline-offset:-4px}
+
+/* Rubriker som tar emot fokus när ett nytt ark läggs fram. De går inte att klicka på, så ingen lime. */
+h1[tabindex="-1"]:focus,main:focus{outline:none}
+
+/* Ärenden utan omslag: platshållaren ska rymmas i den smala rutan på mobil. */
+.arendelista .om .ytthumb{padding:8px 9px;gap:4px;overflow:hidden}
+.arendelista .om .ytthumb strong{overflow-wrap:anywhere;hyphens:auto}
+@media (max-width:760px){
+  .arendelista .om .ytthumb{padding:6px 7px}
+  .arendelista .om .ytthumb small{font-size:8.5px;letter-spacing:.04em;line-height:1.3}
+  .arendelista .om .ytthumb strong{font-size:11.5px;line-height:1.1}
+}
+
+/* Hopplänken hör inte hemma på ett utskrivet beslut. */
+@media print{.hoppa{display:none !important}}
+
+@media (prefers-reduced-motion:reduce){
+  .hoppa{transition:none}
+}

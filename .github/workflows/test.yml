@@ -19,7 +19,7 @@ jobs:
   vakten:
     name: Vakten (dator, mobil, utan rörelse)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       VAKT_FRO: ${{ inputs.fro }}
     steps:

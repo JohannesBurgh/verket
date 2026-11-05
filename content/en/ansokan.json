@@ -1,0 +1,234 @@
+{
+  "_hjalp": "Ansökan på engelska. Bara texterna står här. Poäng, utslag, zonernas gränser och allt annat som styr besluten hämtas från content/ansokan.json, så att ett beslut blir detsamma på båda språken. Ordningen måste vara densamma som i den svenska filen: fråga för fråga, svar för svar, zon för zon. Nyckelorden under 'tolkning' tolkas på båda sidorna, tillsammans med de svenska.",
+
+  "fragor": [
+    {
+      "fraga": "Which of the following objects would the applicant prefer to bring to a meeting?",
+      "svar": [
+        { "text": "A dead rat", "skal": "The applicant intends to bring a dead rat to the meeting." },
+        { "text": "A megaphone" },
+        { "text": "A string quartet" },
+        { "text": "A presentation of 47 slides", "skal": "The applicant intends to bring a presentation of 47 slides. The Office has not found room for it in its schedule." }
+      ]
+    },
+    {
+      "fraga": "How often does the applicant cry at advertisements?",
+      "svar": [
+        { "text": "Never" },
+        { "text": "The applicant does not watch advertisements", "skal": "The applicant has stated that the applicant does not watch advertisements. The question could therefore not be examined." },
+        { "text": "Sometimes, in secret" },
+        { "text": "Every time, even at the petrol station" }
+      ]
+    },
+    {
+      "fraga": "Species of applicant.",
+      "svar": [
+        { "text": "A creative or a director" },
+        { "text": "A commissioner of creative services" },
+        { "text": "A cultural institution" },
+        { "text": "A private individual with too much time", "skal": "The applicant has stated that the applicant has too much time." },
+        { "text": "Species unknown", "skal": "The species of the applicant could not be established." }
+      ]
+    },
+    {
+      "fraga": "Which light is intended?",
+      "svar": [
+        { "text": "November light through a window" },
+        { "text": "Backlight, preferably too much" },
+        { "text": "Stage light and a little smoke" },
+        { "text": "Fluorescent tubes", "skal": "The application is refused in so far as it concerns fluorescent tubes." }
+      ]
+    },
+    {
+      "fraga": "Who or what is to appear in frame?",
+      "svar": [
+        { "text": "People, at close range" },
+        { "text": "No one. Only the room." },
+        { "text": "An animal with no clear business", "skal": "The applicant has requested an animal with no clear business. The matter has been assessed as unclear to the Office as well." },
+        { "text": "An entire ensemble" }
+      ]
+    },
+    {
+      "fraga": "What is the applicant’s position on planning?",
+      "svar": [
+        { "text": "Everything is in a spreadsheet" },
+        { "text": "We will sort it out on site" },
+        { "text": "It should feel unplanned, according to plan" },
+        { "text": "The applicant has not thought that far", "skal": "The applicant has stated that the matter has not been thought through. The Office has not wished to anticipate the applicant." }
+      ]
+    },
+    {
+      "fraga": "What should the recipient feel afterwards?",
+      "svar": [
+        { "text": "That something has happened" },
+        { "text": "A slight unease", "skal": "The applicant has requested a slight unease in the recipient. The Office cannot guarantee that the unease will be slight." },
+        { "text": "An urge to buy a ticket" },
+        { "text": "Nothing, but in a good way" }
+      ]
+    },
+    {
+      "fraga": "State the desired number of takes.",
+      "svar": [
+        { "text": "One", "skal": "The application is refused in so far as it concerns the number of takes. The Office grants one take and one safety take." },
+        { "text": "Three" },
+        { "text": "As many as needed" },
+        { "text": "It depends on the weather" }
+      ]
+    },
+    {
+      "fraga": "State the urgency of the matter.",
+      "skala": ["Yesterday", "Never"],
+      "zoner": [
+        { "etikett": "Yesterday", "skal": "The application is refused in so far as it concerns delivery yesterday." },
+        { "etikett": "Today" },
+        { "etikett": "As soon as possible" },
+        { "etikett": "Before Midsummer" },
+        { "etikett": "When the spirit moves" },
+        { "etikett": "Never", "skal": "The applicant has stated that the matter is to be completed never. The Office has therefore found no grounds for examining it now." }
+      ]
+    },
+    {
+      "fraga": "How much should happen in frame?",
+      "skala": ["Nothing", "Everything at once"],
+      "zoner": [
+        { "etikett": "Nothing" },
+        { "etikett": "A little, slowly" },
+        { "etikett": "A moderate amount" },
+        { "etikett": "A great deal" },
+        { "etikett": "Everything at once", "skal": "The applicant has requested that everything happen at once." }
+      ]
+    },
+    {
+      "fraga": "What share of the budget has been set aside for unexpected solutions?",
+      "skala": ["0 per cent", "100 per cent"],
+      "zoner": [
+        { "etikett": "None at all", "skal": "The budget for unexpected solutions has been stated as zero per cent." },
+        { "etikett": "A cautious share" },
+        { "etikett": "A substantial share" },
+        { "etikett": "The greater part" },
+        { "etikett": "The entire budget", "skal": "The applicant has set aside the entire budget for unexpected solutions." }
+      ]
+    },
+    {
+      "fraga": "Which of the following documents best describes the applicant’s Monday?",
+      "notering": "The applicant has stated that the document {titel} describes the applicant’s Monday. The Office has noted the information without examining it."
+    },
+    {
+      "fraga": "Which of the following documents should hang in the Office’s waiting room?",
+      "notering": "The applicant has proposed that the document {titel} be hung in the Office’s waiting room. The proposal has been referred to the facilities management unit."
+    },
+    {
+      "fraga": "Describe the matter in one word.",
+      "platshallare": "One word",
+      "notering": "The applicant has described the matter with the word {ord}."
+    },
+    {
+      "fraga": "State an object that should appear in frame.",
+      "platshallare": "An object",
+      "notering": "The applicant has requested that {ord} appear in frame."
+    }
+  ],
+
+  "tolkning": [
+    { "ord": ["absurdimo"], "notering": "The word has been interpreted as a request for referral.", "skal": "The applicant has requested Absurdimo by name." },
+    { "ord": ["coffee", "tea", "cake", "bun", "biscuit", "break", "fika"], "notering": "The word has been interpreted as a need for a break." },
+    { "ord": ["dance", "ballet", "choreography", "movement", "jump"], "notering": "The word has been interpreted as a request for movement." },
+    { "ord": ["theatre", "theater", "stage", "opera", "performance", "premiere", "curtain", "applause"], "notering": "The word has been attributed to the Office’s stage activities." },
+    { "ord": ["love", "closeness", "family", "friendship", "child", "children", "mum", "mom", "dad", "home"], "notering": "The word has been interpreted as a need for people." },
+    { "ord": ["light", "sun", "backlight", "sunset", "dawn", "dusk", "night", "darkness", "fire"], "notering": "The word has been referred to the Office’s matters of light." },
+    { "ord": ["advert", "advertising", "campaign", "launch", "budget", "deadline", "delivery", "client", "sales", "kpi"], "notering": "The word has been interpreted as a commission." },
+    { "ord": ["chaos", "party", "joy", "play", "fun", "funny", "mischief"], "notering": "The word has been interpreted as play. The play has been approved." },
+    { "ord": ["grief", "death", "seriousness", "anxiety", "longing", "time", "eternity"], "notering": "The word has been interpreted as seriousness." },
+    { "ord": ["art", "poetry", "dream", "abstract", "feeling", "soul", "silence"], "notering": "The word has been interpreted as artistic longing." },
+    { "ord": ["rabbit", "rat", "potato", "cucumber", "absurd", "strange", "odd", "weird", "gasmask", "sausage", "mosquito", "beard", "gnome"], "notering": "The word has given rise to a special assessment.", "skal": "The word has been assessed as falling outside the Office’s ordinary activities." },
+    { "ord": ["nothing", "none", "nada", "no", "dunno"], "notering": "The Office has taken the applicant at the applicant’s word.", "skal": "A matter concerning nothing cannot be granted." },
+    { "ord": ["film", "video", "photo", "photography", "picture", "image", "camera", "showreel"], "notering": "The Office notes that the applicant has applied to the correct authority." },
+    { "ord": ["ai", "generative", "robot", "machine", "algorithm"], "notering": "The Office also undertakes commissions involving generative AI. The word has been interpreted accordingly." },
+    { "ord": ["help", "please", "urgent", "emergency", "asap"], "notering": "The word has been interpreted as urgency.", "skal": "The application is refused in so far as it concerns immediate assistance. The Office processes matters in the order in which they are received." }
+  ],
+
+  "skruv": { "skal": "The applicant’s need for slight unease has been assessed as considerable." },
+  "otolkat": { "notering": "The word could not be interpreted. It has been registered in its existing condition." },
+  "flera_ord": "The applicant has stated several words. The Office has examined the first.",
+  "avstar_ord": "The applicant has declined to answer with a word. The silence has been registered.",
+  "arkivet": {
+    "funnet": "A document corresponding to the object has been located in the archive. The document is enclosed.",
+    "ej_funnet": "The object has not been located in the archive."
+  },
+  "underskrift": { "fraga": "Draw a circle. The circle will be registered.", "rubrik": "Signature" },
+  "cirkel": {
+    "noggrann": { "text": "The circle is assessed as meticulous." },
+    "fri": { "text": "The circle is assessed as free but acceptable." },
+    "potatis": { "text": "The circle is assessed as very nearly a potato." },
+    "avstod": "The applicant has declined to sign with a circle. The application has been examined regardless."
+  },
+  "motiveringar": {
+    "allvar": "a marked lack of seriousness",
+    "lek": "a chronic deficit of play",
+    "stilla": "a need for stillness lasting at least one 125th of a second",
+    "rorligt": "insufficient movement in frame",
+    "scen": "an acute shortage of stage light",
+    "manniska": "too few people in the applicant’s vicinity",
+    "ljus": "inadequate access to backlight",
+    "skruv": "a moderate to severe need for slight unease",
+    "uppdrag": "a documented need for delivery on time",
+    "konst": "untreated artistic longing"
+  },
+  "handlaggning": {
+    "gemensamt": ["The case is registered", "The case is assigned to a case officer"],
+    "ord": "The word {ord} is interpreted",
+    "cirkel": "The circle is measured",
+    "bifall": ["The case is prepared", "A decision is made"],
+    "delvis": ["The case is prepared", "The application is divided", "A decision is made"],
+    "avslag": ["The case is prepared", "References are compiled", "A decision is made"],
+    "absurdimo": ["The case is prepared", "The case is found to have no counterpart in the Office’s regulations", "The case is referred"]
+  },
+  "beslut": {
+    "bifall": {
+      "utgang": "Granted",
+      "stampel": "GRANTED",
+      "slut": "The application is granted. The following documents are enclosed.",
+      "lagrum": "This decision has been made pursuant to section 3 of the Office’s Regulations (VOL 2026:1) on Unexpected Solutions."
+    },
+    "delvis": {
+      "utgang": "Partially granted",
+      "stampel": "PARTIALLY GRANTED",
+      "allmant": "The Office has, upon reconsideration, found that the application may be granted in part.",
+      "slut": "The application is partially granted. Documents are enclosed in so far as the application has been granted.",
+      "lagrum": "This decision has been made pursuant to section 4 of the Office’s Regulations (VOL 2026:1) on Unexpected Solutions.",
+      "rubrik_bilagor": "Enclosures, in so far as the application has been granted"
+    },
+    "avslag": {
+      "utgang": "Refused",
+      "stampel": "REFUSED",
+      "etikett": "Reference",
+      "allmant": "The Office has found no grounds for granting the application.",
+      "slut": "The application is refused. The applicant is instead referred to the following documents in the Office’s archive.",
+      "lagrum": "This decision has been made pursuant to section 7, second paragraph, of the Office’s Regulations (VOL 2026:1) on Unexpected Solutions.",
+      "rubrik_bilagor": "Enclosures, by way of reference"
+    },
+    "absurdimo": {
+      "utgang": "Referred",
+      "stampel": "REFERRED",
+      "etikett_forsta": "From Absurdimo",
+      "etikett": "For information",
+      "allmant": "The case has been assessed as falling outside the Office’s ordinary activities.",
+      "slut": "The Office has found that the case cannot be examined in the ordinary manner. The case is referred to Absurdimo, which has enclosed a document. The Office further encloses two documents for information.",
+      "overklagat": "Absurdimo has taken note of the appeal and has found no grounds for returning the case.",
+      "lagrum": "This decision has been made pursuant to section 12 of the Office’s Regulations (VOL 2026:1) on Unexpected Solutions.",
+      "handlaggare": "Absurdimo"
+    }
+  },
+  "omprovat": {
+    "stampel": "RECONSIDERED",
+    "text": "The decision has been reconsidered on appeal ({n}). Previous enclosures have been withdrawn."
+  },
+  "forenklat": [
+    "The applicant has requested the simplified procedure. The Office has not examined the application on its merits.",
+    "The Office instead encloses a selection of the authority’s most important documents."
+  ],
+  "art_okand_bifall": "The Office grants the application regardless.",
+  "overklagande": "How to appeal. This decision may be appealed. An appeal is lodged by the applicant pressing the button Appeal the decision. The Office will then reconsider the decision forthwith and without further inquiry.",
+  "aterkallad": "The document has been withdrawn from the archive.",
+  "skadad": "The decision could not be located in the register. The address may have been damaged in transit."
+}

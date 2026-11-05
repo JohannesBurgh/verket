@@ -2,6 +2,7 @@
 // Varje år har sitt eget bad, i tidsordning längs bordet. Handlingarna ligger i vätskan
 // som vitt papper, och bilden växer fram när man närmar sig.
 import * as THREE from "three";
+import { t } from "../sprak.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 export const LUTNING = .74;      // hur mycket bordet lutar mot kameran (radianer)
@@ -95,13 +96,13 @@ export function skapaMorkrum({ world, tot, Y0, Y1, borjan, bredd, antal, ZON_UD,
   const haloMat = reg(new THREE.MeshBasicMaterial({ map: halo, blending: THREE.AdditiveBlending, depthWrite: false }), .55);
   const skylt = textur(512, 160, (c, W, H) => {
     c.fillStyle = "#120706"; c.fillRect(0, 0, W, H); c.strokeStyle = "#ff3a1c"; c.lineWidth = 4; c.strokeRect(10, 10, W - 20, H - 20);
-    c.fillStyle = "#ff4a26"; c.font = "800 46px 'Public Sans', Arial"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("FRAMKALLNING PÅGÅR", W / 2, H / 2 + 3, W - 60);
+    c.fillStyle = "#ff4a26"; c.font = "800 46px 'Public Sans', Arial"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(t("FRAMKALLNING PÅGÅR"), W / 2, H / 2 + 3, W - 60);
   });
   const lapp = textur(512, 200, (c, W, H) => {
     c.fillStyle = "#eee9dd"; c.fillRect(0, 0, W, H);
-    c.fillStyle = "#2a2622"; c.font = "500 22px 'IBM Plex Mono', monospace"; c.fillText("MEDDELANDE NR 4", 30, 46);
+    c.fillStyle = "#2a2622"; c.font = "500 22px 'IBM Plex Mono', monospace"; c.fillText(t("MEDDELANDE NR 4"), 30, 46);
     c.font = "400 25px 'Public Sans', Arial";
-    ["Handlingar som inte har framkallats", "anses inte ha inkommit.", "Ljus tänds först när ärendet är avgjort."].forEach((r, i) => c.fillText(r, 30, 96 + i * 34));
+    [t("Handlingar som inte har framkallats"), t("anses inte ha inkommit."), t("Ljus tänds först när ärendet är avgjort.")].forEach((r, i) => c.fillText(r, 30, 96 + i * 34));
   });
   const skyltMat = reg(new THREE.MeshBasicMaterial({ map: skylt })), lappMat = reg(new THREE.MeshLambertMaterial({ map: lapp }));
   const lampor = [];

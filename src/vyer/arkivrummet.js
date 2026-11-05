@@ -2,32 +2,39 @@
 // Fem rum, en tidslinje som andas och en knapp som blåser omkull allt.
 // Korten är papper under en lampa. Rummen byts i en bestämd ordning: insamling,
 // förflyttning, utdelning. Mörkrummet framkallar handlingarna när man närmar sig.
+// Föredragningen kan spelas här inne (#arkivrummet-foredragning-<frö>): se src/rum/foredragning.js.
 import * as THREE from "three";
 import "../stil/arkivrummet.css";
 import { VERK, el, reduce } from "../data.js";
 import { oppna, oppen as visareOppen } from "../visare.js";
 import { klick, prassel } from "../ljud.js";
+import { t, vag } from "../sprak.js";
 import { skapaPapper, skuggTextur, kanalKort, fotoMaterial, GEMENSAMT } from "../rum/papper.js";
 import { skapaEfter } from "../rum/efter.js";
 import { skapaKvalitet } from "../rum/kvalitet.js";
 import { skapaMorkrum, LUTNING } from "../rum/morkrummet.js";
 import { skapaKoreografi } from "../rum/koreografi.js";
+import { skapaRumsforedragning, nyttFro } from "../rum/foredragning.js";
 
 let byggd = null;
 
-export function render(app) {
+// arg: det som står efter #arkivrummet- i adressen. "foredragning-<frö>" spelar föredragningen i rummet.
+export function render(app, arg = "") {
   if (!byggd) byggd = bygg();
   app.replaceChildren(byggd.rot);
   byggd.starta();
+  const f = /^foredragning(?:-(.*))?$/.exec(arg || "");
+  byggd.foredra(f ? f[1] || "" : null);
 }
 export function stoppa() { if (byggd) byggd.stoppa(); }
 
 // Utan WebGL: en lapp i stället för ett rum.
 function utanRum() {
   const rot = el("section", { class: "rum" },
-    el("div", { class: "rum-lapp" }, el("b", {}, "Arkivrummet kan inte visas på den här enheten."),
-      el("p", {}, "Webbläsaren saknar stöd för tredimensionell återgivning. Samtliga handlingar finns i "), el("a", { href: "#registret" }, "Registret"), "."));
-  return { rot, starta() {}, stoppa() {} };
+    el("div", { class: "rum-lapp" }, el("b", {}, t("Arkivrummet kan inte visas på den här enheten.")),
+      el("p", {}, t("Webbläsaren saknar stöd för tredimensionell återgivning. Samtliga handlingar finns i "), el("a", { href: vag("registret") }, t("Registret")), ".")));
+  // Föredragningen går att se utan rummet.
+  return { rot, starta() {}, stoppa() {}, foredra(fro) { if (fro != null) location.replace(vag("foredragning", fro || null)); } };
 }
 
 function bygg() {
@@ -60,19 +67,22 @@ function bygg() {
 
   // ---- DOM ----
   const canvas = renderer.domElement;
-  canvas.className = "gl"; canvas.setAttribute("aria-label", "Arkivrummet, ett tredimensionellt rum med alla handlingar");
+  canvas.className = "gl"; canvas.tabIndex = 0;
+  canvas.setAttribute("aria-label", t("Arkivrummet, ett tredimensionellt rum med alla handlingar. Pilarna flyttar blicken. Enter öppnar handlingen mitt i bild."));
   const namn = el("b"), under = el("small");
-  const tips = el("div", { class: "tips" }), laddar = el("div", { class: "laddar" }, "[ handlingarna hämtas ]"), svep = el("div", { class: "svep", "aria-hidden": "true" });
-  const tl = el("canvas", { tabindex: "0", role: "slider", "aria-label": "Tidslinje. Klicka på ett år för att lyfta fram det.", "aria-valuemin": Y0, "aria-valuemax": Y1 });
+  const tips = el("div", { class: "tips" }), laddar = el("div", { class: "laddar" }, t("[ handlingarna hämtas ]")), svep = el("div", { class: "svep", "aria-hidden": "true" });
+  const tl = el("canvas", { tabindex: "0", role: "slider", "aria-label": t("Tidslinje. Klicka på ett år för att lyfta fram det. Med tangentbordet: pilarna väljer år, Enter öppnar en handling från året."), "aria-valuemin": Y0, "aria-valuemax": Y1 + 2, "aria-valuenow": Y0 });
   const absKnapp = el("button", { type: "button", class: "abs", "aria-pressed": "true" }, "Absurdimo");
   const arText = el("span", { class: "ar" });
-  const ROOMNAMES = [["falt", "Fältet", "1"], ["rulle", "Rullen", "2"], ["moln", "Molnet", "3"], ["vagg", "Väggen", "4"], ["mork", "Mörkrummet", "5"]];
-  const docka = el("nav", { class: "docka", "aria-label": "Rum" });
-  ROOMNAMES.forEach(([k, t, n]) => docka.append(el("button", { type: "button", "data-rum": k, "aria-pressed": "false", title: `${t} (${n})` }, t)));
-  const blasKnapp = el("button", { type: "button", class: "blas" }, "Blås"); docka.append(blasKnapp);
+  const ROOMNAMES = [["falt", t("Fältet"), "1"], ["rulle", t("Rullen"), "2"], ["moln", t("Molnet"), "3"], ["vagg", t("Väggen"), "4"], ["mork", t("Mörkrummet"), "5"]];
+  const docka = el("nav", { class: "docka", "aria-label": t("Rum") });
+  ROOMNAMES.forEach(([k, namn, n]) => docka.append(el("button", { type: "button", "data-rum": k, "aria-pressed": "false", title: `${namn} (${n})` }, namn)));
+  const blasKnapp = el("button", { type: "button", class: "blas" }, t("Blås")); docka.append(blasKnapp);
   const korn = el("div", { class: "korn", "aria-hidden": "true" });
-  const atergivning = el("button", { type: "button", class: "atergivning", title: "Efterbehandling: djupskärpa, ljus och korn" });
-  const rot = el("section", { class: "rum" }, canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, laddar, svep, tips,
+  const atergivning = el("button", { type: "button", class: "atergivning", title: t("Efterbehandling: djupskärpa, ljus och korn") });
+  const foredraKnapp = el("button", { type: "button", class: "foredra", title: t("Föredragningen, spelad här i rummet") }, t("Föredra arkivet"));
+  foredraKnapp.addEventListener("click", () => { klick(); location.hash = vag("arkivrummet", "foredragning-" + nyttFro()); });
+  const rot = el("section", { class: "rum", "aria-labelledby": "rum-rubrik" }, el("h1", { class: "dold", id: "rum-rubrik" }, t("Arkivrummet")), canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, foredraKnapp, laddar, svep, tips,
     el("div", { class: "hud" }, el("div", { class: "tidslinje" }, absKnapp, arText, tl), docka));
 
   // ---- scen ----
@@ -117,7 +127,7 @@ function bygg() {
   const ritaEtiketter = () => {
     let sista = -1e9;
     for (let y = Y0; y <= Y1; y++) { const x = xOf(borjan[y]); if (antal[y] > 0 && x - sista > 2.3) { etikett(String(y), x, -3.6); sista = x; } }
-    etikett("utan datum", xOf(tot + .2), -3.6, "#8aa0a8", 30);
+    etikett(t("utan datum"), xOf(tot + .2), -3.6, "#8aa0a8", 30);
     absEtikett.push(etikett("Absurdimo", xOf(tot + ZON_UD + .3), -3.6, "#ef3fe6", 32));
     satsLime();
   };
@@ -128,6 +138,7 @@ function bygg() {
   const TJOCK = { hjälte: .036, frö: .018, damm: .01 };
   const RAM = { abs: new THREE.Color(0xef3fe6), film: new THREE.Color(0x5ff3ff), foto: new THREE.Color(0xf2f3ee) };
   let klara = 0; const antalBilder = FRO.filter((s) => s.v.bild).length;
+  let hamtade; const klart = new Promise((r) => (hamtade = r)); // när handlingarna är hämtade (för föredragningen)
   const fontKlar = document.fonts ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]) : Promise.resolve();
   FRO.forEach((s, i) => {
     const { m: mat, u } = fotoMaterial(PAPPER.ytaTex);
@@ -140,14 +151,14 @@ function bygg() {
     const mount = new THREE.Mesh(lada, ram); mount.scale.set(1 + .07 / W, 1 + .07 / H, s.tjock); mount.position.z = -s.tjock / 2 - .0015; m.add(mount);
     const skugga = new THREE.Mesh(plan, skuggMat); skugga.renderOrder = 3; m.add(skugga);
     s.mat = mat; s.uni = u; s.ram = ram; s.skugga = skugga; s.dim = 1; s.last = 0; s.fram = 1; s.hoj = 0;
-    const klar = () => { s.klar = true; if (++klara >= antalBilder * .85) laddar.style.opacity = 0; };
+    const klar = () => { s.klar = true; if (++klara >= antalBilder * .85) { laddar.style.opacity = 0; hamtade(); } };
     if (s.v.bild) loader.load(s.v.bild, (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; mat.map = t; mat.needsUpdate = true; klar(); }, undefined, klar);
     else fontKlar.then(() => { mat.map = kanalKort(s.v); mat.needsUpdate = true; s.klar = true; });
     m.position.set((rnd() - .5) * 40, (rnd() - .5) * 24, -25 - rnd() * 10);
     s.mesh = m; s.tp = new THREE.Vector3(); s.tq = new THREE.Quaternion(); s.start = 0; world.add(m);
   });
   fontKlar.then(ritaEtiketter);
-  setTimeout(() => (laddar.style.opacity = 0), 7000);
+  setTimeout(() => { laddar.style.opacity = 0; hamtade(); }, 7000);
 
   // markeringen runt det kort som pekas på: lime, eftersom det går att klicka på
   const markMat = new THREE.MeshBasicMaterial({ color: 0xd4ff3f, fog: false }); limeMat.push(markMat);
@@ -184,7 +195,7 @@ function bygg() {
   const minU = 0, maxU = () => totalt();
   // dof: var djupskärpan börjar och hur fort den tar, räknat från kameran
   const ROOMS = {
-    falt: { namn: "Fältet", under: "tiden åt sidan, ljuset upp och ner", pan: true, fov: 50, stil: "glid", dof: (z) => [z + 1.6, 7],
+    falt: { namn: t("Fältet"), under: t("tiden åt sidan, ljuset upp och ner"), pan: true, fov: 50, stil: "glid", dof: (z) => [z + 1.6, 7],
       fit() { return passaV(4.15, 50) * 1.06; }, tillPan: (u) => xOf(u), franPan: (p) => p / XS + tot / 2, panSpann: () => [xOf(minU), xOf(maxU())],
       layout() {
         const lagd = [];
@@ -201,7 +212,7 @@ function bygg() {
           rikta(s, new THREE.Vector3(x, y, z), new THREE.Vector3(x, y, z + 5));
         });
       } },
-    rulle: { namn: "Rullen", under: "vidvinkel mot trumman. färgen runt, tiden längs", pan: true, fov: 74, stil: "trumma", dof: (z) => [z + .4, 4],
+    rulle: { namn: t("Rullen"), under: t("vidvinkel mot trumman. färgen runt, tiden längs"), pan: true, fov: 74, stil: "trumma", dof: (z) => [z + .4, 4],
       fit() { return Math.max(7.2, passaV(4.5, 74) * .92); }, tillPan: (u) => (u - tot / 2) * .5, franPan: (p) => p / .5 + tot / 2, panSpann: () => [(minU - tot / 2) * .5, (maxU() - tot / 2) * .5],
       layout() {
         aktiva().forEach((s) => {
@@ -210,7 +221,7 @@ function bygg() {
           rikta(s, p, p.clone().add(ut), new THREE.Vector3(0, Math.sin(th), -Math.cos(th)));
         });
       } },
-    moln: { namn: "Molnet", under: "du står mitt i. tiden är höjd, färgen är väderstreck", inne: true, fov: 76, stil: "dimma", dof: () => [7.2, 5],
+    moln: { namn: t("Molnet"), under: t("du står mitt i. tiden är höjd, färgen är väderstreck"), inne: true, fov: 76, stil: "dimma", dof: () => [7.2, 5],
       lat: (u) => (u / Math.max(1, totalt()) - .5) * .7 + .04,
       layout() {
         aktiva().forEach((s) => {
@@ -218,7 +229,7 @@ function bygg() {
           rikta(s, new THREE.Vector3(Math.cos(lon) * Math.cos(lat) * R, Math.sin(lat) * R, Math.sin(lon) * Math.cos(lat) * R), new THREE.Vector3(0, 0, 0));
         });
       } },
-    vagg: { namn: "Väggen", under: "du står i mitten, åren runt dig", inne: true, fov: 62, stil: "vagg", dof: () => [10.5, 6],
+    vagg: { namn: t("Väggen"), under: t("du står i mitten, åren runt dig"), inne: true, fov: 62, stil: "vagg", dof: () => [10.5, 6],
       layout() {
         const l = kronologisk(), rader = 6, kol = Math.ceil(l.length / rader), R = 8.5;
         const gap = Math.min(1.0, (Math.tan(THREE.MathUtils.degToRad(31)) * anvand() * R * 1.9 - .9) / (rader - 1));
@@ -229,7 +240,7 @@ function bygg() {
           rikta(s, p, new THREE.Vector3(0, p.y, 0));
         });
       } },
-    mork: { namn: "Mörkrummet", under: "rött ljus. bilden växer fram när du närmar dig", pan: true, fov: 46, stil: "mork", lutning: LUTNING, dof: (z) => [z + .9, 5],
+    mork: { namn: t("Mörkrummet"), under: t("rött ljus. bilden växer fram när du närmar dig"), pan: true, fov: 46, stil: "mork", lutning: LUTNING, dof: (z) => [z + .9, 5],
       fit() { return Math.max(passaV(2.8, 46), 2.7 / (Math.tan(THREE.MathUtils.degToRad(23)) * camera.aspect)); }, tillPan: (u) => M.x(u), franPan: (p) => M.u(p), panSpann: () => [M.x(minU), M.x(maxU())],
       layout() { M.lagg(kronologisk(), rikta, visaAbs); } },
   };
@@ -237,7 +248,9 @@ function bygg() {
   let rotX = 0, rotY = 0, velX = 0, velY = 0, panX = xOf(borjan[2010] ?? 0), panMal = panX, rotXMal = null, rotYMal = null;
   let fokusAr = null, hover = null, aktuell = null;
   const miljo = { falt: 1, mork: 0 }, dof = { start: 12, omfang: 8 };
-  const ko = skapaKoreografi({ world, camera });
+  // Koreografin samlar bunten framför rummets egen kamera, även när föredragningen styr den riktiga.
+  const rumsKam = { position: new THREE.Vector3(0, 0, 10) };
+  const ko = skapaKoreografi({ world, camera: rumsKam });
   let kamFran = null, kamTill = null;
   const traff = (s, y) => (y >= ABS ? s.abs : y >= UD ? s.undated : !s.abs && !s.undated && Math.floor(s.v.ar) === Math.floor(y));
   const klampa = (p) => { const r = ROOMS[rum].panSpann(); return Math.max(r[0], Math.min(r[1], p)); };
@@ -276,15 +289,50 @@ function bygg() {
     }
     docka.querySelectorAll("[data-rum]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.rum === r ? "true" : "false"));
     namn.textContent = R.namn; under.textContent = R.under; rot.dataset.rum = r;
-    if (!tyst) { prassel(.6); if (!reduce) { svep.textContent = (R.namn + " ■ ").repeat(3); svep.classList.remove("go"); void svep.offsetWidth; svep.classList.add("go"); } }
+    if (!tyst && !RF.aktiv) { prassel(.6); if (!reduce) { svep.textContent = (R.namn + " ■ ").repeat(3); svep.classList.remove("go"); void svep.offsetWidth; svep.classList.add("go"); } }
   }
-  function blas() {
+  // stanna: blås omkull men stanna i rummet (föredragningen bestämmer själv vart det går sedan)
+  function blas(stanna) {
     ko.avbryt(); FRO.forEach((s) => { s.flyg = null; });
-    aktiva().forEach((s) => { const p = new THREE.Vector3((rnd() - .5) * 18, (rnd() - .5) * 11, (rnd() - .5) * 12); dummy.position.copy(p); dummy.rotation.set(rnd() * 6, rnd() * 6, rnd() * 6); s.tp.copy(p); s.tq.copy(dummy.quaternion); s.start = klocka + rnd() * .15; });
-    velY += (rnd() - .5) * 3; velX += (rnd() - .5) * 2; prassel(1.4);
+    // i föredragningen blåser korten omkring där kameran står, inte kring rummets mitt
+    const cx = stanna && ROOMS[rum].pan ? panX : 0;
+    aktiva().forEach((s) => { const p = new THREE.Vector3(cx + (rnd() - .5) * 18, (rnd() - .5) * 11, (rnd() - .5) * 12); dummy.position.copy(p); dummy.rotation.set(rnd() * 6, rnd() * 6, rnd() * 6); s.tp.copy(p); s.tq.copy(dummy.quaternion); s.start = klocka + rnd() * .15; });
+    velY += (rnd() - .5) * 3; velX += (rnd() - .5) * 2;
+    if (stanna) { rotXMal = rotYMal = null; return; }
+    prassel(1.4);
     const andra = Object.keys(ROOMS).filter((r) => r !== rum);
-    setTimeout(() => bytRum(andra[Math.floor(rnd() * andra.length)]), reduce ? 0 : 1300);
+    setTimeout(() => { if (!RF.aktiv) bytRum(andra[Math.floor(rnd() * andra.length)]); }, reduce ? 0 : 1300);
   }
+
+  // ---- föredragningen i rummet ----
+  const kortFor = new Map(FRO.map((s) => [s.v, s]));
+  let absFore = null;
+  const RF = skapaRumsforedragning({
+    camera, rot, ko, LUTNING,
+    kortFor: (v) => kortFor.get(v),
+    get rum() { return rum; },
+    bytRum: (r, tyst) => bytRum(r, tyst),
+    blas: () => blas(true),
+    fov: () => ROOMS[rum].fov,
+    dof: () => [dof.start, dof.omfang],
+    anvand: () => anvand(),
+    portratt: () => camera.aspect < .85,
+    klar: klart,
+    varld: {
+      las: () => ({ rotX, rotY, panX }),
+      satt(w) { rotX = rotXMal = w.rotX; rotY = rotYMal = w.rotY; panX = panMal = w.panX; velX = velY = 0; },
+      mal(w) { if (w.rotY != null) rotYMal = w.rotY; if (w.panX != null) panMal = w.panX; },
+    },
+    // när föredragningen börjar och slutar: rummets egna reglage göms och visas igen
+    andrat(pa) {
+      rot.classList.toggle("foredrar", pa);
+      if (pa) {
+        fokusAr = null; fokus(); if (hover) hover.het = false; hover = null; satsMark(null); tips.style.transform = "translate(-9999px,0)";
+        absFore = visaAbs; if (!visaAbs) satsAbs(true);
+      } else if (absFore === false) { satsAbs(false); absFore = null; }
+      storlek();
+    },
+  });
 
   // ---- tidslinjen ----
   const tc = tl.getContext("2d");
@@ -319,7 +367,13 @@ function bygg() {
     const u = fokusAr != null ? posAr(fokusAr) : nuvarandeU();
     if (u != null) { const x = hudX(u, w); tc.fillStyle = "#d4ff3f"; tc.fillRect(x - 1, 2, 2, h - 4); tc.beginPath(); tc.moveTo(x - 6, 2); tc.lineTo(x + 6, 2); tc.lineTo(x, 9); tc.fill(); }
     const a = fokusAr ?? (u != null ? uTillAr(u) : null);
-    arText.textContent = a == null ? "" : a >= ABS ? "Absurdimo" : a >= UD ? "Utan datum" : `${Math.floor(a)} · ${antal[Math.floor(a)]} handlingar` + (fokusAr != null ? " · klicka igen för att släppa" : "");
+    const n = a == null || a >= UD ? 0 : antal[Math.floor(a)];
+    const text = a == null ? "" : a >= ABS ? "Absurdimo" : a >= UD ? t("Utan datum") : t("{ar} · {n} handlingar", { ar: Math.floor(a), n });
+    arText.textContent = text + (text && fokusAr != null && a < UD ? t(" · klicka igen för att släppa") : "");
+    // Skärmläsaren får samma uppgift som syns ovanför tidslinjen.
+    const nu = a == null ? Y0 : a >= ABS ? ABS : a >= UD ? UD : Math.floor(a);
+    const vt = text || t("Inget år valt");
+    if (tl.getAttribute("aria-valuetext") !== vt) { tl.setAttribute("aria-valuenow", nu); tl.setAttribute("aria-valuetext", vt); }
   }
   let drar = false, dragFlytt = 0, sistaX = 0;
   tl.addEventListener("pointerdown", (e) => { drar = true; dragFlytt = 0; sistaX = e.clientX; tl.setPointerCapture(e.pointerId); });
@@ -333,15 +387,18 @@ function bygg() {
     fokusAr = fokusAr != null && Math.floor(fokusAr) === Math.floor(ny) ? null : ny; klick(); fokus();
   });
   tl.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && fokusAr != null) { e.preventDefault(); fokusAr = null; fokus(); return; }
+    if (e.key === "Enter") { e.preventDefault(); oppnaNarmast(); return; }
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return; e.preventDefault();
     let y = fokusAr ?? 2010; y = Math.floor(y) + .5 + (e.key === "ArrowRight" ? 1 : -1);
     if (y > Y1 + .5) y = visaAbs && fokusAr === UD && e.key === "ArrowRight" ? ABS : UD; if (fokusAr === ABS && e.key === "ArrowLeft") y = UD; if (y < Y0) y = Y0 + .5;
     fokusAr = y; fokus();
   });
-  absKnapp.addEventListener("click", () => {
-    visaAbs = !visaAbs; absKnapp.setAttribute("aria-pressed", visaAbs); absEtikett.forEach((m) => (m.visible = visaAbs));
+  function satsAbs(v) {
+    visaAbs = v; absKnapp.setAttribute("aria-pressed", visaAbs); absEtikett.forEach((m) => (m.visible = visaAbs));
     if (!visaAbs && fokusAr === ABS) fokusAr = null; bytRum(rum, true);
-  });
+  }
+  absKnapp.addEventListener("click", () => satsAbs(!visaAbs));
 
   // ---- interaktion i rummet ----
   const ray = new THREE.Raycaster(), mus = new THREE.Vector2();
@@ -365,18 +422,31 @@ function bygg() {
     }
     const s = vald(e);
     if (s !== hover) { if (hover) hover.het = false; hover = s; if (s) s.het = true; canvas.classList.toggle("pointer", !!s); }
-    if (s) { tips.replaceChildren(s.v.titel, el("span", {}, s.abs ? "Absurdimo" : s.undated ? "odaterad" : String(Math.floor(s.v.ar)))); const r = rot.getBoundingClientRect(); tips.style.transform = `translate(${Math.min(e.clientX - r.left + 14, r.width - 260)}px,${e.clientY - r.top + 14}px)`; }
+    if (s) { tips.replaceChildren(s.v.titel, el("span", {}, s.abs ? "Absurdimo" : s.undated ? t("odaterad") : String(Math.floor(s.v.ar)))); const r = rot.getBoundingClientRect(); tips.style.transform = `translate(${Math.min(e.clientX - r.left + 14, r.width - 260)}px,${e.clientY - r.top + 14}px)`; }
     else tips.style.transform = "translate(-9999px,0)";
   });
   canvas.addEventListener("pointerup", (e) => { canvas.classList.remove("grabbing"); if (ner && flytt < 6) { const s = vald(e); if (s) oppnaFro(s); } ner = null; });
   canvas.addEventListener("pointerleave", () => { if (hover) hover.het = false; hover = null; tips.style.transform = "translate(-9999px,0)"; });
   canvas.addEventListener("wheel", (e) => { e.preventDefault(); zoom = Math.max(.35, Math.min(2.2, zoom * (1 + e.deltaY * .0012))); }, { passive: false });
   docka.querySelectorAll("[data-rum]").forEach((b) => b.addEventListener("click", () => bytRum(b.dataset.rum)));
-  blasKnapp.addEventListener("click", blas);
+  blasKnapp.addEventListener("click", () => blas());
+  // Med tangentbordet: pilarna flyttar blicken och Enter öppnar handlingen mitt i bild.
+  canvas.addEventListener("keydown", (e) => {
+    if (RF.aktiv) return;
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (e.key === "Enter") { e.preventDefault(); oppnaNarmast(); }
+    else if (d) {
+      e.preventDefault();
+      if (ROOMS[rum].pan) panMal = klampa(panMal + d * 1.1);
+      else rotYMal = (rotYMal ?? rotY) + d * .22;
+    }
+  });
   const tangent = (e) => {
-    if (!aktiv || visareOppen() || document.activeElement === tl || /input|textarea/i.test(document.activeElement?.tagName)) return;
+    const fokuserad = document.activeElement;
+    if (!aktiv || RF.aktiv || visareOppen() || fokuserad === tl || /input|textarea/i.test(fokuserad?.tagName)) return;
     const map = { 1: "falt", 2: "rulle", 3: "moln", 4: "vagg", 5: "mork" }; if (map[e.key]) bytRum(map[e.key]);
-    if (e.key === " ") { e.preventDefault(); blas(); }
+    // Mellanslag på en knapp trycker på knappen. Annars blåser det.
+    if (e.key === " " && !fokuserad?.closest?.("button, a")) { e.preventDefault(); blas(); }
     if (e.key === "Escape" && fokusAr != null) { fokusAr = null; fokus(); }
   };
   addEventListener("keydown", tangent);
@@ -392,6 +462,19 @@ function bygg() {
     if (R.pan) panMal = klampa(s.tp.x);
     else { rotYMal = Math.atan2(s.tp.x, -s.tp.z); if (rum === "moln") rotXMal = -Math.asin(s.tp.y / Math.max(.01, s.tp.length())); }
   }
+  // Den handling som står närmast mitten av bilden. Ett år i fokus går före.
+  function narmast() {
+    let bast = null, bd = Infinity;
+    for (const s of aktiva()) {
+      if ((s.fade ?? 1) < .35 || !s.mesh.visible) continue;
+      s.mesh.getWorldPosition(_p).project(camera);
+      if (_p.z > 1 || Math.abs(_p.x) > 1.05 || Math.abs(_p.y) > 1.05) continue;
+      const d = Math.hypot(_p.x * camera.aspect, _p.y) - (s.lyft ? 10 : 0);
+      if (d < bd) { bd = d; bast = s; }
+    }
+    return bast;
+  }
+  function oppnaNarmast() { if (ko.aktiv) return; const s = narmast(); if (s) { klick(); oppnaFro(s); } }
   function oppnaFro(s) {
     const o = ordning();
     oppna(o.map((x) => x.v), o.indexOf(s), { stil: ROOMS[rum].stil, onStep: (v) => folj(FRO.find((x) => x.v === v)) });
@@ -401,7 +484,7 @@ function bygg() {
   function tillampa() {
     renderer.setPixelRatio(kv.dpr); storlek(); satsLime();
     rot.classList.toggle("enkel", !kv.efter);
-    atergivning.textContent = "Återgivning: " + (kv.efter ? "full" : "förenklad");
+    atergivning.textContent = kv.efter ? t("Återgivning: full") : t("Återgivning: förenklad");
     atergivning.setAttribute("aria-pressed", kv.efter ? "true" : "false");
   }
   atergivning.addEventListener("click", () => { kv.vaxla(); tillampa(); klick(); });
@@ -421,6 +504,7 @@ function bygg() {
     renderer.setSize(w, h, false); camera.aspect = w / h;
     if (kv.efter) efter.storlek(w, h, renderer.getPixelRatio()); else efter.storlek(1, 1, 1);
     UI.top = w < 600 ? 64 : 70; UI.bottom = h < 560 ? 132 : 150;
+    if (RF.aktiv) { UI.top = 52; UI.bottom = w <= 700 ? 104 : 86; } // föredragningens kontroller i stället för tidslinjen
     camera.setViewOffset(w, h, 0, (UI.bottom - UI.top) / 2, w, h); camera.updateProjectionMatrix();
     if (rum === "vagg") ROOMS.vagg.layout();
   }
@@ -433,6 +517,7 @@ function bygg() {
     // Tiden följer klockan även när rutorna är få, så att en övergång tar lika lång tid på en svag dator.
     // Ett steg är högst en kvarts sekund. Har fliken varit dold börjar klockan om (se visibilitychange nedan).
     const ra = (nu - sist) / 1000, dt = Math.min(.25, Math.max(0, ra)); sist = nu; klocka += dt;
+    RF.fore();
     const k = 1 - Math.exp(-dt * (reduce ? 30 : 3.4)), kq = 1 - Math.exp(-dt * (reduce ? 30 : 4));
     if (!visareOppen()) aktuell = null;
     const lugn = aktuell || fokusAr != null ? .15 : 1;
@@ -446,8 +531,8 @@ function bygg() {
       velX = velY = 0;
       camera.position.set(0, Math.sin(Math.PI * e) * .35, camZ); camera.lookAt(0, camera.position.y * .4, camZ - 1);
     } else {
-      if (rum === "rulle") velX += dt * .05 * lugn;
-      if (rum === "moln") velY += dt * .04 * lugn;
+      if (rum === "rulle" && RF.fritt) velX += dt * .05 * lugn;
+      if (rum === "moln" && RF.fritt) velY += dt * .04 * lugn;
       rotX += velX * dt * 4; rotY += velY * dt * 4; velX *= Math.pow(.04, dt); velY *= Math.pow(.04, dt);
       if (rotXMal != null) { rotX += (rotXMal - rotX) * k * 1.2; velX *= .9; }
       if (rotYMal != null) { let d = rotYMal - rotY; d = Math.atan2(Math.sin(d), Math.cos(d)); rotY += d * k * 1.2; velY *= .9; }
@@ -461,15 +546,17 @@ function bygg() {
     if (ko.klar(klocka)) FRO.forEach((s) => { s.flyg = null; });
     // syns i DOM medan korten flyttas mellan rummen (används av testerna)
     if (rot.hasAttribute("data-overgang") !== !!ko.aktiv) rot.toggleAttribute("data-overgang", !!ko.aktiv);
+    rumsKam.position.copy(camera.position);
     world.rotation.set(rotX, rotY, 0, "YXZ"); world.position.x = -panX;
     world.updateMatrixWorld();
+    RF.kamera(); // föredragningen tar över kameran
     const mo = miljo.mork, mk = mo * mo * (3 - 2 * mo);
 
     // dimma, bakgrund och ljus
     if (rum === "rulle" && !ko.aktiv) { scene.fog.near = camZ - 1.5; scene.fog.far = camZ + 4.2; } else { scene.fog.near = R.inne ? 3 : Math.max(4, camZ - 2); scene.fog.far = camZ + (R.inne ? 14 : rum === "mork" ? 11 : 24); }
     scene.background.copy(RUM_FARG).lerp(MORK_FARG, mk); scene.fog.color.copy(scene.background);
     lx += (lxMal - lx) * (1 - Math.exp(-dt * 2.2)); ly += (lyMal - ly) * (1 - Math.exp(-dt * 2.2));
-    lampa.position.set(lx * 7, 3.5 - ly * 3.5, camZ + 6); lampa.target.position.set(0, 0, camZ - 8);
+    if (!RF.ljus(lampa)) { lampa.position.set(lx * 7, 3.5 - ly * 3.5, camZ + 6); lampa.target.position.set(0, 0, camZ - 8); }
     lampa.intensity = 1.7 * (1 - mk);
     himmel.intensity = lerp(1.9, 1.5, mk); himmel.color.copy(HIMMEL[0]).lerp(HIMMEL[1], mk); himmel.groundColor.copy(MARK[0]).lerp(MARK[1], mk);
     saker.intensity = 8 * mk; saker.position.set(panX, 2.6, M.VZ + 1.2);
@@ -479,7 +566,8 @@ function bygg() {
     grid.visible = miljo.falt > .01;
     M.steg(mk, klocka, panX);
     const [ds, dz] = R.dof(camZ); dof.start += (ds - dof.start) * k; dof.omfang += (dz - dof.omfang) * k;
-    efter.U.uStart.value = dof.start; efter.U.uOmfang.value = dof.omfang;
+    const fdof = RF.dof() || [dof.start, dof.omfang];
+    efter.U.uStart.value = fdof[0]; efter.U.uOmfang.value = fdof[1];
     efter.U.uTidK.value = reduce ? 1 : Math.floor(klocka * 24) % 97;
     efter.U.uVinjett.value = lerp(.5, .62, mk);
 
@@ -489,14 +577,15 @@ function bygg() {
     const synlHalv = camZ * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
     const iMork = rum === "mork" && !ko.aktiv;
     FRO.forEach((s) => {
-      const m = s.mesh, av = s.abs && !visaAbs;
-      if (s.flyg) { if (ko.kort(s, klocka)) s.flyg = null; if (s.flyg && s.flyg.ljud) { s.flyg.ljud = false; if (++ljudRakna % 12 === 0) prassel(.3); } }
+      const m = s.mesh, av = s.abs && !visaAbs, fk = RF.kort(s);
+      if (s.flyg) { if (ko.kort(s, klocka)) s.flyg = null; if (s.flyg && s.flyg.ljud) { s.flyg.ljud = false; if (++ljudRakna % 12 === 0 && !fk) prassel(.3); } }
       else if (klocka >= s.start) {
         _t.copy(s.tp); if (rum === "mork") _t.y += s.hoj;
         m.position.lerp(_t, k); m.quaternion.slerp(s.tq, kq);
       }
-      const f = av ? 0 : (s.het ? 1.22 : 1) * (aktuell === s ? 1.3 : 1) * (s.lyft ? 1.18 : s.tillbaka ? .86 : 1);
-      m.scale.x += (s.bas.x * f - m.scale.x) * .2; m.scale.y += (s.bas.y * f - m.scale.y) * .2; m.visible = m.scale.x > .01;
+      const f = av ? 0 : (s.het ? 1.22 : 1) * (aktuell === s ? 1.3 : 1) * (s.lyft ? 1.18 : s.tillbaka ? .86 : 1) * (fk ? fk.skala : 1);
+      const ks = fk ? 1 - Math.exp(-dt * 14) : .2; // i föredragningen viker korten undan lika fort oavsett bildfrekvens
+      m.scale.x += (s.bas.x * f - m.scale.x) * ks; m.scale.y += (s.bas.y * f - m.scale.y) * ks; m.visible = m.scale.x > .01;
       let fade = 1;
       if (rum === "rulle" && !s.flyg) { m.getWorldPosition(_p); m.getWorldQuaternion(_q); _n.set(0, 0, 1).applyQuaternion(_q); _c.copy(camera.position).sub(_p).normalize(); fade = Math.max(0, Math.min(1, (_n.dot(_c) - .05) / .45)); }
       s.fade = fade;
@@ -504,12 +593,13 @@ function bygg() {
       if (s.klar) s.last = Math.min(1, s.last + dt / (reduce ? .2 : .9));
       if (iMork) {
         const dx = Math.abs(m.position.x - panX) / Math.max(1, synlHalv);
-        const mal = Math.max(1 - THREE.MathUtils.smoothstep(dx, .16, .5), s.het || s.lyft || aktuell === s ? 1 : 0);
-        s.fram += mal > s.fram ? Math.min((reduce ? 3 : .5) * dt, mal - s.fram) : -Math.min(.06 * dt, s.fram - mal);
+        const mal = fk ? fk.fram ?? 0 : Math.max(1 - THREE.MathUtils.smoothstep(dx, .16, .5), s.het || s.lyft || aktuell === s ? 1 : 0);
+        if (fk && fk.fram != null) s.fram = fk.fram; // i föredragningen framkallas hjälten i takt
+        else s.fram += mal > s.fram ? Math.min((reduce ? 3 : .5) * dt, mal - s.fram) : -Math.min(.06 * dt, s.fram - mal);
         s.hoj += (((s.het || aktuell === s) ? .3 : s.lyft ? .18 : 0) - s.hoj) * k;
       } else s.hoj += (0 - s.hoj) * k;
-      const dimMal = (s.tillbaka ? .42 : 1) * (rum === "rulle" ? .02 + .98 * fade : 1);
-      s.dim += (dimMal - s.dim) * .15;
+      const dimMal = (s.tillbaka ? .42 : 1) * (rum === "rulle" ? .02 + .98 * fade : 1) * (fk ? fk.dim : 1);
+      s.dim += (dimMal - s.dim) * (fk ? 1 - Math.exp(-dt * 9) : .15);
       if (rum === "rulle" && fade < .02 && s.dim < .08 && !s.flyg) m.visible = false; // trummans baksida syns inte, som förut
       s.uni.uDev.value = s.last * lerp(1, s.fram, mk); s.uni.uDim.value = s.dim;
       s.ram.color.copy(s.ramFarg).multiplyScalar(s.dim * lerp(1, .6 + .4 * s.uni.uDev.value, mk));
@@ -523,11 +613,12 @@ function bygg() {
         sk.scale.set(1 + (.3 + gap) / s.bas.x, 1 + (.3 + gap) / s.bas.y, 1);
       } else sk.visible = false;
     });
-    satsMark(!ko.aktiv && (hover || aktuell) || null);
+    satsMark(!ko.aktiv && !RF.aktiv && (hover || aktuell) || null);
 
     if (kv.efter) efter.rita(scene, camera, markPa || miljo.falt > .02);
     else { renderer.setRenderTarget(null); renderer.render(scene, camera); }
-    ritaTL();
+    if (!RF.aktiv) ritaTL();
+    RF.efter();
     if (kv.mat(ra, ko.aktiv || klara < antalBilder * .85)) tillampa();
   }
   addEventListener("visibilitychange", () => { sist = performance.now(); });
@@ -535,6 +626,7 @@ function bygg() {
   return {
     rot,
     starta() { aktiv = true; requestAnimationFrame(() => { tillampa(); sist = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(ruta); }); },
-    stoppa() { aktiv = false; cancelAnimationFrame(raf); },
+    stoppa() { aktiv = false; cancelAnimationFrame(raf); RF.stoppa(); },
+    foredra: (fro) => RF.foredra(fro),
   };
 }

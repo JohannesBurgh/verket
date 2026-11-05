@@ -74,4 +74,26 @@ test.describe("Skärmdumpar", () => {
     await lugnt(page);
     await skarmdump(page, info, "08-bestallare");
   });
+
+  // Den engelska sidan (uppdrag 9).
+  test("den engelska sidan", async ({ page }, info) => {
+    test.setTimeout(120_000);
+    const bild = async (adress, namn, opt = {}) => {
+      await page.goto(adress);
+      await expect(page.locator("#app > *").first()).toBeVisible();
+      await page.waitForLoadState("networkidle");
+      await lugnt(page, 500);
+      await skarmdump(page, info, namn, opt);
+    };
+    await bild("./en/#application", "20-en-ansokan-start");
+    await bild("./en/#register", "21-en-registret", { helsida: false });
+    await bild("./en/#cases", "22-en-arenden");
+    await bild("./en/#case-nordisk-saga", "23-en-arende");
+    await bild("./en/#clients", "24-en-bestallare");
+    await page.goto("./en/#application");
+    await page.getByRole("button", { name: "Simplified procedure (I am in a hurry)" }).click();
+    await expect(page.locator(".paper.beslut .stamp").first()).toHaveClass(/\bgo\b/);
+    await lugnt(page, 600);
+    await skarmdump(page, info, "25-en-beslut");
+  });
 });

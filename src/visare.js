@@ -1,18 +1,19 @@
 // Visaren: ett verk i taget, stort. Pilar, svep och Esc. Delas av alla vyer.
 import { el, metaRad, kanalFarg, PREVIEW, reduce, storBild } from "./data.js";
 import { klick } from "./ljud.js";
+import { t, vag, arVy, SPRAK, avdelningNamn } from "./sprak.js";
 
 const root = document.getElementById("visare");
 let lista = [], i = 0, stil = "glid", onStep = null, tidigareFokus = null;
 
 const scen = el("div", { class: "vscen" });
-const p = el("button", { type: "button", class: "vnav p", "aria-label": "Föregående" }, "‹");
-const n = el("button", { type: "button", class: "vnav n", "aria-label": "Nästa" }, "›");
+const p = el("button", { type: "button", class: "vnav p", "aria-label": t("Föregående") }, "‹");
+const n = el("button", { type: "button", class: "vnav n", "aria-label": t("Nästa") }, "›");
 scen.append(p, n);
-const titel = el("b"), meta = el("div", { class: "mono" }), text = el("div", { class: "text" });
-const nasta = el("button", { type: "button" }, "Nästa →");
+const titel = el("b", { id: "visare-titel" }), meta = el("div", { class: "mono" }), text = el("div", { class: "text" });
+const nasta = el("button", { type: "button" }, t("Nästa →"));
 const knappar = el("div", { class: "vknappar" },
-  el("button", { type: "button", onclick: () => steg(-1) }, "← Förra"), nasta, el("button", { type: "button", onclick: stang }, "Stäng"));
+  el("button", { type: "button", onclick: () => steg(-1) }, t("← Förra")), nasta, el("button", { type: "button", onclick: stang }, t("Stäng")));
 root.append(scen, el("div", { class: "vcap" }, el("div", {}, titel, meta, text), knappar));
 p.onclick = () => steg(-1); n.onclick = () => steg(1); nasta.onclick = () => steg(1);
 
@@ -23,7 +24,7 @@ function media(v) {
   else if (v.youtube) {
     const [bg, fg] = kanalFarg(v.kanal);
     m.append(el("div", { class: "ytstor", style: `background:${bg};color:${fg}` }, el("small", {}, v.kanal), el("strong", {}, v.titel),
-      el("a", { href: "https://www.youtube.com/watch?v=" + v.youtube, target: "_blank", rel: "noopener" }, "Spela på YouTube")));
+      el("a", { href: "https://www.youtube.com/watch?v=" + v.youtube, target: "_blank", rel: "noopener" }, t("Spela på YouTube"))));
   } else m.append(storBild(v));
   return m;
 }
@@ -46,14 +47,19 @@ function visa(d) {
     } else gammal.remove();
   }
   titel.textContent = v.titel;
-  meta.textContent = `${metaRad(v)} · ${v.avdelning} · ${i + 1} / ${lista.length}`;
+  meta.textContent = `${metaRad(v)} · ${avdelningNamn(v.avdelning)} · ${i + 1} / ${lista.length}`;
   text.innerHTML = v.text || "";
+  // En text som ännu inte översatts visas på svenska, och märks så att skärmläsaren uttalar den rätt.
+  if (v.textSprak && v.textSprak !== SPRAK) text.setAttribute("lang", v.textSprak); else text.removeAttribute("lang");
   if (onStep) onStep(v);
 }
+// Medan visaren är öppen går det inte att nå sidan bakom, varken med tabb eller skärmläsare.
+const BAKOM = ["#hoppa", ".bar", "#app", "#fotnot", ".lamp"];
+const bakom = (av) => BAKOM.forEach((s) => { const e = document.querySelector(s); if (e) e.inert = av; });
 export function oppna(l, start, opt = {}) {
   lista = l; i = Math.max(0, start); stil = opt.stil || "glid"; onStep = opt.onStep || null;
   if (root.hidden) tidigareFokus = document.activeElement;
-  root.hidden = false;
+  root.hidden = false; bakom(true);
   scen.querySelectorAll(".m").forEach((m) => m.remove());
   visa(0);
   nasta.focus({ preventScroll: true });
@@ -63,9 +69,9 @@ export function stang() {
   if (root.hidden) return;
   scen.querySelectorAll("video").forEach((x) => x.pause());
   scen.querySelectorAll(".m").forEach((m) => m.remove());
-  root.hidden = true;
+  root.hidden = true; bakom(false);
   if (tidigareFokus) tidigareFokus.focus({ preventScroll: true });
-  if (location.hash.startsWith("#verk-")) history.replaceState(null, "", "#registret");
+  if (arVy("verk")) history.replaceState(null, "", vag("registret"));
 }
 export const oppen = () => !root.hidden;
 
@@ -75,6 +81,15 @@ scen.addEventListener("pointerup", (e) => { if (sx == null) return; const dx = e
 addEventListener("keydown", (e) => {
   if (root.hidden) return;
   if (["Escape", "ArrowRight", "ArrowLeft"].includes(e.key) || /^[1-9]$/.test(e.key)) e.stopImmediatePropagation();
+  // Tabb stannar i visaren: från sista knappen till första och tvärtom.
+  if (e.key === "Tab") {
+    const f = [...root.querySelectorAll("button, a[href], video[controls], iframe")].filter((x) => x.offsetParent !== null || x === document.activeElement);
+    if (!f.length) return;
+    const forst = f[0], sist = f[f.length - 1], nu = document.activeElement;
+    if (e.shiftKey && (nu === forst || !root.contains(nu))) { e.preventDefault(); sist.focus(); }
+    else if (!e.shiftKey && (nu === sist || !root.contains(nu))) { e.preventDefault(); forst.focus(); }
+    return;
+  }
   if (e.key === "Escape") stang();
   else if (e.key === "ArrowRight") { e.preventDefault(); steg(1); }
   else if (e.key === "ArrowLeft") { e.preventDefault(); steg(-1); }
