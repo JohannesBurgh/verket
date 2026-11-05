@@ -26,6 +26,14 @@ ingress: "En film på Kungliga Operans kanal. Kungliga Baletten repeterar Jiří
 
 ::verk film-bella-figura-kungliga-baletten
 
+Ur Dropbox-mappen har det tillkommit två stillbilder från repetitionen, en intervjufilm och en reptrailer. Samma mapp innehåller en reptrailer för In the Middle, Somewhat Elevated.
+
+::verk 121-bella-thumb-2 141-bella-thumb-1 v04-bella-figura-intervju v05-bella-figura-reptrailer v14-in-the-middle-somewhat-elevated-reptrail
+
+[JOHAN: Hörde In the Middle, Somewhat Elevated till samma uppdrag som Bella Figura, eller var det ett eget?]
+
+[JOHAN: Filmerna finns i flera format (kvadratisk, stående, liggande). Klipptes de för en viss kanal?]
+
 [JOHAN: Finns det stillbilder från repetitionen som kan läggas i inkorgen?]
 
 ## Beslut

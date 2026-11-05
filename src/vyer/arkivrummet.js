@@ -515,8 +515,8 @@ function bygg() {
   function ruta(nu) {
     raf = requestAnimationFrame(ruta);
     // Tiden följer klockan även när rutorna är få, så att en övergång tar lika lång tid på en svag dator.
-    // Ett steg är högst en kvarts sekund. Har fliken varit dold börjar klockan om (se visibilitychange nedan).
-    const ra = (nu - sist) / 1000, dt = Math.min(.25, Math.max(0, ra)); sist = nu; klocka += dt;
+    // Ett steg är högst en sekund, så att en mycket svag dator (utan grafikkort) ändå blir klar med ett rumsbyte. Har fliken varit dold börjar klockan om (se visibilitychange nedan).
+    const ra = (nu - sist) / 1000, dt = Math.min(1, Math.max(0, ra)); sist = nu; klocka += dt;
     RF.fore();
     const k = 1 - Math.exp(-dt * (reduce ? 30 : 3.4)), kq = 1 - Math.exp(-dt * (reduce ? 30 : 4));
     if (!visareOppen()) aktuell = null;

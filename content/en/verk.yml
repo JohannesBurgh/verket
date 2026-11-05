@@ -15,6 +15,11 @@ avdelningar:
 
 # Epokerna. Till vänster det svenska namnet i verkfilerna.
 epoker:
+  "Generativ AI, 2025": "Generative AI, 2025"
+  "Produktfoto, Dialogbox": "Product photography, Dialogbox"
+  "Lärobok, generativ AI, 2025": "Textbook, generative AI, 2025"
+  "Evenemang, 2025–2026": "Events, 2025–2026"
+  "Marketing Levels, 2022–2026": "Marketing Levels, 2022–2026"
   "Abstrakt, 2011": "Abstract, 2011"
   "Absurdimo": "Absurdimo"
   "Dans": "Dance"
@@ -437,3 +442,275 @@ verk:
   v01-riksteaterns-logga-animerad:
     titel: "Riksteatern’s logo, animated"
     text: "Animated by myself. The clip is played here."
+  106-generated-image-august-28-2025-5-01pm:
+    titel: "The restaurant, draft"
+  107-dsc3153:
+    titel: "The cards"
+  108-dsc2962:
+    titel: "Conversation at the table"
+  109-modig-2025-marketing-foundations-book-fi:
+    titel: "The categories"
+  110-260211-cmo-club-frukosttraff-ai-seo-med-:
+    titel: "The breakfast meeting"
+  111-dsc2387:
+    titel: "The woman and the dog"
+    text: "A woman in a denim jacket crouches on a gravel path with a black dog in front of her. She smiles at the camera. The dog looks elsewhere."
+  112-dsc3062:
+    titel: "Games night"
+  113-modig-2025-customer-behavior-ebook-001:
+    titel: "The authors"
+  114-modig-2025-marketing-foundations-book-fi:
+    titel: "Marketing Foundations, cover"
+  115-dsc3877:
+    titel: "The guests"
+  116-druva-thumb-1:
+    titel: "En druva i solen"
+  117-11-d-4-final:
+    titel: "Meeat Burgers, logotype"
+  118-dsc3256:
+    titel: "The Dialogbox"
+  119-generated-image-august-29-2025-2-21pm-1:
+    titel: "Father and son eating"
+  120-dsc3802:
+    titel: "Two guests"
+  121-bella-thumb-2:
+    titel: "The red skirts"
+    text: "Dancers in wide red skirts spin in a rehearsal studio. The movement turns the skirts into blurred fields. The mirrors behind double the room."
+  122-dsc4087:
+    titel: "The couple with the book"
+  123-app-bokning-a-close-up-of-a-person-holdi:
+    titel: "The booking on the phone"
+  124-crw-0740:
+    titel: "The cap"
+    text: "Portrait of a young man in a knitted cap and a striped shirt. He looks straight into the camera. The background is dark and without detail."
+  125-thumb-storytelling-eng:
+    titel: "Cover, Storytelling"
+  126-modig-2025-customer-behavior-ebook-3-001:
+    titel: "The heads"
+    text: "Illustration for a textbook. Two heads, one drawn in dense line, the other in black, meet in profile. The image was made with generative AI."
+  127-dsc3562:
+    titel: "The couple"
+  128-dsc2637-redigera-2:
+    titel: "The Dialogbox on the table"
+    text: "A box of the card game Dialogbox stands on a table in a living room. Three people sit at another table behind it. The box is sharp, the people are not."
+  129-thumb-affarsstrategi:
+    titel: "Cover, Business strategy"
+  130-vardet-thumb-1:
+    titel: "Värdet av konst, the speech"
+    text: "A black and white image from a launch party. Someone speaks into a microphone in front of a gathering of guests. The room is full."
+  131-dsc1722-edit:
+    titel: "The lecture"
+  132-black-and-white-glossy-interior-photog-e:
+    titel: "The gallery"
+    text: "A black and white room with framed photographs on the walls, a chequered floor and a ceiling lamp. The image was made with generative AI and shows no place that exists."
+  133-dsc2929:
+    titel: "She listens"
+    text: "A woman at a table smiles at someone outside the frame. The foreground is a blurred shoulder. The light comes from a window on the left."
+  134-dsc0576:
+    titel: "The wedding cake"
+  135-an-interior-of-a-swedish-upper-class-ham:
+    titel: "Meeat Burgers, dinner"
+  136-ba7a0736:
+    titel: "The woman with the glasses"
+    text: "Portrait of a woman with grey curly hair, glasses and a necklace. She smiles with her mouth closed. The background is an even grey."
+  137-vardet-thumb-2:
+    titel: "Värdet av konst, the book"
+  138-plint-a3a4378:
+    titel: "Plint, the vaulting box"
+    text: "Three young actors stand around a vaulting box in a gym. One of them wears a backpack. Balls lie on the floor."
+  139-modig-2025-customer-behavior-ebook-4-001:
+    titel: "Hands raised"
+  140-exterior-generated-image-september-01-20:
+    titel: "Meeat Burgers, the facade"
+  141-bella-thumb-1:
+    titel: "Bella Figura, the rehearsal"
+    text: "A dancer in a rehearsal studio moves towards the camera while others remain in the background. The image was taken during rehearsal."
+  142-a-busy-industrial-port-with-containers-9:
+    titel: "The harbour"
+  143-thumb-certified-brand-strategist:
+    titel: "Cover, Certified Brand Strategist"
+  144-perfektion1-tyst-teater:
+    titel: "Perfektion"
+    text: "Three figures in black dresses stand on a stage in smoke under a single spotlight. One of them sits in a wheelchair. The rest of the stage is dark."
+  145-perfektion2-tyst-teater:
+    titel: "Perfektion II"
+    text: "The same three figures, now with their arms raised towards two spotlights. The smoke catches the light. None of them looks at the audience."
+  146-abstract-glossy-black-and-white-photog-0:
+    titel: "The marble stairs II"
+  147-dsc1737:
+    titel: "The lecturer"
+  148-a-father-and-son-having-a-beautiful-mo-4:
+    titel: "Father and son by the window"
+    text: "An older man and a child with curly hair share a burger by a window. The image was made with generative AI for a fictional restaurant chain."
+  149-modig-2025-marketing-foundations-book-fi:
+    titel: "The dark side of sales"
+    text: "Illustration for a textbook. A hand holds out a tower of banknotes that collapses onto a group of people. The image was made with generative AI."
+  150-crw-6491:
+    titel: "The embrace"
+    text: "A fair-haired child holds an adult from behind. The adult has their eyes closed. The light is cold."
+  151-gen4-add-logotype-img-2-to-the-white-bri:
+    titel: "Meeat Burgers, the wall"
+  152-mg-7155:
+    titel: "The smile"
+    text: "Black and white portrait of a man with short hair smiling broadly. The background is light. Nothing else is visible."
+  153-crw-2898:
+    titel: "Two in evening light"
+    text: "Two women in low evening light. One looks into the camera, the other past it. The background is green and blurred."
+  154-dsc1819:
+    titel: "The audience"
+  155-dsc1763:
+    titel: "The notes"
+  156-6e63453154593abde29c4185b76ccbf4-copy-1:
+    titel: "The restaurant, the booths"
+  157-conversation-starter-1:
+    titel: "The conversation card"
+  158-butterfly-thumb-1:
+    titel: "Madame Butterfly, the costume"
+    text: "A singer in a white and orange costume stands on white paper beside a staircase while costumers work around her. The image was taken backstage."
+  159-jorge-castro-16-9-ml-logga:
+    titel: "The lecturer at the screen"
+  160-black-and-white-glossy-lifestyle-photo-6:
+    titel: "The villa by the pool"
+  161-modig-2025-customer-behavior-ebook-2-001:
+    titel: "The hands that meet"
+  162-modig-2025-customer-behavior-ebook-6-001:
+    titel: "The rainbow in the hand"
+  163-crw-8991:
+    titel: "Siesta, black and white"
+  164-mg-3401:
+    titel: "The frogs III"
+    text: "Two dancers in suits and frog heads stand in a studio. Between them stands a woman in a white shirt. A light on a stand is visible behind them."
+  165-black-and-white-glossy-image-of-two-ex-c:
+    titel: "The handshake"
+  166-dsc3661:
+    titel: "The glasses and the book"
+    text: "Three empty wine glasses stand on a round table next to a book. The light is warm and low. A hand appears at the edge of the frame."
+  167-mg-0909:
+    titel: "Portrait in a blue wig"
+    text: "A woman in a blue bob wig looks into the camera. Half of the face lies in darkness. The light comes hard from the side."
+  168-crw-8991:
+    titel: "Siesta, in colour"
+    text: "A woman sleeps in a chair on a veranda with an infant on her chest. The same image as Siesta, in colour and with a wider crop."
+  169-modig-2025-marketing-foundations-book-fi:
+    titel: "The diamond"
+    text: "Illustration for a textbook. Two hands hold out a diamond between them. The image was made with generative AI."
+  170-generated-image-september-01-2025-1-19pm:
+    titel: "Blosserum, the smile"
+  171-dsc3897:
+    titel: "Three with the book"
+  172-modig-2025-customer-behavior-ebook-5-001:
+    titel: "The customer journey in five steps"
+  173-generated-image-august-28-2025-4-57pm:
+    titel: "Meeat Burgers, the kitchen"
+  174-editorial-lifestyle-magazine-cover-bl-5f:
+    titel: "The house by the sea"
+    text: "A white house with sun loungers in front of a sea under heavy clouds. Black and white. The image was made with generative AI."
+  175-mg-0515:
+    titel: "Blue wigs"
+    text: "Four dancers in blue wigs and black clothes on a dark stage. They stretch their arms in different directions. The floor is black."
+  176-dsc3310:
+    titel: "The question card"
+  177-abstract-glossy-black-and-white-photog-0:
+    titel: "The marble stairs"
+  178-crw-8095:
+    titel: "The man in the blue shirt"
+    text: "Portrait of an older man with glasses and a grey beard in a light blue shirt. He smiles crookedly. The background is green and blurred."
+  179-mg-3297:
+    titel: "The frogs"
+    text: "Two dancers in suits and frog heads on a glossy floor. One walks, the other stretches out their arms. There is no explanation in the image."
+  180-plint-mg-0022:
+    titel: "Plint, from above"
+    text: "Three actors lie on the floor of a gym, photographed from directly above. Balls, a bar and a vaulting box lie around them. They look in different directions."
+  181-color-logo-with-background:
+    titel: "Blosserum, logotype"
+  182-mg-3335:
+    titel: "The frogs II"
+    text: "Two dancers in suits and frog heads stand side by side with their legs apart. Their hands rest on their knees. The floor faintly mirrors them."
+  183-plint-mg-0140:
+    titel: "Plint, the wall bars"
+  184-talk-58144:
+    titel: "The contract"
+    text: "A hand with a fountain pen signs a document. Black and white, with a cufflink and a wristwatch in frame. The image was made with generative AI."
+  185-84a3195-fotograf-johan-soderberg:
+    titel: "Virpi Pahkinen II"
+    text: "Two dancers in bronze light on a blue stage. One bends backwards over the other. The arms point out into the space."
+  186-dsc3578:
+    titel: "The opening"
+  v02-allt-som-ar-vart-reportage:
+    titel: "Allt som är värt, report"
+    text: "A report from a theatre production, with interviews in a dressing room and images from the stage. The film was made for Facebook."
+  v03-almedalen-sketch:
+    titel: "Almedalen, sketch"
+    text: "A sketch recorded for Riksteatern in connection with Almedalen."
+  v04-bella-figura-intervju:
+    titel: "Bella Figura, interview"
+    text: "Interview film from the rehearsals of Bella Figura. Dancers and choreographer in the studio, intercut with interview."
+  v05-bella-figura-reptrailer:
+    titel: "Bella Figura, repertoire trailer"
+    text: "Trailer cut from the rehearsals of Bella Figura. The red skirts return."
+  v06-clio-filmtrailer:
+    titel: "Clio, film trailer"
+    text: "Trailer for educational films, with clips from several films in sequence."
+  v07-clio-i-klassrummet:
+    titel: "Clio in the classroom"
+    text: "A report and sales film from a classroom where the learning material is used. Teachers and students are interviewed."
+  v08-demokratins-granser-vinjett:
+    titel: "Demokratins gränser, ident"
+    text: "An ident with news images, demonstrations and archive footage in quick succession. The title is set in orange."
+  v09-dimensioner-bakom-kulisserna:
+    titel: "Dimensioner, behind the scenes"
+    text: "Behind the scenes of the performance Dimensioner. Rehearsals, stage images and an interview in a dressing room."
+  v10-evaluating-digital-sources:
+    titel: "Evaluating digital sources"
+    text: "An educational film on evaluating digital sources. Settings, people and illustrations were made with generative AI and edited into a story."
+  v11-fatta-metoo:
+    titel: "FATTA, #metoo"
+    text: "A short film advert for FATTA! with Cleo and JUCK. The text addresses #metoo and ends with tour dates."
+  v12-fotografiska-lanseringsfilm:
+    titel: "Fotografiska, launch film"
+    text: "A launch film with interviews and images from Fotografiska. A person wearing VR glasses recurs."
+  v13-historia-pa-15-sekunder:
+    titel: "History in 15 seconds"
+    text: "Fifteen seconds on history for social media. Text over images from the Stone Age, the Middle Ages and the 17th century."
+  v14-in-the-middle-somewhat-elevated-reptrail:
+    titel: "In the Middle, Somewhat Elevated, repertoire trailer"
+    text: "Trailer cut from the rehearsals of In the Middle, Somewhat Elevated. Dancers in practice clothes in a bright studio."
+  v15-karlekstrailer:
+    titel: "Love trailer"
+    text: "A film advert for a series of performances on the theme of love. Clips from several productions against a pink background."
+  v16-knaster-trailer:
+    titel: "Knaster, trailer"
+    text: "Trailer for a learning resource. Headings in yellow and blue and a call to sign up."
+  v17-marketing-levels-partners-kapitel-0:
+    titel: "Marketing Levels Partners, chapter 0"
+    text: "Welcome film for a course. A presenter speaks to the camera in an empty football stadium."
+  v18-nina-simone-projektion:
+    titel: "Nina Simone (projection)"
+    text: "A projection for a stage: black and white images of singers at microphones, changing slowly."
+  v19-nour-el-refai-en-komisk-depression-proje:
+    titel: "Nour El Refai, En komisk depression (projection)"
+    text: "A projection for the performance En komisk depression. Images from a bar in dim light."
+  v20-perfektion-livesandning:
+    titel: "Perfektion, live broadcast"
+    text: "Two minutes cut from a five-camera live broadcast of the performance Perfektion."
+  v21-run-for-your-life-kompendium:
+    titel: "Run for your life, compendium"
+    text: "A summary of a project in which a stone was carried from the Arctic to Paris. Snow, torch processions and demonstrations, with text on black."
+  v22-salong-apart:
+    titel: "Salong Apart"
+    text: "A short film for a hair salon. Hairdressers at work, plants and a calm rhythm."
+  v23-skimrande:
+    titel: "Skimrande"
+    text: "A trailer with an actor speaking to the camera in front of still water against the light."
+  v24-sveakbt-reel:
+    titel: "SveaKBT, reel"
+    text: "A short film for social media. A man in a city street, with text boxes filling in what is not said."
+  v25-utdrag-ur-forestallningar:
+    titel: "Excerpts from performances"
+    text: "Three minutes from several performances, edited in sequence."
+  v26-vardet-av-konst-lanseringsfest:
+    titel: "Värdet av konst, launch party"
+    text: "A film from the launch of the book Värdet av konst. Guests, speeches and the book in hands."
+  v27-waiting:
+    titel: "Waiting"
+    text: "A short narrative film made with generative AI. A man and a woman in a bright, bare house. What is being waited for is not made clear."

@@ -46,6 +46,24 @@ Därefter filmerna som inte har ordet trailer i titeln.
 
 [JOHAN: Finns det stillbilder, skisser, manus eller bilder från inspelningarna som kan läggas i inkorgen?]
 
+### Livesändningar och projektioner
+
+Ur Dropbox-mappen har det tillkommit material som inte är trailrar: en livesändning med fem kameror, projektioner för scenen, en vinjett och ett sammandrag av föreställningar. Stillbilderna från Perfektion hör till samma föreställning som livesändningen.
+
+::verk 144-perfektion1-tyst-teater 145-perfektion2-tyst-teater v20-perfektion-livesandning v18-nina-simone-projektion v19-nour-el-refai-en-komisk-depression-proje v08-demokratins-granser-vinjett v25-utdrag-ur-forestallningar
+
+[JOHAN: Livesändningen av Perfektion. Var sändes den, hur många kameror ägde du, och vem klippte?]
+
+[JOHAN: Projektionerna för Nina Simone och En komisk depression. Visades de på scenen under föreställningen?]
+
+### Filmer för sociala medier
+
+::verk v09-dimensioner-bakom-kulisserna v02-allt-som-ar-vart-reportage v03-almedalen-sketch v15-karlekstrailer v11-fatta-metoo v23-skimrande v21-run-for-your-life-kompendium
+
+[JOHAN: Almedalen-sketchen. Vem skrev den, och vem spelar?]
+
+[JOHAN: Run for your life. Var det ett uppdrag från Riksteatern eller ett eget projekt?]
+
 ## Beslut
 
 Beslut fattas när uppgifterna ovan har kompletterats.
