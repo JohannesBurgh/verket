@@ -15,3 +15,4 @@ dom: "hjalte"
 kalla: "Portfolio Johan O Söderberg 2026_OPERAN"
 datum_gissat: true
 ---
+Dansare i vida röda kjolar snurrar i en repetitionssal. Rörelsen gör kjolarna till oskarpa fält. Speglarna i bakgrunden dubblerar rummet.

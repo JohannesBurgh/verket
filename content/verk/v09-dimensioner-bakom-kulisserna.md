@@ -14,3 +14,4 @@ dom: "ja"
 original: "Facebook - BAKOMREPORTAGE DIMENSIONER_170927.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_OPERAN"
 ---
+Bakom kulisserna på föreställningen Dimensioner. Repetitioner, scenbilder och en intervju i en loge.

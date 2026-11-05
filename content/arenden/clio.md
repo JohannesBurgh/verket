@@ -38,6 +38,12 @@ Filmerna i uppskattad tidsordning.
 
 [JOHAN: Nyköpings gästabud är del 1. Hur många delar blev det, och finns de andra?]
 
+Ur Dropbox-mappen har det tillkommit trailrar, ett reportage från ett klassrum och kortare filmer för sociala medier.
+
+::verk v06-clio-filmtrailer v07-clio-i-klassrummet v16-knaster-trailer v13-historia-pa-15-sekunder v12-fotografiska-lanseringsfilm
+
+[JOHAN: Knaster. Vad var det för läromedel?]
+
 ## Beslut
 
 Beslut fattas när uppgifterna ovan har kompletterats.

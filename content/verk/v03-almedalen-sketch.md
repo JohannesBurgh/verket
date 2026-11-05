@@ -14,3 +14,4 @@ dom: "ja"
 original: "RIKSTEASTERN-FACEBOOK-VIRALT-KLIPP-ALMEDALEN_sketch_170617.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 ---
+En sketch inspelad för Riksteatern i samband med Almedalen. Ett samtal vid ett bord blir långsamt något annat.

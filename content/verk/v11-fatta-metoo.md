@@ -14,3 +14,4 @@ dom: "ja"
 original: "FACEBOOK-ANNONS - #METOO-FATTA_20sek_2018_v01.mp4"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
 ---
+Kort filmannons för FATTA! med Cleo och JUCK. Texten tar upp #metoo och avslutas med turnédatum.

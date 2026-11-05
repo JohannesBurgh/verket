@@ -14,3 +14,4 @@ original: "_DSC2637-Redigera_2.jpg"
 dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 ---
+En ask med kortspelet Dialogbox står på ett bord i ett vardagsrum. I bakgrunden sitter tre personer vid ett annat bord. Asken är skarp, människorna är det inte.

@@ -15,3 +15,4 @@ original: "REPORTAGE FACEBOOK - Allt som är värt.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_OPERAN"
 datum_gissat: true
 ---
+Reportage från en teaterproduktion, med intervjuer i en loge och bilder från scenen. Filmen är gjord för Facebook.

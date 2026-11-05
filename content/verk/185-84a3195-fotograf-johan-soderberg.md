@@ -14,3 +14,4 @@ original: "_84A3195_Fotograf Johan Söderberg.jpg"
 dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 ---
+Två dansare i bronsfärgat ljus på en blå scen. Den ena böjer sig bakåt över den andra. Armarna pekar ut i rummet.

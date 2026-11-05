@@ -14,3 +14,4 @@ dom: "ja"
 original: "RUN FOR YOUR LIFE-  Compendium 151210_B.mp4"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
 ---
+Sammanfattning av ett projekt där en sten bars från Arktis till Paris. Snö, fackeltåg och demonstrationer, med text i svart.

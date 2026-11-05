@@ -15,3 +15,4 @@ original: "SoMe 15sek Historia - Clio-Bonnier.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Femton sekunder om historia för sociala medier. Text över bilder från stenålder, medeltid och 1600-tal.

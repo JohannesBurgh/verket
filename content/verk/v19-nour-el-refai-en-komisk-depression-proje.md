@@ -15,3 +15,4 @@ original: "CONTENT PROJEKTION - Nour El Refai - En komisk depression.mov"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
 datum_gissat: true
 ---
+Projektion för föreställningen En komisk depression. Bilder från en bar i mörkt ljus.

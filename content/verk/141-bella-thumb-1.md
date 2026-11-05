@@ -15,3 +15,4 @@ dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_OPERAN"
 datum_gissat: true
 ---
+En dansare i en repetitionssal rör sig mot kameran medan andra står kvar i bakgrunden. Bilden är tagen under repetition.

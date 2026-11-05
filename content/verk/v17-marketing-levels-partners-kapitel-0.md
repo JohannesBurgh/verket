@@ -15,3 +15,4 @@ original: "MarketingLevels_Partners - kapitel 0 - Välkommen.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Välkomstfilm till en kurs. En presentatör talar till kameran på en tom fotbollsarena.

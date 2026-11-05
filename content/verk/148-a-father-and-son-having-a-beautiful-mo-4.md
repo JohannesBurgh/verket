@@ -15,3 +15,4 @@ dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+En äldre man och ett barn med lockigt hår delar en hamburgare vid ett fönster. Bilden är framtagen med generativ AI för en påhittad restaurangkedja.

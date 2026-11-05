@@ -15,3 +15,4 @@ original: "In The Middle -Reptrailer 16-9_2 Youtube.mp4"
 kalla: "Operan - Bella Figura - In the middle - färdiga filmer"
 datum_gissat: true
 ---
+Trailer klippt ur repetitionerna av In the Middle, Somewhat Elevated. Dansare i träningskläder i en ljus sal.

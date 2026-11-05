@@ -14,3 +14,4 @@ original: "‎Modig (2025) Marketing Foundations BOOK_FINAL_3.‎001.jpeg"
 dom: "ja"
 kalla: "GenAi användning"
 ---
+Illustration till en lärobok. En hand håller fram ett torn av sedlar som rasar mot en grupp människor. Bilden är framtagen med generativ AI.

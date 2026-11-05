@@ -14,3 +14,4 @@ original: "PERFEKTION2 - Tyst teater.jpg"
 dom: "ja"
 kalla: "Sample work stillbild - Johan Söderberg"
 ---
+Samma tre gestalter, nu med armarna lyfta mot två strålkastare. Röken tar upp ljuset. Ingen av dem ser mot publiken.

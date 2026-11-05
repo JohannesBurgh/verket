@@ -14,3 +14,4 @@ original: "‎Modig (2025) Marketing Foundations BOOK_FINAL_2.‎001.jpeg"
 dom: "ja"
 kalla: "GenAi användning"
 ---
+Illustration till en lärobok. Två händer räcker fram en diamant mellan sig. Bilden är framtagen med generativ AI.

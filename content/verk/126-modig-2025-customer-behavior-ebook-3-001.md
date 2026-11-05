@@ -14,3 +14,4 @@ original: "‎Modig (2025) Customer Behavior EBOOK_3.‎001.jpeg"
 dom: "ja"
 kalla: "GenAi användning"
 ---
+Illustration till en lärobok. Två huvuden, det ena tecknat i tät linje, det andra i svart, möts i profil. Bilden är framtagen med generativ AI.

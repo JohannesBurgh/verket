@@ -15,3 +15,4 @@ original: "EXEMPEL FRÅN BONNIER CLIO - KNASTER trailer.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Trailer för ett läromedel. Rubriker i gult och blått och en uppmaning att anmäla sig.

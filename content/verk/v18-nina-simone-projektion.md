@@ -15,3 +15,4 @@ original: "CONTENT PROJEKTION - NINA SIMONE.mp4"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
 datum_gissat: true
 ---
+Projektion för en scen: svartvita bilder av en sångerska som växlar långsamt.

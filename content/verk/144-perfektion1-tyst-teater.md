@@ -14,3 +14,4 @@ original: "PERFEKTION1 - Tyst teater.jpg"
 dom: "hjalte"
 kalla: "Sample work stillbild - Johan Söderberg"
 ---
+Tre gestalter i svarta klänningar står på en scen i rök under ett ensamt spotljus. En av dem sitter i rullstol. Resten av scenen är mörk.

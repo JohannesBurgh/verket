@@ -15,3 +15,4 @@ dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Ett vitt hus med solstolar framför ett hav under tunga moln. Svartvitt. Bilden är framtagen med generativ AI.

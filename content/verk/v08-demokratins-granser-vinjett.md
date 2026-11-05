@@ -14,3 +14,4 @@ dom: "ja"
 original: "SÄLJEVENT - VINJETT-DEMOKRATINS_GRÄNSER_PRORESS_161005_A.mp4"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
 ---
+Vinjett med nyhetsbilder, demonstrationer och arkivmaterial i snabb följd. Titeln skrivs ut i orange.

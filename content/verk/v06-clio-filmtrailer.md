@@ -15,3 +15,4 @@ original: "EXEMPEL FRÅN BONNIER CLIO - Filmtrailer våra filmer till sälj SE.m
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Trailer för läromedelsfilmer, med klipp ur flera filmer i följd.

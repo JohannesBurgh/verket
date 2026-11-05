@@ -15,3 +15,4 @@ original: "EXEMPEL FRÅN BONNIER CLIO - Reportage-säljfilm-Clio i klassrummet.m
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Reportage och säljfilm från ett klassrum där läromedlet används. Lärare och elever intervjuas.

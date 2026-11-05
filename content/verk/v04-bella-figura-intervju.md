@@ -15,3 +15,4 @@ original: "Bella Figura - intervjufilm 16-9 Youtube.mp4"
 kalla: "Operan - Bella Figura - In the middle - färdiga filmer"
 datum_gissat: true
 ---
+Intervjufilm från repetitionerna av Bella Figura. Dansare och koreograf i repetitionssalen, varvat med intervju.

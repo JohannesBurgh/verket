@@ -14,3 +14,4 @@ dom: "hjalte"
 original: "SoMe-251209 Värdet av konst - Lanseringsfest (16x9-version).mp4"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 ---
+Film från lanseringen av boken Värdet av konst. Gäster, tal och boken i händer.

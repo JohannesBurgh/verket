@@ -15,3 +15,4 @@ dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 datum_gissat: true
 ---
+Ett svartvitt rum med inramade fotografier på väggarna, ett schackrutigt golv och en taklampa. Bilden är framtagen med generativ AI och föreställer ingen plats som finns.

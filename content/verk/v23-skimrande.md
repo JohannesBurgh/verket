@@ -15,3 +15,4 @@ original: "Skimrande_ KLAR.mp4"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
 datum_gissat: true
 ---
+Trailer med en skådespelare som talar till kameran framför ett stilla vatten i motljus.

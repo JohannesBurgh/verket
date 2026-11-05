@@ -15,3 +15,4 @@ dom: "ja"
 kalla: "Portfolio Johan O Söderberg 2026_OPERAN"
 datum_gissat: true
 ---
+En sångerska i vit och orange dräkt står på ett vitt papper bredvid en trappa medan kostymörer arbetar runt henne. Bilden är tagen bakom scenen.

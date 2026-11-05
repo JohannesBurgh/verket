@@ -14,3 +14,4 @@ dom: "hjalte"
 original: "SHORT NARRATIVE AI-TEST FILM - WAITING 2026.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_1"
 ---
+En kort berättande film gjord med generativ AI. En man i ett vitt, tomt hus väntar. På vad framgår inte.
