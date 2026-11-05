@@ -1,83 +1,58 @@
 ---
 titel: "Riksteatern"
-diarienummer: "VOL UTK 2026/01"
-period: "2012–2017 (uppskattat)"
+diarienummer: "VOL 2012/0101"
+period: "2012–2017 och 2022"
 status: "Avgjort"
-utkast: true
-omslag: "v01-riksteaterns-logga-animerad"
-ingress: "Nio filmer på Riksteaterns kanal och en animerad logga, daterade 2012 till 2017. Åren är uppskattade. Uppdrag, beställare och roll är ännu inte utredda."
+omslag: "film-mannen-med-rosa-triangel-trailer"
+ingress: "Fem år som huvudproducent för Riksteaterns interna filmproduktion. Trailrar, projektioner, sociala medier och en sten som bars till Paris."
 ---
 
 ## Inkom
 
-Ärendet omfattar nio filmer publicerade på Riksteaterns kanal samt en animerad logga. Filmerna är daterade 2012 till 2017. Samtliga år är uppskattade och ska bekräftas.
-
-[JOHAN: Hur kom du in hos Riksteatern? Berätta om första gången: vem du träffade och vad de ville ha.]
-
-[JOHAN: På sidan För beställare står att du byggde upp Riksteaterns interna filmproduktion 2012 till 2017. Gjordes filmerna nedan inom den? Var du anställd eller anlitad?]
+Ärendet avser Riksteaterns interna filmproduktion, som Johan byggde upp och ledde 2012 till 2017. Beställarna fanns i huset: marknadsförare, producenter, ansvariga för sociala medier och kommunikationsavdelningen. År 2022 återkom han som gäst för trailern till In memoriam.
 
 ## Beredning
 
-Loggan är enligt verkfilen animerad av Johan själv.
+Johan var huvudproducent och drev avdelningen. Han rekryterade frilansare, var teamledare och tog emot beställningarna. Ofta tog han fram idén och satte ramarna. Väldigt ofta filmade och fotograferade han själv. Klippet var det han oftast lämnade ifrån sig.
+
+Loggan är animerad av Johan och användes som inledning eller avslutning på filmerna.
 
 ::verk v01-riksteaterns-logga-animerad
 
-[JOHAN: Vad var loggan till för? Inledde den filmerna, eller användes den någon annanstans?]
-
-[JOHAN: Hur gick det till från beställning till färdig film? Vem på Riksteatern beställde, och hur lång tid hade du på dig?]
-
-[JOHAN: Vad var din roll? Regi, foto, klipp, allt på en gång? Arbetade du ensam eller med andra?]
-
 ## Material
 
-Handläggaren har delat filmerna i två grupper efter titlarna. Först trailrarna, i uppskattad tidsordning.
+Trailrarna utgör huvuddelen. Männen med rosa triangel ligger Johan varmt om hjärtat. Samarbetet med det kreativa teamet var fint, och trailern blev stark.
 
-::verk film-fatta-med-cleo-och-juck-trailer film-de-redan-fralsta-trailer film-mannen-med-rosa-triangel-trailer film-en-druva-i-solen-trailer film-en-komisk-depression-trailer
+::verk film-mannen-med-rosa-triangel-trailer film-fatta-med-cleo-och-juck-trailer film-de-redan-fralsta-trailer film-en-druva-i-solen-trailer film-en-komisk-depression-trailer
 
-Därefter filmerna som inte har ordet trailer i titeln.
+Alla är trailrar, men gjorda på olika sätt. In memoriam, från gästspelet 2022, krävde ett stort manusarbete och lång inspelningstid, eftersom materialet var svårt att arbeta med i pjäsform. Bra människor är en parodi på ett format för sociala medier: en man bakom kameran pepprar skådespelaren med frågor på väg in till repetition. Den visar något annat än avfilmad scenkonst. Effekten är filmad på plats i ett nedlagt sjukhus, med scener ur pjäsen och skådespelarna i en riktig miljö. Beauty and the Beast ARENA och BASTU är extramaterial för marknadsföringen av turnén.
 
-::verk film-beauty-and-the-beast-arena-bonusmaterial film-in-memoriam film-bra-manniskor film-effekten
-
-[JOHAN: Männen med rosa triangel är markerad som hjälte i arkivet. Vad gör den viktigare än de andra?]
-
-[JOHAN: Beauty and the Beast ARENA har ordet bonusmaterial i titeln. Vad var det för material, och var visades det?]
-
-[JOHAN: In memoriam, Bra människor och Effekten. Vad är det för slags filmer, om de inte är trailrar?]
-
-[JOHAN: Finns det stillbilder, skisser, manus eller bilder från inspelningarna som kan läggas i inkorgen?]
-
-### Livesändningar och projektioner
-
-Ur Dropbox-mappen har det tillkommit material som inte är trailrar: en livesändning med fem kameror, projektioner för scenen, en vinjett och ett sammandrag av föreställningar. Stillbilderna från Perfektion hör till samma föreställning som livesändningen.
-
-::verk 144-perfektion1-tyst-teater 145-perfektion2-tyst-teater v20-perfektion-livesandning v18-nina-simone-projektion v19-nour-el-refai-en-komisk-depression-proje v08-demokratins-granser-vinjett v25-utdrag-ur-forestallningar
-
-[JOHAN: Livesändningen av Perfektion. Var sändes den, hur många kameror ägde du, och vem klippte?]
-
-[JOHAN: Projektionerna för Nina Simone och En komisk depression. Visades de på scenen under föreställningen?]
+::verk film-in-memoriam film-bra-manniskor film-effekten film-beauty-and-the-beast-arena-bonusmaterial film-beauty-and-the-beast-bastu-bonusmaterial
 
 ### Fler trailrar och intervjuer
 
-Ur Johans spellista med scenkonst har det tillkommit trailrar, intervjuer och bakom-kulisserna-filmer från 2012 till 2017.
+::verk film-froken-julie-trailer film-pojkarna-bakom-kulisserna film-pomos-piano-kortintervju film-bast-fore-intervju film-en-druva-i-solen-backstage-infor-genrep film-tigern-trailer film-aukko-oppningen-trailer film-grater-stora-killar-trailer film-dagbrott-trailer film-nina-en-berattelse-om-mig-och-nina-simone film-kality-trailer film-zebrafinken-trailer
 
-::verk film-froken-julie-trailer film-pojkarna-bakom-kulisserna film-pomos-piano-kortintervju film-bast-fore-intervju film-en-druva-i-solen-backstage-infor-genrep film-tigern-trailer film-aukko-oppningen-trailer film-grater-stora-killar-trailer film-dagbrott-trailer film-nina-en-berattelse-om-mig-och-nina-simone film-kality-trailer film-vad-far-ett-seminarium-i-almedalen-heta film-zebrafinken-trailer film-beauty-and-the-beast-bastu-bonusmaterial
+### Projektioner och vinjetter
 
-[JOHAN: Vilka av de här filmerna gjorde du ensam, och var arbetade du med andra?]
+Projektionerna för Nina Simone och En komisk depression visades på scenen under föreställningarna.
 
-### Filmer för sociala medier
+::verk v18-nina-simone-projektion v19-nour-el-refai-en-komisk-depression-proje v08-demokratins-granser-vinjett v25-utdrag-ur-forestallningar
 
-::verk v09-dimensioner-bakom-kulisserna v02-allt-som-ar-vart-reportage v03-almedalen-sketch v15-karlekstrailer v11-fatta-metoo v23-skimrande v21-run-for-your-life-kompendium
+### Sociala medier
 
-[JOHAN: Almedalen-sketchen. Vem skrev den, och vem spelar?]
+Almedalssketchen skrevs av Riksteaterns dramaturgiat och spelades av den fasta ensemblen. Den var ett inlägg i debatten om att Nordiska motståndsrörelsen fick delta i Almedalen 2017, och fick stort genomslag.
 
-[JOHAN: Run for your life. Var det ett uppdrag från Riksteatern eller ett eget projekt?]
+::verk v03-almedalen-sketch film-vad-far-ett-seminarium-i-almedalen-heta v09-dimensioner-bakom-kulisserna v02-allt-som-ar-vart-reportage v15-karlekstrailer v11-fatta-metoo v23-skimrande
+
+### Run for your life
+
+Ett av de största åtagandena. En klimatstafett i upptakten till klimatmötet i Paris 2015. En sten bars från nordligaste Sverige, Norge och Finland, där samerna började loppet, hela vägen till Paris, där den överlämnades till mötet. Stafetten livesändes. Johan klippte höjdpunkter, trailrar och mellanrapporter hemifrån, och filmade själv från cykel när stafetten passerade Stockholm. En högst oväntad pjäs.
+
+::verk v21-run-for-your-life-kompendium
 
 ## Beslut
 
-Beslut fattas när uppgifterna ovan har kompletterats.
+Fantasi, hjärta och kärlek för samhällets bästa. Så sammanfattar Johan åren på Riksteatern.
 
-[JOHAN: Vad tar du med dig från åren på Riksteatern? En eller två meningar räcker.]
-
-[JOHAN: Minns du de rätta åren för någon av filmerna? Säg titeln och året.]
-
-<!-- Utkast skrivet av handläggaren. Det enda som är känt kommer ur verkfilerna: titel, kanal och år. Allt annat är frågor till Johan. -->
+Filmerna för Tyst teater och för Cullberg gjordes inom samma uppdrag. De redovisas i egna ärenden.

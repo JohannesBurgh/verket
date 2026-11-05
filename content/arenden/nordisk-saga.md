@@ -3,6 +3,7 @@ titel: "Nordisk saga"
 diarienummer: "VOL 2010/0517"
 period: "maj–november 2010"
 status: "Avgjort"
+utkast: true
 omslag: "019-maskerna-vid-bordet"
 ingress: "Ett ärende om barn, masker och en skog som inte riktigt är att lita på."
 ---

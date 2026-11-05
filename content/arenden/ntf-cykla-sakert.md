@@ -1,35 +1,24 @@
 ---
 titel: "Cykla säkert i trafiken"
-diarienummer: "VOL UTK 2026/07"
-period: "[JOHAN: Vilket år?]"
+diarienummer: "VOL 2024/0801"
+period: "2024 (uppskattat)"
 status: "Avgjort"
-utkast: true
 omslag: "film-cykla-sakert-i-trafiken"
-ingress: "En film på kanalen NTF Säker Trafik. År saknas i handlingarna."
+ingress: "En film om trafikvett på cykel, för mellanstadiet."
 ---
 
 ## Inkom
 
-Ärendet omfattar en film publicerad av NTF Säker Trafik. I arkivet förs den under epoken Uppdrag.
-
-[JOHAN: Vem på NTF beställde filmen, och vad skulle den åstadkomma?]
+Johan har gjort tre filmer för NTF. Två inom Clio och Bonnier, en som frilans efteråt. Uppdraget var att förmedla trafikvett på cykel till unga: att motivera, förklara och visa.
 
 ## Beredning
 
-[JOHAN: Vem var filmen till för? Barn, vuxna, skolor?]
-
-[JOHAN: Vad var din roll, och vilka var med?]
+Målgruppen var mellanstadiet och skolorna. Johan skrev manus, filmade och klippte.
 
 ## Material
 
 ::verk film-cykla-sakert-i-trafiken
 
-[JOHAN: Gjorde du fler filmer för NTF? Finns de i så fall någonstans?]
-
 ## Beslut
 
-Beslut fattas när uppgifterna ovan har kompletterats.
-
-[JOHAN: Hur användes filmen efteråt? Vet du hur den togs emot?]
-
-<!-- Utkast skrivet av handläggaren. Det enda som är känt kommer ur verkfilen: titel och kanal. Allt annat är frågor till Johan. -->
+Filmen levererades. Hur den togs emot framgår inte av handlingarna.

@@ -1,39 +1,26 @@
 ---
-titel: "TV4"
-diarienummer: "VOL UTK 2026/06"
-period: "[JOHAN: Vilket år, eller vilka år?]"
+titel: "Snurra flaskan"
+diarienummer: "VOL 2015/0701"
+period: "2015 (uppskattat)"
 status: "Avgjort"
-utkast: true
 omslag: "film-nationalsangen-i-fullsatt-sporthall"
-ingress: "Tre klipp på TV4:s kanal. Två av titlarna nämner en Henrik. År saknas i handlingarna."
+ingress: "Inslag för TV4:s Snurra flaskan. Deltagarna utmanade varandra med knäppa uppdrag."
 ---
 
 ## Inkom
 
-Ärendet omfattar tre klipp publicerade av TV4. Handlingarna anger varken program eller år.
-
-[JOHAN: Vilket program är det här, och vem är Henrik?]
-
-[JOHAN: Hur hamnade du där? Var det TV4 som anlitade dig, eller ett produktionsbolag?]
+Frilansuppdrag som inslagsproducent åt produktionsbolaget Tre Vänner. Snurra flaskan hade sex deltagare. De utmanade varandra med knäppa uppdrag, och den som fick flaskan mot sig när den snurrade fick utföra uppdraget. Henrik är en av deltagarna.
 
 ## Beredning
 
-[JOHAN: Vad var din roll? Foto, regi, klipp?]
-
-[JOHAN: Hur gick inspelningarna till? Var allt förberett, eller hände det på plats?]
+Johan var inslagsproducent och extra kamera. Det mesta hände på plats.
 
 ## Material
 
-::verk film-henrik-joddlar-for-dansbandsfansen film-henrik-skriker-ut-godisexpediten film-nationalsangen-i-fullsatt-sporthall
+Nationalsången framfördes på innebandy-SM i Solna. Deltagaren Erik Barr fick uppdraget, och teamet ordnade med arrangören att han fick gå upp. Det finns många fler inslag. De här tre är de Johan valt att visa.
 
-[JOHAN: Nationalsången i fullsatt sporthall. Vad hände där, och hur filmade ni det?]
-
-[JOHAN: Gjorde du fler inslag än de här tre? Finns de någonstans?]
+::verk film-nationalsangen-i-fullsatt-sporthall film-henrik-joddlar-for-dansbandsfansen film-henrik-skriker-ut-godisexpediten
 
 ## Beslut
 
-Beslut fattas när uppgifterna ovan har kompletterats.
-
-[JOHAN: Vilket av klippen är bäst, tycker du, och varför?]
-
-<!-- Utkast skrivet av handläggaren. Det enda som är känt kommer ur verkfilerna: titel och kanal. Allt annat är frågor till Johan. -->
+Alla tre bedöms som bra.
