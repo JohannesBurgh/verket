@@ -13,8 +13,10 @@ const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // Svenska som får synas på den engelska sidan: egennamn, kanaler och de originaltitlar som står kvar på svenska.
 const TILLATET = [
   ...VERK.filter((v) => EN.titel(v) === v.titel).map((v) => v.titel),
+  // Produktionsnamn som står kvar på svenska framför en engelsk tillägg: "Bäst före?!, interview".
+  ...VERK.map((v) => EN.titel(v).split(", ")[0]).filter((n) => n && VERK.some((v) => v.titel.startsWith(n))),
   ...new Set(VERK.map((v) => v.kanal).filter(Boolean)),
-  "Söderberg", "Svenska", "Skövde", "Bonnierförlagen", "Kylián", "Natur & Kultur", "Nyköpings gästabud",
+  "Söderberg", "Svenska", "Skövde", "Bonnierförlagen", "Kylián", "Natur & Kultur", "Nyköpings gästabud", "Värdet av konst", "Tre Vänner",
 ].map((s) => s.toLowerCase()).sort((a, b) => b.length - a.length);
 async function svenskaKvar(page, rot = "body") {
   // innerText följer CSS (versaler), så jämförelsen görs i gemener.
