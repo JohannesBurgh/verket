@@ -64,6 +64,7 @@ async function route() {
 }
 addEventListener("hashchange", route);
 // Hopplänken förbi menyn. Adressen rörs inte, eftersom den styr vilken vy som visas.
+document.getElementById("hoppa").textContent = t("Till innehållet");
 document.getElementById("hoppa").addEventListener("click", (e) => {
   e.preventDefault();
   const mal = app.querySelector("h1:not(.dold)") || app.querySelector("button:not([disabled]), a[href], input, [tabindex='0']") || app;

@@ -113,6 +113,7 @@ export function tillEngelska(html, { CONTENT, adress = "", upp = true }) {
   h = h.replace(/<a href="#(\w+)" data-r="(\w+)">([^<]+)<\/a>/g, (_, __, r, namn) => `<a href="#${ENGELSKA_VAGAR[r] || r}" data-r="${r}">${esc(t(namn))}</a>`);
   h = h.replace(/(<a class="brand" href=")#ansokan"/, '$1#application"');
   h = h.replace(/aria-label="Huvudmeny"/, `aria-label="${esc(t("Huvudmeny"))}"`);
+  h = h.replace(/(<a class="hoppa"[^>]*>)Till innehållet</, `$1${esc(t("Till innehållet"))}<`);
   h = h.replace(/(id="visare"[^>]*aria-label=")Handling"/, `$1${esc(t("Handling"))}"`);
   h = h.replace(/>Ljud på</, `>${esc(t("Ljud på"))}<`);
   h = h.replace(/<a class="sprakval" href="[^"]*" hreflang="en" lang="en">.*?<\/a>/, '<a class="sprakval" href="../" hreflang="sv" lang="sv"><span class="hel">Svenska</span><span class="kort" aria-hidden="true">SV</span></a>');
