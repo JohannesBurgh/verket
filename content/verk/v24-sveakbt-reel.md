@@ -15,4 +15,4 @@ original: "Johan_Soderberg_SveaKBT_case_video_Reel_30sec.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_SVEAKBT -OLD"
 datum_gissat: true
 ---
-Kort film för sociala medier. En person talar med en psykolog och textrutor fyller i det som inte sägs.
+Kort film för sociala medier. En man i en stadsmiljö, med textrutor som fyller i det som inte sägs.
