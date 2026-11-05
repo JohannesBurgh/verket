@@ -28,6 +28,12 @@ ingress: "En film på Cullbergs kanal, daterad 2013. Året är uppskattat. Verke
 
 ::verk film-plateau-effect-cullberg
 
+Ur Johans spellista med scenkonst har det tillkommit en trailer för Plateau Effect och en för High heels too, båda med Cullberg 2013.
+
+::verk film-plateau-effect-trailer film-high-heels-too-trailer
+
+[JOHAN: Var High heels too ett eget uppdrag, eller en del av samma samarbete med Cullberg?]
+
 [JOHAN: Finns det stillbilder eller annat material från inspelningen som kan läggas i inkorgen?]
 
 ## Beslut

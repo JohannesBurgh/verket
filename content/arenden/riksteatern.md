@@ -56,6 +56,14 @@ Ur Dropbox-mappen har det tillkommit material som inte är trailrar: en livesän
 
 [JOHAN: Projektionerna för Nina Simone och En komisk depression. Visades de på scenen under föreställningen?]
 
+### Fler trailrar och intervjuer
+
+Ur Johans spellista med scenkonst har det tillkommit trailrar, intervjuer och bakom-kulisserna-filmer från 2012 till 2017.
+
+::verk film-froken-julie-trailer film-pojkarna-bakom-kulisserna film-pomos-piano-kortintervju film-bast-fore-intervju film-en-druva-i-solen-backstage-infor-genrep film-tigern-trailer film-aukko-oppningen-trailer film-grater-stora-killar-trailer film-dagbrott-trailer film-nina-en-berattelse-om-mig-och-nina-simone film-kality-trailer film-vad-far-ett-seminarium-i-almedalen-heta film-zebrafinken-trailer film-beauty-and-the-beast-bastu-bonusmaterial
+
+[JOHAN: Vilka av de här filmerna gjorde du ensam, och var arbetade du med andra?]
+
 ### Filmer för sociala medier
 
 ::verk v09-dimensioner-bakom-kulisserna v02-allt-som-ar-vart-reportage v03-almedalen-sketch v15-karlekstrailer v11-fatta-metoo v23-skimrande v21-run-for-your-life-kompendium
