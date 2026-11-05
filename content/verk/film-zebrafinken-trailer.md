@@ -3,6 +3,7 @@ titel: "Zebrafinken, trailer"
 datum: "2017-10-19"
 typ: youtube
 youtube: "pEkCSCI6IPg"
+bild: "bilder/film-zebrafinken-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

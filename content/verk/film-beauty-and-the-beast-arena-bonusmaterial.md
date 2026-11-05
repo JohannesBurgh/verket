@@ -4,6 +4,7 @@ datum: "2013"
 datum_gissat: true
 typ: youtube
 youtube: "YJ_L73D9JYU"
+bild: "bilder/film-beauty-and-the-beast-arena-bonusmaterial.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

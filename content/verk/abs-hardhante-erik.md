@@ -3,6 +3,7 @@ titel: "Hårdhänte Erik"
 datum: null
 typ: youtube
 youtube: "lQm1XdQABdk"
+bild: "bilder/abs-hardhante-erik.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

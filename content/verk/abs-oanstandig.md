@@ -3,6 +3,7 @@ titel: "Oanständig"
 datum: null
 typ: youtube
 youtube: "-1QU7AUR2k0"
+bild: "bilder/abs-oanstandig.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

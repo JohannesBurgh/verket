@@ -3,6 +3,7 @@ titel: "Pomos piano, kortintervju"
 datum: "2013-10-23"
 typ: youtube
 youtube: "d7V0j3k6UyA"
+bild: "bilder/film-pomos-piano-kortintervju.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

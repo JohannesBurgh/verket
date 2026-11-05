@@ -3,6 +3,7 @@ titel: "Vad får ett seminarium i Almedalen heta?"
 datum: "2017-06-20"
 typ: youtube
 youtube: "Vtb8yQjGChg"
+bild: "bilder/film-vad-far-ett-seminarium-i-almedalen-heta.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

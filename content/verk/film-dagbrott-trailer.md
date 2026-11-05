@@ -3,6 +3,7 @@ titel: "Dagbrott, trailer"
 datum: "2016-09-30"
 typ: youtube
 youtube: "fuvU4a4K8AY"
+bild: "bilder/film-dagbrott-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

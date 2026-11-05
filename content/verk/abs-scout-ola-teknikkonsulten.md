@@ -3,6 +3,7 @@ titel: "Scout-Ola: Teknikkonsulten"
 datum: null
 typ: youtube
 youtube: "-eWIUEphPcc"
+bild: "bilder/abs-scout-ola-teknikkonsulten.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

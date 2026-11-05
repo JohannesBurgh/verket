@@ -4,6 +4,7 @@ datum: "2016"
 datum_gissat: true
 typ: youtube
 youtube: "6BJd-BY84E8"
+bild: "bilder/film-en-druva-i-solen-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

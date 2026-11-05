@@ -3,6 +3,7 @@ titel: "Schack matt"
 datum: null
 typ: youtube
 youtube: "Av3rY-gVA5s"
+bild: "bilder/abs-schack-matt.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

@@ -3,6 +3,7 @@ titel: "Förhöret"
 datum: null
 typ: youtube
 youtube: "k7BCLY-5QnI"
+bild: "bilder/abs-forhoret.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

@@ -4,6 +4,7 @@ datum: "2015"
 datum_gissat: true
 typ: youtube
 youtube: "AsKEuptvheE"
+bild: "bilder/film-de-redan-fralsta-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

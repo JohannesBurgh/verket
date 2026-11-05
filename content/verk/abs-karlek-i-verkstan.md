@@ -3,6 +3,7 @@ titel: "Kärlek i verkstan"
 datum: null
 typ: youtube
 youtube: "_JqXmmGj3aE"
+bild: "bilder/abs-karlek-i-verkstan.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

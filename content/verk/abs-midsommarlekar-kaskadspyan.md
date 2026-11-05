@@ -3,6 +3,7 @@ titel: "Midsommarlekar (kaskadspyan)"
 datum: null
 typ: youtube
 youtube: "nWEpOO7DDlQ"
+bild: "bilder/abs-midsommarlekar-kaskadspyan.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

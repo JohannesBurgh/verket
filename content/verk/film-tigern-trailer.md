@@ -3,6 +3,7 @@ titel: "Tigern, trailer"
 datum: "2016-03-15"
 typ: youtube
 youtube: "2fUHkpiD0ZM"
+bild: "bilder/film-tigern-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

@@ -3,6 +3,7 @@ titel: "Plateau Effect, trailer"
 datum: "2013-10-24"
 typ: youtube
 youtube: "3kZbsgtK-jo"
+bild: "bilder/film-plateau-effect-trailer.jpg"
 kanal: "Cullberg"
 format: 1.778
 epok: "Dans"

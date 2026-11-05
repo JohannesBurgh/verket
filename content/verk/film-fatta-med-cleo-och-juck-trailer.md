@@ -4,6 +4,7 @@ datum: "2012"
 datum_gissat: true
 typ: youtube
 youtube: "g7LVJlNFyY8"
+bild: "bilder/film-fatta-med-cleo-och-juck-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

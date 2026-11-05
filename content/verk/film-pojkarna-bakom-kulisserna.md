@@ -3,6 +3,7 @@ titel: "Pojkarna, bakom kulisserna"
 datum: "2013-10-11"
 typ: youtube
 youtube: "uw6bzieRTSY"
+bild: "bilder/film-pojkarna-bakom-kulisserna.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

@@ -3,6 +3,7 @@ titel: "Beauty and the Beast BASTU, bonusmaterial"
 datum: "2017-10-19"
 typ: youtube
 youtube: "XxGV_gA3yp8"
+bild: "bilder/film-beauty-and-the-beast-bastu-bonusmaterial.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

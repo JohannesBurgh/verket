@@ -3,6 +3,7 @@ titel: "Kality, trailer"
 datum: "2017-03-23"
 typ: youtube
 youtube: "KdMJEBFEf_8"
+bild: "bilder/film-kality-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

@@ -3,6 +3,7 @@ titel: "Gårdagens rätt"
 datum: null
 typ: youtube
 youtube: "V6W11SQyTu8"
+bild: "bilder/abs-gardagens-ratt.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

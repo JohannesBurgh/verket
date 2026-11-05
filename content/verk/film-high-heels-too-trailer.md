@@ -3,6 +3,7 @@ titel: "High heels too, trailer"
 datum: "2013-04-10"
 typ: youtube
 youtube: "erhNye9D3EY"
+bild: "bilder/film-high-heels-too-trailer.jpg"
 kanal: "Cullberg"
 format: 1.778
 epok: "Dans"

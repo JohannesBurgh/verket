@@ -3,6 +3,7 @@ titel: "Gråter stora killar?, trailer"
 datum: "2016-09-23"
 typ: youtube
 youtube: "WLOP8ZklNQU"
+bild: "bilder/film-grater-stora-killar-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

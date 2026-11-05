@@ -3,6 +3,7 @@ titel: "Arbetsförmedlingen: Äntligen ett ledigt jobb!"
 datum: null
 typ: youtube
 youtube: "Hl7enmAifxg"
+bild: "bilder/abs-arbetsformedlingen-antligen-ett-ledigt-j.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

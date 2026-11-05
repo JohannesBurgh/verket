@@ -4,6 +4,7 @@ datum: "2020"
 datum_gissat: true
 typ: youtube
 youtube: "FrHwyr83RCw"
+bild: "bilder/film-metoo-tennistranaren.jpg"
 kanal: "Clio Sverige"
 format: 1.778
 epok: "Utbildning"

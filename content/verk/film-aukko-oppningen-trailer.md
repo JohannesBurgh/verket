@@ -3,6 +3,7 @@ titel: "Aukko (Öppningen), trailer"
 datum: "2016-06-08"
 typ: youtube
 youtube: "Oxld8DBQc28"
+bild: "bilder/film-aukko-oppningen-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

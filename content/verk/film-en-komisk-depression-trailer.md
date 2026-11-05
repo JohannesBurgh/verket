@@ -4,6 +4,7 @@ datum: "2017"
 datum_gissat: true
 typ: youtube
 youtube: "J0AuwIvK038"
+bild: "bilder/film-en-komisk-depression-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

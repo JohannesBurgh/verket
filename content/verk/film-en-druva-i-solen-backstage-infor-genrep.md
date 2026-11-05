@@ -3,6 +3,7 @@ titel: "En druva i solen, backstage inför genrep"
 datum: "2016-02-04"
 typ: youtube
 youtube: "jYbFN1phDm0"
+bild: "bilder/film-en-druva-i-solen-backstage-infor-genrep.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

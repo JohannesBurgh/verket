@@ -3,6 +3,7 @@ titel: "Fröken Julie, trailer"
 datum: "2012-10-22"
 typ: youtube
 youtube: "xJiCBzKsfJQ"
+bild: "bilder/film-froken-julie-trailer.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

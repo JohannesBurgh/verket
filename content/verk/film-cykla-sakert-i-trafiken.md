@@ -3,6 +3,7 @@ titel: "Cykla säkert i trafiken"
 datum: null
 typ: youtube
 youtube: "EOJMCt56UmM"
+bild: "bilder/film-cykla-sakert-i-trafiken.jpg"
 kanal: "NTF Säker Trafik"
 format: 1.778
 epok: "Uppdrag"

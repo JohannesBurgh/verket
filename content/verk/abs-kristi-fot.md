@@ -3,6 +3,7 @@ titel: "Kristi fot"
 datum: null
 typ: youtube
 youtube: "frlRmcai7ec"
+bild: "bilder/abs-kristi-fot.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

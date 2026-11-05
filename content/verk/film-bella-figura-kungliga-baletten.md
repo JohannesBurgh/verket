@@ -3,6 +3,7 @@ titel: "Bella Figura, Kungliga Baletten"
 datum: "2021"
 typ: youtube
 youtube: "dJY4xbJKWpw"
+bild: "bilder/film-bella-figura-kungliga-baletten.jpg"
 kanal: "Kungliga Operan"
 format: 1.778
 epok: "Dans"

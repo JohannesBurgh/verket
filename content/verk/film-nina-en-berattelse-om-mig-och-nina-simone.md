@@ -3,6 +3,7 @@ titel: "Nina, en berättelse om mig och Nina Simone"
 datum: "2017-02-21"
 typ: youtube
 youtube: "ZBjmezyvPLs"
+bild: "bilder/film-nina-en-berattelse-om-mig-och-nina-simone.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

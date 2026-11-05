@@ -4,6 +4,7 @@ datum: "2014"
 datum_gissat: true
 typ: youtube
 youtube: "8bTNSh4n7iE"
+bild: "bilder/film-bra-manniskor.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"
