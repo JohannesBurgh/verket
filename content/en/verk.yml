@@ -1,0 +1,439 @@
+# Verken på engelska. Verkfilerna i content/verk/ delas mellan språken: datum, bild, vikt och ton
+# hämtas därifrån. Här står bara det som visas som text.
+#
+# Ett nytt verk utan engelsk titel visas med sin svenska titel. npm run kontroll säger till.
+# Produktionernas egna titlar (teater, trailrar) står kvar på svenska, som originaltitlar.
+
+# Avdelningarna (filtret i Registret). Till vänster det svenska namnet i verkfilerna.
+avdelningar:
+  Ljuset: "The Light"
+  Människan: "The Human"
+  Scenen: "The Stage"
+  Skruven: "The Twist"
+  Uppdragen: "The Commissions"
+  Övrigt: "Other"
+
+# Epokerna. Till vänster det svenska namnet i verkfilerna.
+epoker:
+  "Abstrakt, 2011": "Abstract, 2011"
+  "Absurdimo": "Absurdimo"
+  "Dans": "Dance"
+  "Egen animation, 2014": "Own animation, 2014"
+  "Indien, 2006": "India, 2006"
+  "Iscensatt lek, 2004–2005": "Staged play, 2004–2005"
+  "Kolkata, 2010": "Kolkata, 2010"
+  "Musikvideo": "Music video"
+  "Nordisk saga, 2010": "Nordic fairy tale, 2010"
+  "Närhet, 2007–2009": "Closeness, 2007–2009"
+  "Odaterat": "Undated"
+  "Porträtt, 2022–2025": "Portraits, 2022–2025"
+  "Scen, 2016–2018": "Stage, 2016–2018"
+  "Teater": "Theatre"
+  "Tv": "TV"
+  "Uppdrag": "Commissions"
+  "Utbildning": "Education"
+  "Vita öknen, 2005": "White desert, 2005"
+
+verk:
+  001-helikopter-over-badstranden:
+    titel: "Helicopter over the beach"
+    text: "A helicopter passes low over a beach. The onlookers at the water’s edge have turned towards a lone swimmer further out. The connection between the helicopter and the swimmer is not apparent from the image."
+  002-one-more-onion:
+    titel: "One more onion"
+    text: "An onion rests on a piece of wicker furniture in the foreground while a woman regards it with dismay. Staged. The onion has the leading role."
+  003-loken-och-kniven:
+    titel: "The onion and the knife"
+    text: "A man throws himself at a knife that is about to cut into an onion. The table lamp gives hard light from above. Same series as One more onion."
+  004-alex-med-fisken:
+    titel: "Alex with the fish"
+    text: "A man in sunglasses holds a mackerel out towards the camera. The fish is sharper than the man. The sky is blue and without remark."
+  005-tva-vid-vattenbrynet:
+    titel: "Two at the water’s edge"
+    text: "Three people stand at the water’s edge with the sun low over the sea. They are seen against the light and have turned towards the water. The wave has just reached their feet."
+  006-vattenbuffel-i-rosa:
+    titel: "Water buffalo in pink"
+    text: "A water buffalo stands on a road in a landscape that has been coloured pink. The backlight dissolves the trees in the background. The buffalo appears unconcerned about the colour."
+  007-mulen:
+    titel: "The muzzle"
+    text: "Close-up of a muzzle, probably a camel’s, with a halter. The light is low and brown. The rest of the animal lies outside the frame."
+  008-svart-ko-i-stallet:
+    titel: "Black cow in the shed"
+    text: "A black cow stands under a bamboo roof and looks straight into the camera. Behind it a blue tarpaulin glows."
+  009-in-i-branningen:
+    titel: "Into the surf"
+    text: "A person throws themselves backwards into the surf. The sun shows through the arch formed by the body. The spray has stopped in mid-air."
+  010-mannen-som-skriver:
+    titel: "The man writing"
+    text: "A man in a cap and checked shirt writes at a table with a checked cloth. His gaze is directed at the paper. What is being written is not apparent."
+  011-rod-metall:
+    titel: "Red metal"
+    text: "Two red metal brackets with holes. The large bracket in the foreground is sharp and the rest of the image dissolves. The purpose has not been established."
+  012-brev-pa-kafeet:
+    titel: "Letter at the café"
+    text: "A person with curly hair writes by hand at a café table. On the table are coffee, toast and a sugar bowl. The recipient is not apparent."
+  013-silverskorna:
+    titel: "The silver shoes"
+    text: "A pair of silver trainers with white socks, on a tree root. The image is almost black and white and the shoes are the only thing that shines."
+  014-halm-i-motljus:
+    titel: "Straw against the light"
+    text: "A shirtless man works with bundles of straw in low light. The straw takes up most of the image."
+  015-flaskor-i-halmen:
+    titel: "Bottles in the straw"
+    text: "A number of bottles lie half buried in red earth and straw. The bottles have taken on the colour of the earth."
+  016-somnad:
+    titel: "Asleep"
+    text: "A child sleeps with a cheek against a stone surface. The light is weak and cold. The camera is at the level of the surface."
+  017-tre-mot-solen:
+    titel: "Three against the sun"
+    text: "Three people sit in silhouette against a sunset. The sun stands between two of them. The conversation has not been minuted."
+  018-saden-rensas:
+    titel: "Winnowing the grain"
+    text: "Two women winnow grain. One pours from a basket so that the chaff blows away. The air in front of them is full of grain."
+  019-maskerna-vid-bordet:
+    titel: "The masks at the table"
+    text: "Four children in masks eat at a wooden table outdoors. One of them drinks through a straw inserted under the mask. The masks have not been removed for the meal."
+  020-bla-blick:
+    titel: "Blue gaze"
+    text: "Close-up of a boy with cropped hair, blue eyes and freckles. The background is grey and neutral. The gaze is directed straight at the viewer."
+  021-masker-svartvitt:
+    titel: "Masks, black and white"
+    text: "Four children in masks at a stainless steel table. The image is black and white except for the blue in two of the masks. The child on the right holds a banana."
+  022-korg-med-jord:
+    titel: "Basket of earth"
+    text: "A man carries a basket of earth on his head in front of an earthen wall. The face lies in shadow. The basket is the brightest point in the image."
+  023-utgravningen:
+    titel: "The excavation"
+    text: "The excavation is seen from above. Workers carry earth in baskets out of a trench while a red tractor stands at the edge. A bicycle is parked at the top of the image."
+  024-pelarsalen:
+    titel: "The hall of pillars"
+    text: "A hall of pillars with red and white stripes. People sit and rest in the shade between the pillars. No one appears to be waiting for anything in particular."
+  025-lasning-under-tacket:
+    titel: "Reading under the covers"
+    text: "Two hands hold a handwritten card in a dim room. A floral dress and a pillow are visible at the edge. The text on the card cannot be read."
+  026-lov-pa-dorren:
+    titel: "Leaf on the door"
+    text: "A hand holds a plug next to a hole in the wall. The wallpaper has split around the hole and forms something resembling a leaf. A cable protrudes from the tear."
+  027-bakom-platen:
+    titel: "Behind the sheet metal"
+    text: "A child peers out from behind a plank in front of a wall of corrugated metal. Above the metal a road and a grassy slope are visible. The wide angle makes the planks large and the child small."
+  028-gula-regnjackan:
+    titel: "The yellow raincoat"
+    text: "A child in a yellow raincoat is lifted by a pair of adult hands beside a dark stream. The child’s face is contorted in a grimace. The water behind is still."
+  029-lov-mellan-hander:
+    titel: "Leaf between hands"
+    text: "Two hands hold up a maple leaf that has decayed into a net of veins. Water droplets remain on the leaf. The image is black and white."
+  030-i-ormbunkarna:
+    titel: "In the ferns"
+    text: "A person in a dark jacket stands among ferns at dusk. The light is blue and weak. The face is turned away from the camera."
+  031-rosa-falt:
+    titel: "Pink field"
+    text: "A field of tall grass and flowers, coloured pink and heavily overexposed. A figure walks in the field with its back to the camera. Ahead of it something white can be glimpsed that has not been identified."
+  032-elden-pa-garden:
+    titel: "The fire in the yard"
+    text: "A fire burns in a yard at dusk and throws sparks towards a white house. A few people stand around the fire. A man crouching on the right tends it."
+  033-ansikte-vid-elden:
+    titel: "Face by the fire"
+    text: "Portrait of a man in a vest with a pendant around his neck. The background is dark except for a fire on the left. The gaze is directed at the camera."
+  034-mosaikmasken:
+    titel: "The mosaic mask"
+    text: "A child lies on its back with a black mask over the upper part of the face. The mask is covered with shards of glass and tile. The mouth and cheek show beneath the edge."
+  035-den-vita-bilen:
+    titel: "The white car"
+    text: "A white car of an older model is parked in a wet yard, seen obliquely from above. Behind it are a brick wall and a shed with a thatched roof. A garden hose lies on the ground."
+  036-pojke-i-blatt:
+    titel: "Boy in blue"
+    text: "Close-up of a fair-haired boy in a blue jacket. The head is tilted and the gaze directed at the camera. Focus is on the eye nearest the viewer."
+  037-fraknar:
+    titel: "Freckles"
+    text: "Close-up of a child with freckles and squinting eyes. Focus is on the eyes. The smile is restrained."
+  038-elefanten-vid-templet:
+    titel: "The elephant at the temple"
+    text: "An elephant lays its trunk on the head of a girl in a red school uniform. Adults stand around them and watch. The wall behind is of stone."
+  039-tvatten:
+    titel: "The washing"
+    text: "A white house and a house of natural stone beneath misty mountains. A washing line is hung full of clothes and below it lies a woodpile. A small child stands in the left-hand corner of the image."
+  040-vattenfallet:
+    titel: "The waterfall"
+    text: "A narrow waterfall runs over a smooth rock face. Greenery grows in the crevices."
+  041-vag-i-dimma:
+    titel: "Road in fog"
+    text: "A dirt road leads into a misty valley. Tall trees stand in darkness on the left. The road is empty."
+  042-i-morkret-vid-klippan:
+    titel: "In the dark by the rock"
+    text: "A person with fair hair lies on their back against a rock, seen from above. A hard light strikes the face and shoulders. The rest of the image is black."
+  043-sjon:
+    titel: "The lake"
+    text: "A lake with conifer forest and a floating jetty, in subdued pink light. A dark object floats on the water beside the jetty. The object has not been identified."
+  044-mannen-vid-grinden:
+    titel: "The man at the gate"
+    text: "An elderly man passes along the bottom edge of the image in front of a gate with posters. Motorcycles are parked on the right. The backlight is hazy and hard."
+  045-genom-glaset:
+    titel: "Through the glass"
+    text: "A view seen through glass. The horizon has been bent into an arc and the surroundings into a swirl. What is depicted has not been established."
+  046-genom-glaset-ii:
+    titel: "Through the glass II"
+    text: "A variant of Through the glass, taken through the same glass. The horizon lies somewhat higher."
+  047-svart-vatten:
+    titel: "Black water"
+    text: "Ice floes on dark water. Low light shines gold in the channels between the floes. Bare branches hang in from the top edge of the image."
+  048-har-i-motljus:
+    titel: "Hair against the light"
+    text: "Fair hair against the light. The face beneath is out of focus and seen in profile. Focus is on the hair."
+  049-koket:
+    titel: "The kitchen"
+    text: "Two people cook at a stove. A man stirs a saucepan while a woman looks on. The light is green and a third face has been cropped by the edge of the frame."
+  050-grasstraet:
+    titel: "The blade of grass"
+    text: "A hand holds a blade of grass against a backlight that has dissolved into large patches of light. The bristles of the blade are sharp."
+  051-filten:
+    titel: "The blanket"
+    text: "A person shakes out a blanket over a lawn in low evening light. The blanket is in motion and fills half the image. The person is largely obscured."
+  052-frost:
+    titel: "Frost"
+    text: "Hoarfrost on the roof of a car of an older model. Focus is on the frost crystals. The car’s rounded side windows are visible below."
+  053-mjolkkannorna:
+    titel: "The milk churns"
+    text: "A large number of milk churns are carried through a crowd. A man in a green knitted vest passes in the foreground."
+  054-granden:
+    titel: "The alley"
+    text: "A narrow alley full of people in motion. Power lines hang densely overhead. Most are walking away from the camera."
+  055-ryggen-med-radbandet:
+    titel: "The back with the beads"
+    text: "A man’s bare back with a necklace of brown beads. The skin bears white marks. The surroundings are dark and out of focus."
+  056-barnet-och-valparna:
+    titel: "The child and the puppies"
+    text: "A child in a turquoise knitted jumper crouches and pats a puppy. A bicycle pedal hangs above them. A white paw can be glimpsed behind the child’s hand."
+  057-rattan:
+    titel: "The rat"
+    text: "A rat lies on its side on a brown floor. The odd one out. It requires no explanation."
+  058-rattan-ii:
+    titel: "The rat II"
+    text: "The same rat as in The rat, with a shallower depth of field. Focus is on the ear."
+  059-tarna:
+    titel: "The toes"
+    text: "Two feet with toe rings and chipped red nail varnish. The feet rest against each other. The background is out of focus and blue."
+  060-bindin:
+    titel: "Bindi"
+    text: "A woman with closed eyes and an ornament on her forehead. A finger is raised in front of the face. The rest of the image lies in darkness."
+  061-vid-fonstret:
+    titel: "By the window"
+    text: "A child sits by a window. The window light traces the profile of the face while the rest of the image lies in darkness."
+  062-armenian-college-kolkata:
+    titel: "Armenian College, Kolkata"
+    text: "Two guards stand in front of the gate of Armenian College. The gate and the pillars are arranged symmetrically. The man in the foreground is not."
+  063-gatubarberaren:
+    titel: "The street barber"
+    text: "A street barber works on a customer against a peeling wall with green lettering. A mirror on the wall shows a section of the scene. A child in the foreground looks up."
+  064-hundarna:
+    titel: "The dogs"
+    text: "A street dog sniffs the ground while a puppy stands beside it. The asphalt is grey and even."
+  065-poison:
+    titel: "POISON"
+    text: "A glass bottle labelled POISON stands in a window. A brush lies beside it. According to the label the bottle contains a cleaning agent."
+  066-prickar:
+    titel: "Dots"
+    text: "Water droplets on a curved, dark surface. The light comes from the top edge of the image."
+  067-bebisen:
+    titel: "The baby"
+    text: "An infant is fed with a spoon by an adult hand wearing a bracelet. The child looks up at the camera. The image is taken from above."
+  068-lysroret:
+    titel: "The fluorescent tube"
+    text: "Close-up of a fluorescent tube in a dark room. The tube is the only source of light in the image."
+  069-ogat:
+    titel: "The eye"
+    text: "Close-up of an animal’s eye. Eyelashes and folds of skin are sharp. The eye lies partly in shadow."
+  070-den-stangda-butiken:
+    titel: "The closed shop"
+    text: "An elderly man with a beard sits in front of lowered roller shutters with his hand raised to his face. A walking stick leans beside him and two bags lie on the ground. The image is black and white."
+  071-siesta:
+    titel: "Siesta"
+    text: "A woman sleeps in a chair on a veranda with an infant on her chest. Both have their eyes closed. The palms in the background are out of focus."
+  074-granden-i-sten:
+    titel: "The stone alley"
+    text: "A narrow alley between walls of red stone. A few women in saris and a man in a blue shirt walk away from the camera. The alley continues upwards and out of the image."
+  075-pa-trappan:
+    titel: "On the steps"
+    text: "A woman in a yellow sari stands by a flight of stone steps and looks out to the left. The wall behind is dark."
+  076-fingret:
+    titel: "The finger"
+    text: "A man in a knitted hat points a finger at the lens. The finger is out of focus and the face sharp. The flash has left few shadows."
+  077-bagen-i-lovet:
+    titel: "The arch in the leaves"
+    text: "A person in an orange jumper has bent over so that the head rests in the autumn leaves and the body forms an arch. The forest behind is green."
+  078-slojan-i-skogen:
+    titel: "The veil in the forest"
+    text: "A person stands in a forest with fair hair blowing across the face. Hair and scarf conceal the face entirely. The trees behind are sparsely leaved."
+  079-gasmasken:
+    titel: "The gas mask"
+    text: "A man in a half mask with a filter and a yellow jacket, in green light. A spanner is visible at the bottom edge of the image. What is to be repaired is not apparent."
+  080-tre-i-blasten:
+    titel: "Three in the wind"
+    text: "Three people in winter clothing look in the same direction, out of frame. Behind them stand bare trees and a utility pole. What they are looking at is not accounted for."
+  081-kiddo-med-megafon:
+    titel: "Kiddo with megaphone"
+    text: "A boy holds a megaphone for a woman who reads from a sheet of paper. On the right a pink sign with incomplete text can be glimpsed. The image is sepia-toned."
+  082-haret:
+    titel: "The hair"
+    text: "Dark hair blows across a face against a white background. The image is black and white and bright."
+  083-bananen:
+    titel: "The banana"
+    text: "A shirtless man eats a banana in white sand. The wide angle makes the banana large. The sky is deep blue."
+  084-fallet-i-den-vita-oknen:
+    titel: "The fall in the white desert"
+    text: "A person in a floral dress plunges head first into a white sand dune. The legs point at the sky. Beside them stands a piece of cardboard whose function has not been clarified."
+  085-hoppborgen:
+    titel: "The bouncy castle"
+    text: "A boy climbs through an opening in a green bouncy castle. The image is taken from below and the bouncy castle fills the entire frame."
+  086-baten-uppifran:
+    titel: "The boat from above"
+    text: "A motorboat photographed directly from above beside a quay. The passengers have turned their faces upwards and someone is waving. A child wears a life jacket."
+  087-kaninen-vid-bankomaten:
+    titel: "The rabbit at the cash machine"
+    text: "The photograph shows a rabbit at a cash machine. The rabbit does not appear to have any business there. It has placed a paw on its neighbour’s shoulder."
+  088-lek-i-graset:
+    titel: "Play in the grass"
+    text: "A girl walks towards the camera while two adults sit on a rock behind her. One of the adults holds an infant. The image is black and white."
+  089-bakom-kameran:
+    titel: "Behind the camera"
+    text: "A man sets up a film camera on a tripod in a dark studio. Strong light falls in from the left."
+  090-sandangeln:
+    titel: "The sand angel"
+    text: "A person in jeans and a cap lies on their back making an angel in white sand. The image is taken from above. The sand has been shaped by arms and legs."
+  091-hoppet:
+    titel: "The jump"
+    text: "A person jumps over a white dune while a kneeling photographer documents the jump. The camera’s date appears to be wrong. Dated by the same series as Jump at White Sands."
+  092-hopp-i-white-sands:
+    titel: "Jump at White Sands"
+    text: "Three people jump on a white dune. The image is tilted so that the slope becomes a wall. Which way is up has not been established."
+  093-youtube-festival:
+    titel: "YouTube Festival"
+    text: "A man in a cap smiles in front of a sign for YouTube Festival. Large flower arrangements stand on both sides."
+  094-fotografen-pa-scenen:
+    titel: "The photographer on stage"
+    text: "A photographer crouches on a stage photographing a dancer in mid-kick. The spotlights in the background give backlight. Both are occupied by the same moment."
+  095-repetitionen:
+    titel: "The rehearsal"
+    text: "A rehearsal room where several people are working at the same time. Boxes are wheeled on a sack truck, something is hung on the wall and papers are handed out. The man in the middle stands still."
+  096-rosen:
+    titel: "The rose"
+    text: "A man with wide-open eyes smells a yellow rose in front of a red house. The wide angle enlarges both the rose and the face. The expression is out of proportion to the rose."
+  097-dansarna-i-barnsten:
+    titel: "The dancers in amber"
+    text: "Three dancers in amber light against a black background. Two are bent deep towards the floor while the third stands with an arm above the head. A row of lamps glows at the bottom left."
+  098-portratt-med-blommor:
+    titel: "Portrait with flowers"
+    text: "Portrait of a woman with strawberry-blonde hair worn up and a floral blouse. The gaze is directed past the camera. The background is dark with touches of magenta."
+  099-ensam-pa-scenen:
+    titel: "Alone on stage"
+    text: "A lone dancer curls up in a cone of light on a stage floor. The audience is seen in silhouette in the foreground. The image is taken from above."
+  100-blatt-har:
+    titel: "Blue hair"
+    text: "Three performers in blue wigs and black dresses with white collars. All three tilt their heads back. The background is black."
+  101-skuggan:
+    titel: "The shadow"
+    text: "A dancer in a black dress and blue wig stretches an arm upwards. The shadow on the wall is considerably larger than the dancer. The light comes from lamps on two metal stands."
+  102-barnets-mun:
+    titel: "The child’s mouth"
+    text: "Close-up of a child’s open mouth. The child wears a green knitted cardigan. The background has dissolved into patches of light."
+  103-skriket-underifran:
+    titel: "The scream from below"
+    text: "A man in a patterned jumper and knitted hat, photographed from below with a wide angle. The mouth is wide open. White wardrobe doors are visible behind."
+  104-lapparna:
+    titel: "The lips"
+    text: "A woman with curly hair holds a finger to her lips. The gaze is directed straight into the camera. The light is soft and comes from the front."
+  105-pa-vag:
+    titel: "On the way"
+    text: "A man in a cap and knitted scarf looks into the camera in a hallway. The flash has flattened the room. A carabiner hangs from the jacket."
+
+  # Absurdimo
+  abs-arbetsformedlingen-antligen-ett-ledigt-j:
+    titel: "The employment service: a vacancy at last!"
+  abs-dagens-visdomsord-tankvart-om-vind:
+    titel: "Today’s words of wisdom: thoughts on wind"
+  abs-fader-jans-oheliga-nattvard:
+    titel: "Father Jan’s unholy communion"
+  abs-forhoret:
+    titel: "The interrogation"
+  abs-frisoren:
+    titel: "The hairdresser"
+  abs-gardagens-ratt:
+    titel: "Yesterday’s dish"
+  abs-gubbe-hi-gubbe-ha:
+    titel: "GUBBE HI GUBBE HÄ!"
+  abs-hardhante-erik:
+    titel: "Heavy-handed Erik"
+  abs-karlek-i-verkstan:
+    titel: "Love in the workshop"
+  abs-kontaktannonsen-1337-h4xx0r-soker-sallsk:
+    titel: "The personal ad: 1337 H4XX0r seeks company"
+  abs-kristi-fot:
+    titel: "The foot of Christ"
+  abs-midsommarlekar-kaskadspyan:
+    titel: "Midsummer games (the cascade vomit)"
+  abs-myggan:
+    titel: "The mosquito"
+  abs-naturrutan:
+    titel: "The nature corner"
+  abs-oanstandig:
+    titel: "Indecent"
+  abs-ranarna:
+    titel: "The robbers"
+  abs-schack-matt:
+    titel: "Checkmate"
+  abs-scout-ola-teknikkonsulten:
+    titel: "Scout Ola: the tech consultant"
+  abs-the-daily-ritual-theme-song:
+    titel: "The Daily Ritual, theme song"
+  abs-vagra-atervinna:
+    titel: "Refuse to recycle"
+
+  # Film. Produktionernas titlar står kvar på svenska.
+  film-beauty-and-the-beast-arena-bonusmaterial:
+    titel: "Beauty and the Beast ARENA, bonus material"
+  film-bella-figura-kungliga-baletten:
+    titel: "Bella Figura, the Royal Swedish Ballet"
+    text: "The Royal Swedish Ballet rehearses Jiří Kylián’s Bella Figura, October 2021."
+  film-bernardas-hus-trailer:
+    titel: "Bernardas hus, trailer"
+  film-bra-manniskor:
+    titel: "Bra människor"
+  film-cykla-sakert-i-trafiken:
+    titel: "Cycling safely in traffic"
+  film-de-redan-fralsta-trailer:
+    titel: "De redan frälsta, trailer"
+  film-deejay-spider-intellect:
+    titel: "Deejay Spider, Intellect"
+  film-effekten:
+    titel: "Effekten"
+  film-en-druva-i-solen-trailer:
+    titel: "En druva i solen, trailer"
+  film-en-komisk-depression-trailer:
+    titel: "En komisk depression, trailer"
+  film-fatta-med-cleo-och-juck-trailer:
+    titel: "FATTA! med Cleo och JUCK, trailer"
+  film-fotografiskas-kok-i-360:
+    titel: "Fotografiska’s kitchen in 360°"
+  film-hem-varen-2019:
+    titel: "Hem, spring 2019"
+    text: "The year is taken from the title."
+  film-henrik-joddlar-for-dansbandsfansen:
+    titel: "Henrik yodels for the dance band fans"
+  film-henrik-skriker-ut-godisexpediten:
+    titel: "Henrik yells at the sweet shop assistant"
+  film-in-memoriam:
+    titel: "In memoriam"
+  film-mannen-med-rosa-triangel-trailer:
+    titel: "Männen med rosa triangel, trailer"
+  film-metoo-tennistranaren:
+    titel: "#metoo, the tennis coach"
+  film-nationalsangen-i-fullsatt-sporthall:
+    titel: "The national anthem in a packed sports hall"
+  film-nykopings-gastabud-del-1:
+    titel: "Nyköpings gästabud, part 1"
+  film-plateau-effect-cullberg:
+    titel: "Plateau Effect, Cullberg"
+  film-spies-in-the-east-intro:
+    titel: "Spies in the east, intro"
+  v01-riksteaterns-logga-animerad:
+    titel: "Riksteatern’s logo, animated"
+    text: "Animated by myself. The clip is played here."

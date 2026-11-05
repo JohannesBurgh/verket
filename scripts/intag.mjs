@@ -19,6 +19,9 @@ const VERK = path.resolve("content/verk"), BILDER = path.resolve("public/media/b
 
 const slug = (t) => t.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "verk";
 const q = (s) => JSON.stringify(s);
+// Kamerans klockslag är lokal tid. toISOString() räknar om till UTC, och då hamnar en bild
+// tagen strax efter midnatt på dagen före. Därför byggs datumet av de lokala delarna.
+const dag = (d) => (isNaN(d) ? null : `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
 const nastaNummer = () => {
   const n = fs.readdirSync(VERK).map((f) => parseInt(f, 10)).filter((x) => !isNaN(x));
   return (n.length ? Math.max(...n) : 0) + 1;
@@ -81,7 +84,7 @@ for (const f of filer.filter((f) => /\.(jpe?g|png|tiff?|webp)$/i.test(f))) {
   const nr = String(nastaNummer()).padStart(3, "0"), titel = sid?.titel || bas.replace(/[_-]+/g, " ").trim();
   const id = `${nr}-${slug(titel)}`, bildfil = `${id}.jpg`;
   let datum = null;
-  try { const e = await exifr.parse(src, ["DateTimeOriginal", "CreateDate"]); const d = e?.DateTimeOriginal || e?.CreateDate; if (d) datum = new Date(d).toISOString().slice(0, 10); } catch (e) {}
+  try { const e = await exifr.parse(src, ["DateTimeOriginal", "CreateDate"]); const d = e?.DateTimeOriginal || e?.CreateDate; if (d) datum = dag(new Date(d)); } catch (e) {}
   const meta = await sharp(src).metadata();
   const orient = (meta.orientation || 1) >= 5;
   const w = orient ? meta.height : meta.width, h = orient ? meta.width : meta.height;

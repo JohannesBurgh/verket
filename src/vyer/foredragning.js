@@ -4,12 +4,17 @@
 // Sekvensen är en tidslinje av avsnitt, mätt i slag (80 slag i minuten). Allt som rör sig är
 // Web Animations som går att pausa och spola, och ljudet syntetiseras med WebAudio mot samma klocka.
 // Med prefers-reduced-motion blir det ett lugnt bildspel: samma urval, bara toningar.
+//
+// Samma föredragning kan också spelas inne i Arkivrummet (#arkivrummet-foredragning-<frö>).
+// Då står spelaren för klockan, ljudet, texterna och kontrollerna, och rummet för bilderna
+// (se src/rum/foredragning.js). Ett frö ger samma föredragning på båda ställena.
 import "../stil/foredragning.css";
 import { VERK, S, el, kanalFarg, metaRad, ytBild, PREVIEW, idag } from "../data.js";
 import { oppna, oppen as visareOppen } from "../visare.js";
 import { arPa } from "../ljud.js";
+import { t, vag, las, arVy } from "../sprak.js";
 
-const BPM = 80, SLAG = 60 / BPM, MS = SLAG * 1000;
+export const BPM = 80, SLAG = 60 / BPM, MS = SLAG * 1000;
 const POOL = VERK.filter((v) => v.vikt !== "damm");
 const PEKSKARM = matchMedia("(hover: none)").matches;
 const EASE = "cubic-bezier(.2,.8,.2,1)";
@@ -17,7 +22,7 @@ const EASE = "cubic-bezier(.2,.8,.2,1)";
 // ---------- frö ----------
 const TECKEN = "abcdefghjkmnpqrstuvwxyz23456789";
 export const nyttFro = () => Array.from({ length: 5 }, () => TECKEN[Math.floor(Math.random() * TECKEN.length)]).join("");
-const tvatta = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 16);
+export const tvatta = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 16);
 function slump(fro) {
   let h = 2166136261;
   for (const c of fro) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); }
@@ -72,29 +77,29 @@ export function manus(froIn, lugn = false) {
   };
 
   L("oppning", 16);
-  L("rubrik", 4, { nr: "§ 1", titel: "Fotografi", under: "Stillbild. Ur arkivet, i den ordning fröet anger." });
+  L("rubrik", 4, { nr: "§ 1", titel: t("Fotografi"), under: t("Stillbild. Ur arkivet, i den ordning fröet anger.") });
   for (let k = 0; k < 3; k++) V("foto", 6, "foto");
-  L("rubrik", 4, { nr: "§ 2", titel: "Rörlig bild", under: "Film. Återges som stillbild i kanalens färg." });
+  L("rubrik", 4, { nr: "§ 2", titel: t("Rörlig bild"), under: t("Film. Återges som stillbild i kanalens färg.") });
   for (let k = 0; k < 2; k++) V("film", 5, "film", "foto");
   L("uppgift", 6);
   for (let k = 0; k < 4; k++) V("snabb", lugn ? 5 : 2, "foto");
   const avbrott = V("avbrott", 8, "absurd");
-  L("rubrik", 4, { nr: "§ 3", titel: "Återupptagen föredragning", under: avbrott ? "Föredragningen återupptas där den avbröts." : "Föredragningen fortsätter." });
+  L("rubrik", 4, { nr: "§ 3", titel: t("Återupptagen föredragning"), under: avbrott ? t("Föredragningen återupptas där den avbröts.") : t("Föredragningen fortsätter.") });
   for (let k = 0; k < 2; k++) V("foto", 6, "foto");
   V("film", 5, "film", "foto");
   V("blixt", 3, "absurd");
-  L("rubrik", 4, { nr: "§ 4", titel: "Handling av särskild vikt", under: "Verket fäster särskild vikt vid följande handling." });
+  L("rubrik", 4, { nr: "§ 4", titel: t("Handling av särskild vikt"), under: t("Verket fäster särskild vikt vid följande handling.") });
   V("hjalte", 10, "hjaltefoto", "hjalte", "foto");
   L("kontakt", 12);
   L("slut", 8);
 
-  let t = 0, nr = 0;
+  let tid = 0, nr = 0;
   const verk = [];
   seg.forEach((s, i) => {
-    s.i = i; s.start = t; s.dur = s.slag * SLAG; t += s.dur; s.slut = t; s.tyst = TYSTA.has(s.typ);
+    s.i = i; s.start = tid; s.dur = s.slag * SLAG; tid += s.dur; s.slut = tid; s.tyst = TYSTA.has(s.typ);
     if (s.v) { s.nr = ++nr; verk.push(s.v); }
   });
-  const plan = { fro, lugn, seg, verk, total: t, dnr: `${S.diarieprefix || "VOL"} F/${fro.toUpperCase()}` };
+  const plan = { fro, lugn, seg, verk, total: tid, dnr: `${S.diarieprefix || "VOL"} F/${fro.toUpperCase()}` };
   plan.ljud = ljudspar(plan);
   return plan;
 }
@@ -124,7 +129,7 @@ function ljudspar(plan) {
 }
 
 // ---------- hjälpare ----------
-const langd = (sek) => { const m = Math.floor(sek / 60), r = Math.round(sek % 60); return m ? `${m} min ${r} s` : `${r} s`; };
+const langd = (sek) => { const m = Math.floor(sek / 60), r = Math.round(sek % 60); return m ? t("{m} min {s} s", { m, s: r }) : t("{s} s", { s: r }); };
 const klocka = (sek) => { const s = Math.max(0, Math.floor(sek)); return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
 const lum = (hex) => { const n = parseInt(hex.slice(1), 16); return 0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255); };
 const hal = () => [el("span", { class: "hal a", "aria-hidden": "true" }), el("span", { class: "hal b", "aria-hidden": "true" })];
@@ -204,11 +209,11 @@ function bakgrund(src) {
   im.src = src;
   return c;
 }
-function lapp(k, s, rad, extra) {
-  const l = el("div", { class: "fd-lapp" }, el("span", { class: "mono" }, `Bilaga ${s.nr} av ${k.plan.verk.length}`), el("b", {}, s.v.titel), el("span", { class: "mono" }, rad), extra || null);
-  return k.inn(l, 0.75, "lapp", 0.7);
+export function lapp(k, s, rad, extra, slag0 = 0.75) {
+  const l = el("div", { class: "fd-lapp" }, el("span", { class: "mono" }, t("Bilaga {nr} av {n}", { nr: s.nr, n: k.plan.verk.length })), el("b", {}, s.v.titel), el("span", { class: "mono" }, rad), extra || null);
+  return k.inn(l, slag0, "lapp", 0.7);
 }
-function stampel(text, liten) {
+export function stampel(text, liten) {
   return el("div", { class: "fd-stampel", "aria-hidden": "true" }, text, liten ? el("small", {}, liten) : null);
 }
 // En film som stillbild, tonad i kanalens färger. Cyan markerar rörlig bild.
@@ -224,7 +229,7 @@ function filmram(k, s, farger) {
   });
   if (!k.lugn) k.anim(duo, [{ opacity: 1 }, { opacity: 0.9 }, { opacity: 1 }, { opacity: 0.95 }, { opacity: 1 }], 0, 1.3, { iterations: Infinity, fill: "none", easing: "linear" });
   return el("div", { class: "fd-ram" }, duo, ...["a", "b", "c", "d"].map((h) => el("i", { class: "fd-horn " + h, "aria-hidden": "true" })),
-    el("span", { class: "fd-rec mono" }, v.kanal === "Absurdimo" ? "▶ Absurdimo" : "▶ Rörlig bild"), tc);
+    el("span", { class: "fd-rec mono" }, v.kanal === "Absurdimo" ? "▶ Absurdimo" : "▶ " + t("Rörlig bild")), tc);
 }
 
 // ---------- avsnitten ----------
@@ -233,13 +238,14 @@ const BYGG = {
     const p = k.plan;
     const dnr = k.skriv(el("div", { class: "fd-dnr mono" }), p.dnr, 0.4);
     k.ut(dnr, 3, 0.6);
-    const rader = ["Verket", "föredrar", "sitt arkiv."].map((t, j) => el("span", { class: "fd-rad" }, k.inn(el("span", {}, t), 4 + j, "mask", 0.7)));
-    const falt = el("div", { class: "fields fd-falt" }, ...[["Diarienummer", p.dnr], ["Datum", idag()], ["Föredragande", S.handlaggare],
-      ["Omfattning", `${p.verk.length} handlingar, ${langd(p.total)}`]].map(([a, b], j) => k.inn(el("div", {}, el("span", {}, a), el("b", {}, b)), 8 + j * 0.5, "upp", 0.6)));
-    const hint = k.inn(el("p", { class: "fd-hint mono" }, PEKSKARM ? "Tryck för att pausa. Svep för att bläddra." : "Mellanslag pausar. Pilarna bläddrar. Escape avslutar."), 10, "tona", 1);
-    const st = k.stampa(stampel("Föredras", idag()), 12, -8);
+    // Tre rader som slår ned en i taget. | delar raderna.
+    const rader = t("Verket|föredrar|sitt arkiv.").split("|").map((rad, j) => el("span", { class: "fd-rad" }, k.inn(el("span", {}, rad), 4 + j, "mask", 0.7)));
+    const falt = el("div", { class: "fields fd-falt" }, ...[[t("Diarienummer"), p.dnr], [t("Datum"), idag()], [t("Föredragande"), S.handlaggare],
+      [t("Omfattning"), t("{n} handlingar, {langd}", { n: p.verk.length, langd: langd(p.total) })]].map(([a, b], j) => k.inn(el("div", {}, el("span", {}, a), el("b", {}, b)), 8 + j * 0.5, "upp", 0.6)));
+    const hint = k.inn(el("p", { class: "fd-hint mono" }, PEKSKARM ? t("Tryck för att pausa. Svep för att bläddra.") : t("Mellanslag pausar. Pilarna bläddrar. Escape avslutar.")), 10, "tona", 1);
+    const st = k.stampa(stampel(t("Föredras"), idag()), 12, -8);
     const ark = el("section", { class: "paper fd-ark fd-oppning" }, ...hal(),
-      el("div", { class: "head" }, el("div", { class: "org" }, S.namn), el("div", { class: "form" }, "Föredragning · " + p.dnr)),
+      el("div", { class: "head" }, el("div", { class: "org" }, S.namn), el("div", { class: "form" }, t("Föredragning · {dnr}", { dnr: p.dnr }))),
       el("div", { class: "fd-stor" }, rader), falt, hint, st);
     k.ark(ark, 3); k.skak(ark, 12); k.arkUt(ark, s.slag - 0.6);
     return el("div", { class: "fd-seg" }, dnr, ark);
@@ -272,7 +278,7 @@ const BYGG = {
     if (k.lugn) return BYGG.foto(s, k);
     const v = s.v;
     const tryck = el("figure", { class: "fd-tryck", style: `--ar:${v.format}` }, el("img", { src: v.bild, alt: v.titel, decoding: "async" }));
-    tryck.append(k.stampa(stampel(`Bilaga ${s.nr}`), 1, s.rot));
+    tryck.append(k.stampa(stampel(t("Bilaga {nr}", { nr: s.nr })), 1, s.rot));
     const kam = el("div", { class: "fd-kamera" }, tryck);
     k.anim(kam, [{ transform: "scale(1.0)" }, { transform: "scale(1.035)" }], 0, s.slag, { easing: "linear" });
     k.skak(kam, 1);
@@ -295,11 +301,11 @@ const BYGG = {
       return k.inn(el("div", { class: "r" }, el("span", {}, etikett), b), slag0, "upp", 0.6);
     };
     const lista = el("div", { class: "fd-liggare" },
-      rad("Handlingar i arkivet", VERK.length, 0, true),
-      arsSpann ? rad("Äldsta handlingen", arsSpann[0], 1.25) : null,
-      arsSpann ? rad("Senaste handlingen", arsSpann[1], 2) : null,
-      rad("Föredras i dag", p.verk.length, 3, true),
-      k.inn(el("p", { class: "mono fd-not" }, "Övriga handlingar finns i Registret."), 4.25, "tona", 0.8));
+      rad(t("Handlingar i arkivet"), VERK.length, 0, true),
+      arsSpann ? rad(t("Äldsta handlingen"), arsSpann[0], 1.25) : null,
+      arsSpann ? rad(t("Senaste handlingen"), arsSpann[1], 2) : null,
+      rad(t("Föredras i dag"), p.verk.length, 3, true),
+      k.inn(el("p", { class: "mono fd-not" }, t("Övriga handlingar finns i Registret.")), 4.25, "tona", 0.8));
     k.ut(lista, s.slag - 0.5, 0.5);
     return el("div", { class: "fd-seg fd-uppgift" }, lista);
   },
@@ -310,51 +316,51 @@ const BYGG = {
     else k.anim(yta, [{ opacity: 0 }, { opacity: 0.18 }], 0, 1, { easing: "ease" });
     const svep = el("div", { class: "fd-svep", "aria-hidden": "true" }, "Avbrott");
     if (!k.lugn) k.anim(svep, [{ transform: "translateX(40%)", opacity: 0 }, { opacity: 0.9, offset: 0.12 }, { opacity: 0.5, offset: 0.75 }, { transform: "translateX(-75%)", opacity: 0 }], 0, 4, { easing: "cubic-bezier(.3,.6,.2,1)" });
-    const text = k.inn(el("p", { class: "fd-avbrottstext mono" }, "Föredragningen har avbrutits av Absurdimo."), 0.5, "tona", 0.5);
+    const text = k.inn(el("p", { class: "fd-avbrottstext mono" }, t("Föredragningen har avbrutits av Absurdimo.")), 0.5, "tona", 0.5);
     const ram = filmram(k, s);
-    ram.append(el("div", { class: "fd-absetikett" }, el("span", { class: "mono" }, `Bilaga ${s.nr}. Inkom oanmäld.`), el("b", {}, v.titel)));
+    ram.append(el("div", { class: "fd-absetikett" }, el("span", { class: "mono" }, t("Bilaga {nr}. Inkom oanmäld.", { nr: s.nr })), el("b", {}, v.titel)));
     const hall = el("div", { class: "fd-kamera fd-absram" }, ram);
     k.inn(hall, 1.5, "pop", 0.6);
     if (!k.lugn) {
       k.anim(ram, [{ rotate: "-3deg" }, { rotate: "2deg" }, { rotate: "-3deg" }], 2.1, 1, { iterations: 4, fill: "none", easing: "ease-in-out" });
       k.anim(hall, [{ transform: "none" }, { transform: "translateY(110vh) rotate(24deg)" }], 6.75, 0.9, { fill: "forwards", easing: "cubic-bezier(.5,0,.9,.3)" });
     } else k.ut(hall, 6.75, 1);
-    const beklagar = k.inn(el("p", { class: "fd-beklagar mono" }, "Verket beklagar avbrottet."), 5.75, "tona", 0.6);
+    const beklagar = k.inn(el("p", { class: "fd-beklagar mono" }, t("Verket beklagar avbrottet.")), 5.75, "tona", 0.6);
     return el("div", { class: "fd-seg fd-avbrott" }, yta, svep, text, hall, beklagar);
   },
 
   blixt(s, k) {
     const v = s.v;
-    const yta = el("div", { class: "fd-blixtyta" }, el("span", { class: "mono" }, "Absurdimo"), el("strong", {}, v.titel), el("span", { class: "mono" }, `Bilaga ${s.nr}. Inkom oanmäld.`));
+    const yta = el("div", { class: "fd-blixtyta" }, el("span", { class: "mono" }, "Absurdimo"), el("strong", {}, v.titel), el("span", { class: "mono" }, t("Bilaga {nr}. Inkom oanmäld.", { nr: s.nr })));
     if (k.lugn) { k.anim(yta, [{ opacity: 0 }, { opacity: 1 }], 0, 0.6, { easing: "ease" }); k.ut(yta, 1.25, 0.6); }
     else {
       k.anim(yta, steg("opacity", [1, 1, 1, 1, 0]), 0, 1.5, { easing: "linear" });
       k.anim(yta.querySelector("strong"), steg("transform", ["rotate(-4deg)", "rotate(3deg) scale(1.08)", "rotate(-2deg)", "rotate(5deg) scale(.96)", "rotate(-4deg)"]), 0, 1.25, { easing: "linear" });
     }
-    const notis = el("p", { class: "fd-notis mono" }, "Avbrottet har noterats.");
+    const notis = el("p", { class: "fd-notis mono" }, t("Avbrottet har noterats."));
     k.anim(notis, k.lugn ? [{ opacity: 0 }, { opacity: 1 }] : steg("opacity", [0, 1]), k.lugn ? 1.4 : 0.6, k.lugn ? 0.8 : 1.3, { easing: "linear" });
     return el("div", { class: "fd-seg fd-blixt" }, notis, yta);
   },
 
   hjalte(s, k) {
-    return s.v.typ === "foto" && s.v.bild ? BYGG.foto(s, k, { stor: true, stampel: ["Arkiveras", 7] }) : BYGG.film(s, k, { stampel: ["Arkiveras", 7] });
+    return s.v.typ === "foto" && s.v.bild ? BYGG.foto(s, k, { stor: true, stampel: [t("Arkiveras"), 7] }) : BYGG.film(s, k, { stampel: [t("Arkiveras"), 7] });
   },
 
   kontakt(s, k) {
-    const p = k.plan, saknas = el("span", { class: "mono" }, "[läggs in i content/verket.md]");
+    const p = k.plan, saknas = el("span", { class: "mono" }, t("[läggs in i content/verket.md]"));
     const rad = (a, varde, href) => el("div", { class: "row" }, el("span", {}, a), varde ? (href ? el("a", { href }, varde) : el("span", { class: "mono" }, varde)) : saknas.cloneNode(true));
     const rader = [
-      rad("E-post", S.epost, S.epost ? `mailto:${S.epost}?subject=${encodeURIComponent("Föredragning " + p.dnr)}` : null),
-      rad("Telefon", S.telefon, S.telefon ? "tel:" + S.telefon.replace(/\s/g, "") : null),
+      rad(t("E-post"), S.epost, S.epost ? `mailto:${S.epost}?subject=${encodeURIComponent(t("Föredragning {dnr}", { dnr: p.dnr }))}` : null),
+      rad(t("Telefon"), S.telefon, S.telefon ? "tel:" + S.telefon.replace(/\s/g, "") : null),
       S.instagram ? rad("Instagram", S.instagram, "https://instagram.com/" + S.instagram.replace(/^@/, "")) : null,
-      rad("Ange", p.dnr),
+      rad(t("Ange"), p.dnr),
     ].filter(Boolean).map((r, j) => k.inn(r, 3 + j * 0.75, "upp", 0.5));
     const ark = el("section", { class: "paper fd-ark fd-kontakt" }, ...hal(),
-      el("div", { class: "head" }, el("div", { class: "org" }, S.namn), el("div", { class: "form" }, "Föredragning · " + p.dnr)),
-      el("div", { class: "fd-stor fd-mellan" }, ["Frågor om", "föredragningen."].map((t, j) => el("span", { class: "fd-rad" }, k.inn(el("span", {}, t), 1 + j * 0.75, "mask", 0.7)))),
-      k.inn(el("p", {}, "Handläggning begärs per e-post eller telefon. Ange föredragningens diarienummer."), 2.4, "tona", 0.8),
+      el("div", { class: "head" }, el("div", { class: "org" }, S.namn), el("div", { class: "form" }, t("Föredragning · {dnr}", { dnr: p.dnr }))),
+      el("div", { class: "fd-stor fd-mellan" }, t("Frågor om|föredragningen.").split("|").map((rad, j) => el("span", { class: "fd-rad" }, k.inn(el("span", {}, rad), 1 + j * 0.75, "mask", 0.7)))),
+      k.inn(el("p", {}, t("Handläggning begärs per e-post eller telefon. Ange föredragningens diarienummer.")), 2.4, "tona", 0.8),
       el("div", { class: "kontakt" }, ...rader),
-      k.inn(el("p", { class: "small" }, `Handläggare: ${S.handlaggare}.`), 7.5, "tona", 1));
+      k.inn(el("p", { class: "small" }, t("Handläggare: {namn}.", { namn: S.handlaggare })), 7.5, "tona", 1));
     k.ark(ark, 0); k.arkUt(ark, s.slag - 0.55);
     return el("div", { class: "fd-seg" }, ark);
   },
@@ -362,16 +368,17 @@ const BYGG = {
   slut(s, k) {
     const p = k.plan, knapp = (text, fn, primar) => el("button", { type: "button", class: "fd-knapp" + (primar ? " primar" : ""), onclick: fn }, text);
     const knappar = el("div", { class: "fd-slutknappar" },
-      knapp("Föredra igen", () => k.styr.omstart(), true),
-      knapp("Ny föredragning", () => { location.hash = "#foredragning-" + nyttFro(); }),
-      knapp("Kopiera adressen", (e) => k.styr.kopiera(e.currentTarget)),
-      el("a", { class: "fd-knapp", href: "#registret" }, "Till Registret"));
+      knapp(t("Föredra igen"), () => k.styr.omstart(), true),
+      knapp(t("Ny föredragning"), () => { location.hash = k.styr.adress(nyttFro()); }),
+      knapp(k.styr.iRummet ? t("Föredra utan rummet") : t("Föredra i Arkivrummet"), () => k.styr.byt()),
+      knapp(t("Kopiera adressen"), (e) => k.styr.kopiera(e.currentTarget)),
+      k.styr.iRummet ? el("a", { class: "fd-knapp", href: vag("arkivrummet") }, t("Stanna i rummet")) : el("a", { class: "fd-knapp", href: vag("registret") }, t("Till Registret")));
     k.inn(knappar, 4, "upp", 0.8);
     k.ticks.push((lok) => { const av = lok < 4 * SLAG; if (knappar.inert !== av) knappar.inert = av; });
     const kontakt = [S.epost && el("a", { href: "mailto:" + S.epost }, S.epost), S.telefon && el("a", { href: "tel:" + S.telefon.replace(/\s/g, "") }, S.telefon)].filter(Boolean);
     return el("div", { class: "fd-seg fd-slutseg" },
-      el("h2", { class: "fd-slut" }, el("span", { class: "fd-rad" }, k.inn(el("span", {}, "Föredragningen är avslutad."), 0.5, "mask", 0.9))),
-      k.inn(el("p", { class: "mono fd-slutmeta" }, `${p.dnr} · ${p.verk.length} handlingar · ${langd(p.total)}`), 2, "tona", 1),
+      el("h2", { class: "fd-slut" }, el("span", { class: "fd-rad" }, k.inn(el("span", {}, t("Föredragningen är avslutad.")), 0.5, "mask", 0.9))),
+      k.inn(el("p", { class: "mono fd-slutmeta" }, t("{dnr} · {n} handlingar · {langd}", { dnr: p.dnr, n: p.verk.length, langd: langd(p.total) })), 2, "tona", 1),
       kontakt.length ? k.inn(el("p", { class: "mono fd-slutmeta" }, ...kontakt.flatMap((a, j) => (j ? [" · ", a] : [a]))), 2.6, "tona", 1) : null,
       knappar);
   },
@@ -379,9 +386,9 @@ const BYGG = {
 // Var en föredragning stannar när man bläddrar i pausat läge: när avsnittet har lagt sig.
 const VILA = { oppning: 13, rubrik: 2.9, foto: 3, film: 3, uppgift: 5, snabb: 1.5, avbrott: 4.5, blixt: 0.9, hjalte: 8, kontakt: 8.5, slut: 7.9 };
 const beskriv = (s, p) => {
-  if (s.v) return `Bilaga ${s.nr} av ${p.verk.length}. ${s.v.titel}. ${[s.v.kanal, metaRad(s.v)].filter(Boolean).join(", ")}.`;
-  return { oppning: `Föredragning ${p.dnr}. ${p.verk.length} handlingar.`, rubrik: `${s.nr} ${s.titel}.`, uppgift: `Arkivet omfattar ${VERK.length} handlingar.`,
-    kontakt: "Frågor om föredragningen.", slut: "Föredragningen är avslutad." }[s.typ] || "";
+  if (s.v) return `${t("Bilaga {nr} av {n}", { nr: s.nr, n: p.verk.length })}. ${s.v.titel}. ${[s.v.kanal, metaRad(s.v)].filter(Boolean).join(", ")}.`;
+  return { oppning: t("Föredragning {dnr}. {n} handlingar.", { dnr: p.dnr, n: p.verk.length }), rubrik: `${s.nr} ${s.titel}.`, uppgift: t("Arkivet omfattar {n} handlingar.", { n: VERK.length }),
+    kontakt: t("Frågor om|föredragningen.").replace("|", " "), slut: t("Föredragningen är avslutad.") }[s.typ] || "";
 };
 
 // ---------- ljud ----------
@@ -454,48 +461,59 @@ const LJUD = {
 
 // ---------- spelaren ----------
 let aktivt = null;
+// Byter man mellan föredragningen och Arkivrummet fortsätter den där den var.
+let fortsatt = null;
+const adressFor = (iRummet, fro) => (iRummet ? vag("arkivrummet", "foredragning-" + fro) : vag("foredragning", fro));
 
 export function render(app, arg) {
   // Adressen kan ha hunnit ändras medan modulen laddades. Det är den som gäller.
-  const h = decodeURIComponent(location.hash.slice(1));
-  if (!h.startsWith("foredragning")) return;
-  arg = h.slice("foredragning".length + 1) || arg;
+  const nu = las();
+  if (nu.vy !== "foredragning") return;
+  arg = nu.arg || arg;
   let fro = tvatta(arg);
   if (fro && aktivt && aktivt.plan.fro === fro && aktivt.rot.isConnected) return;
   stoppa();
-  if (!fro) { fro = nyttFro(); history.replaceState(null, "", "#foredragning-" + fro); }
+  if (!fro) { fro = nyttFro(); history.replaceState(null, "", vag("foredragning", fro)); }
   aktivt = spelare(app, fro);
 }
 export function stoppa() { if (aktivt) { aktivt.stoppa(); aktivt = null; } }
-addEventListener("hashchange", () => { if (aktivt && !location.hash.startsWith("#foredragning")) stoppa(); });
+addEventListener("hashchange", () => { if (aktivt && !arVy("foredragning")) stoppa(); });
 
-function spelare(app, fro) {
+// Föredragningen inne i Arkivrummet. vard: { rot, bygg, forbered }.
+//  rot       elementet som spelaren läggs i (rummet)
+//  bygg      egna byggare för avsnittstyper (verken visas som kort i rummet, inte som bilder)
+//  forbered  ett löfte som uppfylls när rummets handlingar är hämtade
+export function iRummet(fro, vard) { return spelare(null, tvatta(fro) || nyttFro(), vard); }
+
+function spelare(app, fro, vard = null) {
   const lugn = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const plan = manus(fro, lugn), N = plan.seg.length;
+  const adress = (f) => adressFor(!!vard, f);
 
   // ---- DOM ----
   const scen = el("div", { class: "fd-scen" });
-  const laddar = el("div", { class: "fd-laddar mono" }, "Föredragningen förbereds");
+  const laddar = el("div", { class: "fd-laddar mono" }, t("Föredragningen förbereds"));
   const live = el("p", { class: "fd-sr", "aria-live": "polite" });
-  const ljudtips = el("p", { class: "fd-ljudtips mono", hidden: true }, PEKSKARM ? "Ljudet startar vid första tryck" : "Ljudet startar vid första klick");
+  const ljudtips = el("p", { class: "fd-ljudtips mono", hidden: true }, PEKSKARM ? t("Ljudet startar vid första tryck") : t("Ljudet startar vid första klick"));
   const fyll = el("i", { class: "fd-fyll" });
-  const spar = el("div", { class: "fd-spar", role: "slider", tabindex: "0", "aria-label": "Föredragningens förlopp", "aria-valuemin": "0", "aria-valuemax": String(Math.round(plan.total)), "aria-valuenow": "0" },
+  const spar = el("div", { class: "fd-spar", role: "slider", tabindex: "0", "aria-label": t("Föredragningens förlopp"), "aria-valuemin": "0", "aria-valuemax": String(Math.round(plan.total)), "aria-valuenow": "0" },
     fyll, ...plan.seg.slice(1).map((s) => el("i", { class: "fd-mark" + (s.v ? "" : " text"), style: `left:${(s.start / plan.total) * 100}%` })));
   const knapp = (cls, text, kort, fn, extra = {}) => el("button", { type: "button", class: cls, "aria-label": text, title: text, onclick: (e) => { fn(e); if (e.detail) e.currentTarget.blur(); visaUi(); }, ...extra },
     el("span", { "aria-hidden": "true" }, kort), el("span", { class: "lang", "aria-hidden": "true" }, text));
-  const bakat = knapp("fd-k", "Föregående", "‹", () => hoppa(-1));
-  const paus = knapp("fd-k fd-paus", "Paus", "Ⅱ", () => vaxla(), { "aria-pressed": "false" });
-  const fram = knapp("fd-k", "Nästa", "›", () => hoppa(1));
+  const bakat = knapp("fd-k", t("Föregående"), "‹", () => hoppa(-1));
+  const paus = knapp("fd-k fd-paus", t("Paus"), "Ⅱ", () => vaxla(), { "aria-pressed": "false" });
+  const fram = knapp("fd-k", t("Nästa"), "›", () => hoppa(1));
   const tid = el("span", { class: "fd-tid mono", "aria-hidden": "true" });
-  const visaKnapp = knapp("fd-k fd-valfri", "Visa handlingen", "◻", () => visaHandling());
-  const kopiKnapp = knapp("fd-k fd-valfri", "Kopiera adressen", "⧉", (e) => kopiera(e.currentTarget));
-  const avsluta = knapp("fd-k", "Avsluta", "✕", () => avsluta_());
+  const visaKnapp = knapp("fd-k fd-valfri", t("Visa handlingen"), "◻", () => visaHandling());
+  const kopiKnapp = knapp("fd-k fd-valfri", t("Kopiera adressen"), "⧉", (e) => kopiera(e.currentTarget));
+  const bytKnapp = knapp("fd-k fd-byt", vard ? t("Utan rummet") : t("I Arkivrummet"), vard ? "▭" : "◫", () => byt());
+  const avsluta = knapp("fd-k", t("Avsluta"), "✕", () => avsluta_());
   const kontroll = el("div", { class: "fd-kontroll" }, spar,
-    el("div", { class: "fd-knappar" }, bakat, paus, fram, tid, el("span", { class: "fd-fro mono fd-valfri" }, "Frö " + plan.fro), visaKnapp, kopiKnapp, avsluta));
-  const rot = el("section", { class: "fd" + (lugn ? " fd-lugn" : ""), "aria-label": "Föredragningen", "aria-roledescription": "föredragning", tabindex: "-1" },
-    scen, el("div", { class: "fd-korn", "aria-hidden": "true" }), el("div", { class: "fd-vinjett", "aria-hidden": "true" }), laddar, ljudtips, live, kontroll);
-  document.documentElement.classList.add("fd-aktiv");
-  app.replaceChildren(rot);
+    el("div", { class: "fd-knappar" }, bakat, paus, fram, tid, el("span", { class: "fd-fro mono fd-valfri" }, t("Frö {fro}", { fro: plan.fro })), visaKnapp, kopiKnapp, bytKnapp, avsluta));
+  const rot = el("section", { class: "fd" + (lugn ? " fd-lugn" : "") + (vard ? " fd-rum" : ""), "aria-label": vard ? t("Föredragningen i Arkivrummet") : t("Föredragningen"), "aria-roledescription": t("föredragning"), tabindex: "-1" },
+    el("h1", { class: "dold" }, (vard ? t("Föredragningen i Arkivrummet") : t("Föredragningen")) + " " + plan.dnr), scen, el("div", { class: "fd-korn", "aria-hidden": "true" }), el("div", { class: "fd-vinjett", "aria-hidden": "true" }), laddar, ljudtips, live, kontroll);
+  if (vard) vard.rot.append(rot);
+  else { document.documentElement.classList.add("fd-aktiv"); app.replaceChildren(rot); }
   rot.focus({ preventScroll: true });
 
   // ---- klocka och avsnitt ----
@@ -503,12 +521,12 @@ function spelare(app, fro) {
   const nu = () => (spelar ? Math.min(plan.total, bas + (performance.now() - t0) / 1000) : bas);
   const segVid = (t) => { let i = 0; while (i < N - 1 && t >= plan.seg[i + 1].start) i++; return i; };
   const animationer = () => scen.getAnimations({ subtree: true });
-  const styr = { omstart: () => { soka(0); spela(); }, kopiera: (b) => kopiera(b) };
+  const styr = { omstart: () => { soka(0); spela(); }, kopiera: (b) => kopiera(b), adress, iRummet: !!vard, byt: () => byt() };
 
   function bygg(i, lok, overgang) {
     const s = plan.seg[i], k = verktyg(plan);
     k.styr = styr;
-    const node = BYGG[s.typ](s, k);
+    const node = (vard?.bygg?.[s.typ] || BYGG[s.typ])(s, k);
     node.dataset.typ = s.typ;
     const gamla = [...scen.children];
     if (overgang && lugn && gamla.length) {
@@ -545,7 +563,7 @@ function spelare(app, fro) {
   }
   const vaxla = () => (spelar ? pausa() : spela());
   function uppdateraPaus() {
-    const text = slut ? "Föredra igen" : spelar ? "Paus" : "Fortsätt";
+    const text = slut ? t("Föredra igen") : spelar ? t("Paus") : t("Fortsätt");
     paus.setAttribute("aria-label", text); paus.title = text; paus.setAttribute("aria-pressed", spelar ? "false" : "true");
     paus.firstChild.textContent = slut ? "↺" : spelar ? "Ⅱ" : "▶"; paus.lastChild.textContent = text;
   }
@@ -561,8 +579,13 @@ function spelare(app, fro) {
   }
   function avsluta_() {
     if (!igang) return;
-    if (aktiv === N - 1) { location.hash = "#ansokan"; return; }
+    if (aktiv === N - 1) { location.hash = vard ? vag("arkivrummet") : vag("ansokan"); return; }
     soka(plan.seg[N - 1].start); spela();
+  }
+  // Till Arkivrummet eller tillbaka, på samma ställe i föredragningen.
+  function byt() {
+    fortsatt = { fro: plan.fro, t: nu(), spelar: spelar || !igang };
+    location.hash = adressFor(!vard, plan.fro);
   }
   function visaHandling() {
     const s = plan.seg[aktiv]; if (!s?.v) return;
@@ -570,7 +593,7 @@ function spelare(app, fro) {
     oppna(plan.verk, plan.verk.indexOf(s.v));
   }
   async function kopiera(b) {
-    const url = location.href.split("#")[0] + "#foredragning-" + plan.fro;
+    const url = location.href.split("#")[0] + adress(plan.fro);
     let ok = false;
     try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {
       const f = el("input", { value: url, "aria-hidden": "true", style: "position:fixed;opacity:0" }); document.body.append(f); f.select();
@@ -578,13 +601,13 @@ function spelare(app, fro) {
     }
     if (!b) return;
     const sp = b.querySelector(".lang") || b, gammal = sp.textContent;
-    sp.textContent = ok ? "Adressen kopierad" : url;
+    sp.textContent = ok ? t("Adressen kopierad") : url;
     setTimeout(() => { sp.textContent = gammal; }, 2200);
   }
-  function rita(t) {
-    fyll.style.transform = `scaleX(${t / plan.total})`;
-    const text = `${klocka(t)} / ${klocka(plan.total)}`;
-    if (tid.textContent !== text) { tid.textContent = text; spar.setAttribute("aria-valuenow", String(Math.round(t))); spar.setAttribute("aria-valuetext", `${klocka(t)} av ${klocka(plan.total)}`); }
+  function rita(tt) {
+    fyll.style.transform = `scaleX(${tt / plan.total})`;
+    const text = `${klocka(tt)} / ${klocka(plan.total)}`;
+    if (tid.textContent !== text) { tid.textContent = text; spar.setAttribute("aria-valuenow", String(Math.round(tt))); spar.setAttribute("aria-valuetext", t("{a} av {b}", { a: klocka(tt), b: klocka(plan.total) })); }
   }
   function ljud(t) {
     const c = ljudet();
@@ -665,25 +688,35 @@ function spelare(app, fro) {
   spar.addEventListener("pointercancel", () => (drar = false));
 
   // ---- förberedelse: bilderna hämtas innan föredragningen börjar ----
-  const kallor = [...new Set(plan.verk.map(stillbild).filter(Boolean))];
+  const kallor = vard ? [] : [...new Set(plan.verk.map(stillbild).filter(Boolean))];
   let klara = 0;
-  const visaLaddning = () => { laddar.textContent = `Föredragningen förbereds · ${klara} av ${kallor.length} handlingar`; };
+  const visaLaddning = () => { laddar.textContent = t("Föredragningen förbereds · {a} av {b} handlingar", { a: klara, b: kallor.length }); };
   visaLaddning();
   const hamta = (src) => new Promise((res) => {
     const im = new Image(); im.decoding = "async";
     const klar = () => { klara++; visaLaddning(); res(); };
     im.onload = () => (im.decode ? im.decode().catch(() => {}).then(klar) : klar()); im.onerror = klar; im.src = src;
   });
-  Promise.race([Promise.all(kallor.map(hamta)), new Promise((r) => setTimeout(r, 6000))]).then(() => {
+  // I rummet är det rummet som hämtar bilderna. Där räcker det att vänta på det.
+  const forberedd = vard ? vard.forbered : Promise.all(kallor.map(hamta));
+  if (vard) laddar.textContent = "Föredragningen förbereds";
+  Promise.race([forberedd, new Promise((r) => setTimeout(r, 6000))]).then(() => {
     if (!levande) return;
     laddar.classList.add("klar");
     igang = true; startTid = performance.now();
-    soka(0); spela();
+    const f = fortsatt && fortsatt.fro === plan.fro ? fortsatt : null; fortsatt = null;
+    soka(f ? f.t : 0);
+    if (!f || f.spelar) spela(); else { rot.classList.add("paus"); uppdateraPaus(); }
   });
   raf = requestAnimationFrame(loop);
 
   return {
-    plan, rot,
+    plan, rot, lugn,
+    // läget just nu, för rummet: tiden, avsnittet och om föredragningen spelar
+    get tid() { return nu(); },
+    get avsnitt() { return aktiv; },
+    get spelar() { return spelar; },
+    get igang() { return igang; },
     stoppa() {
       levande = false; spelar = false; cancelAnimationFrame(raf); clearTimeout(uiTimer);
       for (const a of animationer()) a.cancel();
@@ -691,7 +724,7 @@ function spelare(app, fro) {
       removeEventListener("click", vackLjud);
       removeEventListener("keyup", vackLjud);
       document.removeEventListener("visibilitychange", synlighet);
-      document.documentElement.classList.remove("fd-aktiv");
+      if (!vard) document.documentElement.classList.remove("fd-aktiv");
       if (ctx && master) { malVolym = -1; master.gain.setTargetAtTime(0, ctx.currentTime, 0.02); }
       rot.remove();
     },

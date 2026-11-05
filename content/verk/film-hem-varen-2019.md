@@ -13,4 +13,4 @@ synlig: true
 farg: {nyans: 18, mattnad: 0.5, ljushet: 0.3}
 ton: {allvar: 0.7, rorligt: 1, scen: 1, uppdrag: 0.8}
 ---
-Året kommer från titeln.
+Året har hämtats ur titeln.
