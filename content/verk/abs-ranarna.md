@@ -3,6 +3,7 @@ titel: "Rånarna"
 datum: null
 typ: youtube
 youtube: "l-IJoCqfwGY"
+bild: "bilder/abs-ranarna.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

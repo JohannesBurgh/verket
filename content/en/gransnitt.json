@@ -15,7 +15,6 @@
   "år ej fastställt": "year not established",
   "Odaterad": "Undated",
   "(uppskattat)": "(estimated)",
-  "[läggs in i content/verket.md]": "[to be entered in content/verket.md]",
   "Handläggning begärs per e-post eller telefon.": "Processing is requested by email or telephone.",
   "E-post": "Email",
   "Ärende {dnr}": "Case {dnr}",
@@ -216,5 +215,6 @@
   "Föredragningen, spelad här i rummet": "The Presentation, played here in the room",
   "Föredra arkivet": "Present the archive",
   "Inget år valt": "No year selected",
-  "Till innehållet": "Skip to content"
+  "Till innehållet": "Skip to content",
+  "Uppgiften kompletteras.": "To be supplied."
 }

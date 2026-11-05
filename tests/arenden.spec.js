@@ -66,6 +66,6 @@ test.describe("För beställare", () => {
     const kontakt = page.locator(".bestallare .kontakt");
     await expect(kontakt).toBeVisible();
     if (VERKET.epost) await expect(kontakt.getByRole("link", { name: VERKET.epost })).toHaveAttribute("href", `mailto:${VERKET.epost}`);
-    else await expect(kontakt).toContainText("[läggs in i content/verket.md]");
+    else await expect(kontakt).toContainText("Uppgiften kompletteras.");
   });
 });

@@ -4,6 +4,7 @@ datum: "2019"
 datum_gissat: true
 typ: youtube
 youtube: "wx66nHhKTko"
+bild: "bilder/film-fotografiskas-kok-i-360.jpg"
 kanal: "Clio Sverige"
 format: 1.778
 epok: "Utbildning"

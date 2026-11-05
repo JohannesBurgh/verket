@@ -14,7 +14,7 @@ fotnot: "Temporary regulations. All decisions, titles and selections are provisi
 
 <!-- Allt under strecket visas på sidan For Clients. Vanlig markdown. -->
 
-The Office has conducted film, photography and stage production since 2004, from idea and script to final delivery. The Office also undertakes commissions involving generative AI.
+The Office has conducted film, photography and stage production since 2005, from idea and script to final delivery. The Office also undertakes commissions involving generative AI.
 
 | | |
 |---|---|

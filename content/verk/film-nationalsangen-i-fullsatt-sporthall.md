@@ -3,6 +3,7 @@ titel: "Nationalsången i fullsatt sporthall"
 datum: null
 typ: youtube
 youtube: "EezUoAsfikw"
+bild: "bilder/film-nationalsangen-i-fullsatt-sporthall.jpg"
 kanal: "TV4"
 format: 1.778
 epok: "Tv"

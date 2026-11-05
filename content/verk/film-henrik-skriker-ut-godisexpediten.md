@@ -3,6 +3,7 @@ titel: "Henrik skriker ut godisexpediten"
 datum: null
 typ: youtube
 youtube: "IRnY3roy_u4"
+bild: "bilder/film-henrik-skriker-ut-godisexpediten.jpg"
 kanal: "TV4"
 format: 1.778
 epok: "Tv"

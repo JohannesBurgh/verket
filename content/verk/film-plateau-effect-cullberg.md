@@ -4,6 +4,7 @@ datum: "2013"
 datum_gissat: true
 typ: youtube
 youtube: "mqaPbGgnniU"
+bild: "bilder/film-plateau-effect-cullberg.jpg"
 kanal: "Cullberg"
 format: 1.778
 epok: "Dans"

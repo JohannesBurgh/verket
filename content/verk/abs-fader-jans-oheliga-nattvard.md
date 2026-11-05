@@ -3,6 +3,7 @@ titel: "Fader Jans oheliga nattvard"
 datum: null
 typ: youtube
 youtube: "HQ22DTVf1Bw"
+bild: "bilder/abs-fader-jans-oheliga-nattvard.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

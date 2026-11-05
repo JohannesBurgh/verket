@@ -3,6 +3,7 @@ titel: "Dagens visdomsord: Tänkvärt om vind"
 datum: null
 typ: youtube
 youtube: "yQTDsDbRGZI"
+bild: "bilder/abs-dagens-visdomsord-tankvart-om-vind.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

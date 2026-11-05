@@ -4,6 +4,7 @@ datum: "2013"
 datum_gissat: true
 typ: youtube
 youtube: "DQP2ugerrtk"
+bild: "bilder/film-in-memoriam.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

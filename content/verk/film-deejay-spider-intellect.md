@@ -3,6 +3,7 @@ titel: "Deejay Spider, Intellect"
 datum: null
 typ: youtube
 youtube: "RZVAW8F49tI"
+bild: "bilder/film-deejay-spider-intellect.jpg"
 kanal: "Deejay Spider"
 format: 1.778
 epok: "Musikvideo"

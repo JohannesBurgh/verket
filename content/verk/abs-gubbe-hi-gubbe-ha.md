@@ -3,6 +3,7 @@ titel: "GUBBE HI GUBBE HÄ!"
 datum: null
 typ: youtube
 youtube: "ul4m-80miU8"
+bild: "bilder/abs-gubbe-hi-gubbe-ha.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

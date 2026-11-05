@@ -3,6 +3,7 @@ titel: "Henrik joddlar för dansbandsfansen"
 datum: null
 typ: youtube
 youtube: "Lte8M04_zp8"
+bild: "bilder/film-henrik-joddlar-for-dansbandsfansen.jpg"
 kanal: "TV4"
 format: 1.778
 epok: "Tv"

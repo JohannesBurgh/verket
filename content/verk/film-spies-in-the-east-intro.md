@@ -4,6 +4,7 @@ datum: "2018"
 datum_gissat: true
 typ: youtube
 youtube: "MjsxTARTOcM"
+bild: "bilder/film-spies-in-the-east-intro.jpg"
 kanal: "Clio Sverige"
 format: 1.778
 epok: "Utbildning"

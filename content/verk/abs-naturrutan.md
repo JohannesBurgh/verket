@@ -3,6 +3,7 @@ titel: "Naturrutan"
 datum: null
 typ: youtube
 youtube: "jDH9pw4iX4k"
+bild: "bilder/abs-naturrutan.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

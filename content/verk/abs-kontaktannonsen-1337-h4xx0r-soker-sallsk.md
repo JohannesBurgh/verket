@@ -3,6 +3,7 @@ titel: "Kontaktannonsen: 1337 H4XX0r söker sällskap"
 datum: null
 typ: youtube
 youtube: "dw-sanmjryE"
+bild: "bilder/abs-kontaktannonsen-1337-h4xx0r-soker-sallsk.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

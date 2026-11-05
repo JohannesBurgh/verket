@@ -4,6 +4,7 @@ datum: "2016"
 datum_gissat: true
 typ: youtube
 youtube: "bKNtGWQSYlI"
+bild: "bilder/film-effekten.jpg"
 kanal: "Riksteatern"
 format: 1.778
 epok: "Teater"

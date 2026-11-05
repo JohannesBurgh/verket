@@ -21,7 +21,7 @@ fotnot: "Tillfälliga föreskrifter. Samtliga beslut, titlar och urval är provi
 
 <!-- Allt under strecket visas på sidan För beställare. Vanlig markdown. -->
 
-Verket bedriver film, fotografi och scenproduktion sedan 2004, från idé och manus till färdig leverans. Verket åtar sig även uppdrag med generativ AI.
+Verket bedriver film, fotografi och scenproduktion sedan 2005, från idé och manus till färdig leverans. Verket åtar sig även uppdrag med generativ AI.
 
 | | |
 |---|---|

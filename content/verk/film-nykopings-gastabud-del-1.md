@@ -4,6 +4,7 @@ datum: "2021"
 datum_gissat: true
 typ: youtube
 youtube: "bLAXxZNsF5E"
+bild: "bilder/film-nykopings-gastabud-del-1.jpg"
 kanal: "Clio Sverige"
 format: 1.778
 epok: "Utbildning"

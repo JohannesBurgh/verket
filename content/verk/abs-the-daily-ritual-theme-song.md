@@ -3,6 +3,7 @@ titel: "The Daily Ritual, theme song"
 datum: null
 typ: youtube
 youtube: "s58eo1cJycM"
+bild: "bilder/abs-the-daily-ritual-theme-song.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

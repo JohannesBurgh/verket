@@ -3,6 +3,7 @@ titel: "Vägra återvinna"
 datum: null
 typ: youtube
 youtube: "rITStfgmu9g"
+bild: "bilder/abs-vagra-atervinna.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

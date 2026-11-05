@@ -3,6 +3,7 @@ titel: "Myggan"
 datum: null
 typ: youtube
 youtube: "Upu4nQZVtt0"
+bild: "bilder/abs-myggan.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

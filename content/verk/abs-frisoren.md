@@ -3,6 +3,7 @@ titel: "Frisören"
 datum: null
 typ: youtube
 youtube: "0wcI9toOABc"
+bild: "bilder/abs-frisoren.jpg"
 kanal: "Absurdimo"
 format: 1.778
 epok: "Absurdimo"

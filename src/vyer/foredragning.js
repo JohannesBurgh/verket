@@ -347,7 +347,7 @@ const BYGG = {
   },
 
   kontakt(s, k) {
-    const p = k.plan, saknas = el("span", { class: "mono" }, t("[läggs in i content/verket.md]"));
+    const p = k.plan, saknas = el("span", { class: "mono" }, t("Uppgiften kompletteras."));
     const rad = (a, varde, href) => el("div", { class: "row" }, el("span", {}, a), varde ? (href ? el("a", { href }, varde) : el("span", { class: "mono" }, varde)) : saknas.cloneNode(true));
     const rader = [
       rad(t("E-post"), S.epost, S.epost ? `mailto:${S.epost}?subject=${encodeURIComponent(t("Föredragning {dnr}", { dnr: p.dnr }))}` : null),
