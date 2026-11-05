@@ -5,7 +5,11 @@ import "../stil/ansokan.css";
 import { A, S, VERK, DIMS, el, papper, huvud, tumnagel, metaRad, kontaktRuta, reduce } from "../data.js";
 import { oppna } from "../visare.js";
 import { stampel, prassel, klick } from "../ljud.js";
+import { t, tDelar, vag, arVy } from "../sprak.js";
 
+// SV är den svenska ansökan, som avgör logiken. Ord ur båda språkens nyckelordsregister tolkas
+// på båda sidorna, så att samma svar alltid ger samma beslut, oavsett språk.
+const SV = A.sv_ansokan || A.ansokan;
 const AN = A.ansokan, BANK = AN.fragor, CIRKEL = AN.cirkel, MOTIV = AN.motiveringar, BES = AN.beslut;
 const TYPER = ["val", "reglage", "bild", "ord"];
 const UTGANG = ["bifall", "delvis", "avslag", "absurdimo"];
@@ -41,7 +45,7 @@ const dagNu = () => Math.floor((Date.now() - DAG0) / 864e5);
 const datum = (d) => new Date(DAG0 + d * 864e5).toISOString().slice(0, 10);
 const dnr = (a) => `${S.diarieprefix} ${datum(a.dag).slice(0, 4)}/${10000 + (a.fro % 90000)}`;
 const blankett = () => S.blankett.split("·")[0].trim();
-const citat = (s) => `”${s}”`;
+const citat = (s) => t("”{s}”", { s });
 const fyll = (t, v) => (t || "").replace(/\{(\w+)\}/g, (_, k) => (k === "n" ? v[k] : v[k] != null ? citat(v[k]) : ""));
 
 // ---------- beslutets kod ----------
@@ -150,20 +154,24 @@ function lev(a, b) {
   return f[b.length];
 }
 // Exakt träff först, sedan ordets början (dansa, dansband), sedan ett stavfel.
+const ORDLISTA = (AN.tolkning || []).map((r, i) => [...new Set([...(SV.tolkning?.[i]?.ord || []), ...(A.en_ord?.[i] || []), ...r.ord].map(norm))]);
 function tolka(ord) {
   const w = norm(ord), R = AN.tolkning || [];
   if (!w) return null;
-  return R.find((r) => r.ord.some((k) => norm(k) === w))
-    || R.find((r) => r.ord.some((k) => { k = norm(k); return k.length >= 4 && w.startsWith(k); }))
-    || R.find((r) => r.ord.some((k) => { k = norm(k); return k.length >= 5 && w.length >= 5 && lev(w, k) <= 1; }))
+  const hitta = (test) => { const i = ORDLISTA.findIndex((l) => l.some(test)); return i < 0 ? null : R[i]; };
+  return hitta((k) => k === w)
+    || hitta((k) => k.length >= 4 && w.startsWith(k))
+    || hitta((k) => k.length >= 5 && w.length >= 5 && lev(w, k) <= 1)
     || null;
 }
-const STOPP = new Set(["och", "med", "vid", "den", "det", "ett", "som", "för", "till", "från", "under", "över", "mot", "utan", "efter", "del", "the", "and", "på", "av", "är", "i", "en"]);
+const STOPP = new Set(["och", "med", "vid", "den", "det", "ett", "som", "för", "till", "från", "under", "över", "mot", "utan", "efter", "del", "the", "and", "på", "av", "är", "i", "en",
+  "with", "from", "into", "under", "over", "behind", "through", "for", "part", "two", "three", "four"]);
 // Verk vars titel innehåller ordet, i någon böjning (råtta, råttan; fisk, fisken).
 function arkivtraffar(ord) {
   const w = norm(ord);
   if (w.length < 3) return [];
-  return KANDIDATER.filter((v) => v.titel.toLowerCase().split(/[^\p{L}\p{N}]+/u).some((t) => {
+  // Titeln på båda språken, så att "rat" och "råtta" hittar samma verk.
+  return KANDIDATER.filter((v) => `${v.titel} ${v.sv}`.toLowerCase().split(/[^\p{L}\p{N}]+/u).some((t) => {
     if (t.length < 3 || STOPP.has(t)) return false;
     let cp = 0;
     while (cp < t.length && cp < w.length && t[cp] === w[cp]) cp++;
@@ -206,7 +214,7 @@ function cirkelSvg(c) {
     const p0 = P[i - 1] || P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] || p2;
     d += ` C${f([p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6])} ${f([p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6])} ${f(p2)}`;
   }
-  svg.setAttribute("viewBox", "-3 -3 90 69"); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Sökandes cirkel");
+  svg.setAttribute("viewBox", "-3 -3 90 69"); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", t("Sökandes cirkel"));
   path.setAttribute("d", d);
   Object.entries({ fill: "none", stroke: "currentColor", "stroke-width": "2.6", "stroke-linecap": "round", "stroke-linejoin": "round", "vector-effect": "non-scaling-stroke" }).forEach(([k, v]) => path.setAttribute(k, v));
   svg.append(path);
@@ -226,7 +234,7 @@ function profil(a) {
     if (q.typ === "val") {
       const s = q.svar[f.v]; if (!s) continue;
       lagg(s.poang); slag(s);
-      if (q.art) art = s;
+      if (q.art) art = { ...s, okand: SV.fragor[f.i]?.svar?.[f.v]?.text === "Art okänd" };
     } else if (q.typ === "reglage") {
       const z = zon(q, f.v); lagg(z.poang); slag(z);
     } else if (q.typ === "bild") {
@@ -343,40 +351,41 @@ function nyAnsokan() {
 
 function start() {
   st = null;
-  satt(location.hash.startsWith("#beslut") ? "#ansokan" : location.hash);
+  satt(arVy("beslut") ? vag("ansokan") : location.hash);
   document.title = S.namn;
   const p = papper();
-  p.append(huvud(S.blankett, "Ansökan om kreativ insats"),
+  p.append(huvud(S.blankett, t("Ansökan om kreativ insats")),
     el("p", { class: "lead" }, S.inledning),
-    el("p", { class: "small" }, `Frågorna dras ur Verkets frågebank, som omfattar ${BANK.length} frågor. Ansökan undertecknas med en cirkel.`),
-    el("p", { class: "small" }, "Uppgifterna sparas inte. Cirkeln diarieförs endast i beslutets adress."),
+    el("p", { class: "small" }, t("Frågorna dras ur Verkets frågebank, som omfattar {n} frågor. Ansökan undertecknas med en cirkel.", { n: BANK.length })),
+    el("p", { class: "small" }, t("Uppgifterna sparas inte. Cirkeln diarieförs endast i beslutets adress.")),
     el("div", { class: "actions" },
-      el("button", { type: "button", class: "btn", onclick: () => { nyAnsokan(); fraga(); } }, "Påbörja ansökan"),
-      el("button", { type: "button", class: "btn ghost", onclick: () => { nyAnsokan(); forenklat(); } }, "Förenklat förfarande (jag har bråttom)")),
-    el("p", { class: "small", style: "margin-top:28px" }, el("span", { class: "prov" }, "Provisorisk föreskrift"),
-      "Den som vill se allt på en gång hänvisas till ", el("a", { href: "#registret" }, "Registret"), " eller ", el("a", { href: "#arkivrummet" }, "Arkivrummet"), "."));
+      el("button", { type: "button", class: "btn", onclick: () => { nyAnsokan(); fraga(); } }, t("Påbörja ansökan")),
+      el("button", { type: "button", class: "btn ghost", onclick: () => { nyAnsokan(); forenklat(); } }, t("Förenklat förfarande (jag har bråttom)"))),
+    el("p", { class: "small", style: "margin-top:28px" }, el("span", { class: "prov" }, t("Provisorisk föreskrift")),
+      ...tDelar("Den som vill se allt på en gång hänvisas till {registret} eller {arkivrummet}.", {
+        registret: el("a", { href: vag("registret") }, t("Registret")), arkivrummet: el("a", { href: vag("arkivrummet") }, t("Arkivrummet")) })));
   visa(p, (n) => { if (tangentbord) n.querySelector(".btn")?.focus({ preventScroll: true }); });
 }
 
 function fraga() {
   const i = st.steg, n = st.fragor.length, under = i >= n, f = st.fragor[i], q = under ? null : BANK[f.i], p = papper();
   p.classList.add("ansokan");
-  p.append(huvud(`${blankett()} · ${dnr(st)}`, "Ansökan om kreativ insats"));
-  p.append(el("div", { class: "qmeta" }, el("span", {}, under ? AN.underskrift.rubrik : `Fråga ${i + 1} av ${n}`),
-    el("button", { type: "button", class: "link", onclick: forenklat }, "Hoppa till förenklat förfarande")));
+  p.append(huvud(`${blankett()} · ${dnr(st)}`, t("Ansökan om kreativ insats")));
+  p.append(el("div", { class: "qmeta" }, el("span", {}, under ? AN.underskrift.rubrik : t("Fråga {i} av {n}", { i: i + 1, n })),
+    el("button", { type: "button", class: "link", onclick: forenklat }, t("Hoppa till förenklat förfarande"))));
   const pr = el("div", { class: "progress", "aria-hidden": "true" });
   for (let k = 0; k <= n; k++) pr.append(el("i", { class: (k <= i ? "on" : "") + (k === n ? " underskrift" : "") }));
   p.append(pr);
   const fs = el("fieldset", { class: "q-" + (under ? "underskrift" : q.typ) }, el("legend", {}, under ? AN.underskrift.fraga : q.fraga));
   const nav = el("div", { class: "qnav" },
-    i > 0 ? el("button", { type: "button", class: "link", onclick: () => { st.steg--; fraga(); } }, "← Föregående fråga") : el("span"));
+    i > 0 ? el("button", { type: "button", class: "link", onclick: () => { st.steg--; fraga(); } }, t("← Föregående fråga")) : el("span"));
   let fokus = null;
   if (under) {
     fs.append(ritruta());
-    const avstar = el("button", { type: "button", class: "btn ghost", onclick: () => lamnaIn(true) }, "Avstår från att rita");
+    const avstar = el("button", { type: "button", class: "btn ghost", onclick: () => lamnaIn(true) }, t("Avstår från att rita"));
     nav.append(el("div", { class: "actions", style: "margin:0" },
       avstar,
-      el("button", { type: "button", class: "btn", onclick: () => lamnaIn(false) }, "Lämna in ansökan")));
+      el("button", { type: "button", class: "btn", onclick: () => lamnaIn(false) }, t("Lämna in ansökan"))));
     // Cirkeln ritas med mus eller finger. Med tangentbordet hamnar man på knappen bredvid.
     fokus = () => tangentbord && avstar.focus({ preventScroll: true });
   } else if (q.typ === "val") {
@@ -387,8 +396,8 @@ function fraga() {
     fokus = () => tangentbord && (opts.querySelector('[aria-pressed="true"]') || opts.firstChild).focus({ preventScroll: true });
   } else if (q.typ === "bild") {
     const g = el("div", { class: "bildval" }), val = bildval(st.fro, f.i);
-    val.forEach((v, k) => g.append(el("button", { type: "button", class: "bv", "aria-pressed": f.v === nyckel(v) ? "true" : "false", "aria-label": `Handling ${k + 1}: ${v.titel}`, onclick: () => valj(nyckel(v), k) },
-      el("span", { class: "nr" }, `Handling ${k + 1}`, el("kbd", {}, String(k + 1))), el("span", { class: "m" }, tumnagel(v)), el("b", {}, v.titel))));
+    val.forEach((v, k) => g.append(el("button", { type: "button", class: "bv", "aria-pressed": f.v === nyckel(v) ? "true" : "false", "aria-label": t("Handling {k}: {titel}", { k: k + 1, titel: v.titel }), onclick: () => valj(nyckel(v), k) },
+      el("span", { class: "nr" }, t("Handling {k}", { k: k + 1 }), el("kbd", {}, String(k + 1))), el("span", { class: "m" }, tumnagel(v)), el("b", {}, v.titel))));
     fs.append(g);
     fokus = () => tangentbord && (g.querySelector('[aria-pressed="true"]') || g.firstChild).focus({ preventScroll: true });
   } else if (q.typ === "reglage") {
@@ -421,8 +430,8 @@ function reglage(q, f) {
   const upd = (ljud) => {
     const v = +inp.value, z = zon(q, v), pro = q.visa === "procent";
     lage.textContent = z.etikett;
-    varde.textContent = pro ? `${v} procent` : "";
-    inp.setAttribute("aria-valuetext", pro ? `${v} procent, ${z.etikett}` : z.etikett);
+    varde.textContent = pro ? t("{v} procent", { v }) : "";
+    inp.setAttribute("aria-valuetext", pro ? t("{v} procent, {zon}", { v, zon: z.etikett }) : z.etikett);
     inp.style.setProperty("--p", v + "%");
     if (ljud && nu && z !== nu) klick();
     nu = z;
@@ -432,29 +441,29 @@ function reglage(q, f) {
   const form = el("form", { class: "reglage", onsubmit: (e) => { e.preventDefault(); st.fragor[st.steg].v = +inp.value; klick(); nasta(); } },
     lage, varde, spar,
     el("div", { class: "skala", "aria-hidden": "true" }, el("span", {}, q.skala[0]), el("span", {}, q.skala[1])),
-    el("div", { class: "actions" }, el("button", { type: "submit", class: "btn" }, sista ? "Till underskrift" : "Nästa fråga")));
+    el("div", { class: "actions" }, el("button", { type: "submit", class: "btn" }, sista ? t("Till underskrift") : t("Nästa fråga"))));
   return { form, inp };
 }
 function ordfalt(q, f) {
   const sista = st.steg === st.fragor.length - 1, id = "ord-" + f.i;
-  const inp = el("input", { id, type: "text", maxlength: "20", value: f.v || "", placeholder: q.platshallare || "Ett ord", autocomplete: "off", autocapitalize: "none", spellcheck: "false", enterkeyhint: "done", "aria-label": q.fraga, "aria-describedby": id + "-h" });
-  const rakna = el("span", { class: "rakna", "aria-hidden": "true" }), hint = el("p", { class: "small hint", id: id + "-h" }, "Ett ord. Ordet tolkas mot Verkets nyckelordsregister.");
+  const inp = el("input", { id, type: "text", maxlength: "20", value: f.v || "", placeholder: q.platshallare || t("Ett ord"), autocomplete: "off", autocapitalize: "none", spellcheck: "false", enterkeyhint: "done", "aria-label": q.fraga, "aria-describedby": id + "-h" });
+  const rakna = el("span", { class: "rakna", "aria-hidden": "true" }), hint = el("p", { class: "small hint", id: id + "-h" }, t("Ett ord. Ordet tolkas mot Verkets nyckelordsregister."));
   const upd = () => (rakna.textContent = `${inp.value.length} / 20`);
   inp.addEventListener("input", upd); upd();
   const form = el("form", { class: "ord", onsubmit: (e) => {
     e.preventDefault();
     const v = rensa(inp.value);
-    if (!v) { hint.textContent = "Ange ett ord, eller avstå."; hint.classList.add("fel"); inp.focus(); return; }
+    if (!v) { hint.textContent = t("Ange ett ord, eller avstå."); hint.classList.add("fel"); inp.focus(); return; }
     st.fragor[st.steg].v = v; klick(); nasta();
   } },
     el("div", { class: "falt" }, inp, rakna), hint,
     el("div", { class: "actions" },
-      el("button", { type: "submit", class: "btn" }, "Diarieför ordet"),
-      el("button", { type: "button", class: "btn ghost", onclick: () => { st.fragor[st.steg].v = ""; nasta(); } }, sista ? "Avstår och går till underskrift" : "Avstår")));
+      el("button", { type: "submit", class: "btn" }, t("Diarieför ordet")),
+      el("button", { type: "button", class: "btn ghost", onclick: () => { st.fragor[st.steg].v = ""; nasta(); } }, sista ? t("Avstår och går till underskrift") : t("Avstår"))));
   return { form, inp };
 }
 function ritruta() {
-  const wrap = el("div", { class: "rita" }), c = el("canvas", { "aria-label": "Rityta. Rita en cirkel med mus eller finger." }), hint = el("span", { class: "hint" }, "Rita med musen eller fingret");
+  const wrap = el("div", { class: "rita" }), c = el("canvas", { "aria-label": t("Rityta. Rita en cirkel med mus eller finger.") }), hint = el("span", { class: "hint" }, t("Rita med musen eller fingret"));
   wrap.append(c, hint);
   const pts = []; let ner = false, ctx;
   const storlek = () => { const r = wrap.getBoundingClientRect(), d = Math.min(devicePixelRatio, 2); c.width = r.width * d; c.height = r.height * d; ctx = c.getContext("2d"); ctx.scale(d, d); ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#14181a"; };
@@ -476,7 +485,7 @@ function ritruta() {
 // ---------- handläggning ----------
 function handlagg(a, steg, sedan) {
   const p = papper(), ol = el("ol", {}, steg.map((s) => el("li", {}, s)));
-  p.append(huvud(`${blankett()} · ${dnr(a)}`, a.overklag ? "Överklagandet handläggs" : "Ärendet handläggs"), el("div", { class: "processing", role: "status" }, ol));
+  p.append(huvud(`${blankett()} · ${dnr(a)}`, a.overklag ? t("Överklagandet handläggs") : t("Ärendet handläggs")), el("div", { class: "processing", role: "status" }, ol));
   visa(p);
   if (reduce) { sedan(); return; }
   let i = 0;
@@ -502,19 +511,19 @@ function forenklat() {
   visaKod(koda(a));
 }
 function overklaga(a, status) {
-  if (a.overklag >= 15) { status.textContent = "Överklagandet avvisas. Beslutet har redan omprövats det högsta tillåtna antalet gånger."; return; }
+  if (a.overklag >= 15) { status.textContent = t("Överklagandet avvisas. Beslutet har redan omprövats det högsta tillåtna antalet gånger."); return; }
   if (!st || st.fro !== a.fro) { st = { fro: a.fro, dag: a.dag, snabb: a.snabb, overklag: a.overklag, fragor: a.fragor, cirkel: a.cirkel, steg: a.fragor.length, visade: new Set() }; minnas(a); }
   const b = fatta({ ...a, dag: dagNu(), overklag: a.overklag + 1, fragor: a.fragor.map((f) => ({ ...f })) }, st.visade);
   minnas(b);
   const kod = koda(b);
-  handlagg(b, ["Överklagandet registreras", "Beslutet omprövas"], () => visaKod(kod));
+  handlagg(b, [t("Överklagandet registreras"), t("Beslutet omprövas")], () => visaKod(kod));
 }
 
 // ---------- beslut ----------
 function visaKod(kod) {
   const a = dekoda(kod);
-  if (!a) { skadad(); return (document.title = `Beslut · ${S.namn}`, "Beslut"); }
-  satt("#beslut-" + kod);
+  if (!a) { skadad(); return (document.title = `${t("Beslut")} · ${S.namn}`, t("Beslut")); }
+  satt(vag("beslut", kod));
   beslut(a, kod);
   // Sidans titel följer beslutet, även när adressen byts utan att sidan laddas om.
   const titel = `Beslut ${dnr(a)}`;
@@ -523,22 +532,22 @@ function visaKod(kod) {
 }
 function skadad() {
   const p = papper();
-  p.append(huvud(S.blankett, "Beslutet kunde inte återfinnas"), el("p", { class: "lead" }, AN.skadad),
-    el("div", { class: "actions" }, el("button", { type: "button", class: "btn", onclick: start }, "Ny ansökan"), el("a", { href: "#registret", class: "link" }, "Se hela registret")));
+  p.append(huvud(S.blankett, t("Beslutet kunde inte återfinnas")), el("p", { class: "lead" }, AN.skadad),
+    el("div", { class: "actions" }, el("button", { type: "button", class: "btn", onclick: start }, t("Ny ansökan")), el("a", { href: vag("registret"), class: "link" }, t("Se hela registret"))));
   visa(p);
 }
 function beslut(a, kod) {
   const typ = UTGANG[a.utgang], B = BES[typ], prof = a.snabb ? null : profil(a), nr = dnr(a), dag = datum(a.dag);
-  const adress = location.href.split("#")[0] + "#beslut-" + kod;
+  const adress = location.href.split("#")[0] + vag("beslut", kod);
   const p = papper(); p.classList.add("beslut", "utgang-" + typ);
-  p.append(huvud(`Beslut · ${nr}`, a.overklag ? "Beslut efter överklagande" : "Beslut"));
+  p.append(huvud(t("Beslut · {nr}", { nr }), a.overklag ? t("Beslut efter överklagande") : t("Beslut")));
   p.append(el("div", { class: "fields" },
-    el("div", {}, el("span", {}, "Diarienummer"), el("b", {}, nr)),
-    el("div", {}, el("span", {}, "Datum"), el("b", {}, dag)),
-    el("div", {}, el("span", {}, "Handläggare"), el("b", {}, B.handlaggare || S.handlaggare)),
-    el("div", {}, el("span", {}, "Utgång"), el("b", {}, B.utgang))));
-  const stamp = el("div", { class: "stamp" + (B.stampel.length > 11 ? " lang" : ""), role: "img", "aria-label": "Stämpel: " + B.stampel.toLowerCase() }, B.stampel, el("small", {}, dag));
-  const stamp2 = a.overklag ? el("div", { class: "stamp tva", role: "img", "aria-label": "Stämpel: " + AN.omprovat.stampel.toLowerCase() }, AN.omprovat.stampel, el("small", {}, `${a.overklag}`)) : null;
+    el("div", {}, el("span", {}, t("Diarienummer")), el("b", {}, nr)),
+    el("div", {}, el("span", {}, t("Datum")), el("b", {}, dag)),
+    el("div", {}, el("span", {}, t("Handläggare")), el("b", {}, B.handlaggare || S.handlaggare)),
+    el("div", {}, el("span", {}, t("Utgång")), el("b", {}, B.utgang))));
+  const stamp = el("div", { class: "stamp" + (B.stampel.length > 11 ? " lang" : ""), role: "img", "aria-label": t("Stämpel: {s}", { s: B.stampel.toLowerCase() }) }, B.stampel, el("small", {}, dag));
+  const stamp2 = a.overklag ? el("div", { class: "stamp tva", role: "img", "aria-label": t("Stämpel: {s}", { s: AN.omprovat.stampel.toLowerCase() }) }, AN.omprovat.stampel, el("small", {}, `${a.overklag}`)) : null;
   const tx = el("div", { class: "beslut-text" }, stamp, stamp2), sagt = new Set();
   const stycke = (t) => { if (!t || sagt.has(t)) return; sagt.add(t); tx.append(el("p", {}, t)); };
   p.append(tx);
@@ -546,11 +555,11 @@ function beslut(a, kod) {
   if (a.snabb) AN.forenklat.forEach(stycke);
   else {
     const topp = DIMS.filter((d) => prof.P[d] > 0).sort((x, y) => prof.P[y] - prof.P[x]).slice(0, 2);
-    stycke("Verket har prövat ansökan och funnit att sökanden uppvisar " +
-      (topp.length === 2 ? `${MOTIV[topp[0]]} samt ${MOTIV[topp[1]]}` : topp.length ? MOTIV[topp[0]] : "inga särskilda behov alls, vilket i sig är anmärkningsvärt") + ".");
+    stycke(t("Verket har prövat ansökan och funnit att sökanden uppvisar {behov}.", { behov:
+      topp.length === 2 ? t("{a} samt {b}", { a: MOTIV[topp[0]], b: MOTIV[topp[1]] }) : topp.length ? MOTIV[topp[0]] : t("inga särskilda behov alls, vilket i sig är anmärkningsvärt") }));
     if (prof.art) {
-      const okand = prof.art.text === "Art okänd";
-      stycke(okand ? prof.art.skal + (typ === "bifall" ? " " + AN.art_okand_bifall : "") : `Sökanden har uppgett sig vara: ${prof.art.text.toLowerCase()}.`);
+      const okand = prof.art.okand;
+      stycke(okand ? prof.art.skal + (typ === "bifall" ? " " + AN.art_okand_bifall : "") : t("Sökanden har uppgett sig vara: {art}.", { art: prof.art.text.toLowerCase() }));
       if (okand) sagt.add(prof.art.skal);
     }
     prof.noter.forEach((n) => {
@@ -567,14 +576,14 @@ function beslut(a, kod) {
     stycke(a.cirkel ? CIRKEL[CIRKELBED[a.cirkel.bed]].text : CIRKEL.avstod);
     stycke(B.slut);
   }
-  if (a.cirkel) tx.append(el("div", { class: "sig" }, cirkelSvg(a.cirkel), el("span", {}, "Sökandes cirkel, diarieförd")));
+  if (a.cirkel) tx.append(el("div", { class: "sig" }, cirkelSvg(a.cirkel), el("span", {}, t("Sökandes cirkel, diarieförd"))));
   tx.append(el("p", { class: "lagrum" }, (a.snabb ? BES.bifall : B).lagrum));
 
-  p.append(el("h2", {}, (!a.snabb && B.rubrik_bilagor) || "Bilagor"));
+  p.append(el("h2", {}, (!a.snabb && B.rubrik_bilagor) || t("Bilagor")));
   const visbar = [...lista, vind].filter(Boolean), grid = el("div", { class: "bilagor n" + lista.length });
   const etikett = (k) => (a.snabb ? "" : k === 0 && B.etikett_forsta ? B.etikett_forsta : B.etikett || "");
   lista.forEach((v, k) => {
-    const lbl = el("span", { class: "lbl" }, `Bilaga ${k + 1}`, etikett(k) ? ` · ${etikett(k)}` : "");
+    const lbl = el("span", { class: "lbl" }, t("Bilaga {k}", { k: k + 1 }), etikett(k) ? ` · ${etikett(k)}` : "");
     if (!v) { grid.append(el("div", { class: "bilaga aterkallad" }, el("span", { class: "clip", "aria-hidden": "true" }), lbl, el("div", { class: "m" }), el("b", {}, AN.aterkallad))); return; }
     const m = el("div", { class: "m" }, tumnagel(v));
     m.querySelectorAll("img").forEach((i) => (i.loading = "eager"));
@@ -586,24 +595,24 @@ function beslut(a, kod) {
     const m = el("div", { class: "m" }, tumnagel(vind));
     m.querySelectorAll("img").forEach((i) => (i.loading = "eager"));
     p.append(el("button", { type: "button", class: "vind", onclick: () => oppna(visbar, visbar.length - 1) }, m,
-      el("div", {}, el("span", { class: "mono small" }, `Bilaga ${lista.length + 1} · Vindfrö`), el("p", { style: "margin:4px 0 2px;font-weight:700" }, vind.titel),
-        el("span", { class: "small" }, "Tilldelat slumpmässigt enligt Verkets föreskrift om oväntade lösningar."))));
+      el("div", {}, el("span", { class: "mono small" }, t("Bilaga {k} · Vindfrö", { k: lista.length + 1 })), el("p", { style: "margin:4px 0 2px;font-weight:700" }, vind.titel),
+        el("span", { class: "small" }, t("Tilldelat slumpmässigt enligt Verkets föreskrift om oväntade lösningar.")))));
   }
   const [forsta, ...resten] = AN.overklagande.split(/(?<=\.)\s/);
   p.append(el("p", { class: "hanvisning" }, el("b", {}, forsta), " ", resten.join(" ")));
-  p.append(el("p", { class: "utskrift" }, "Beslutet finns i diariet under adressen ", el("span", { class: "mono" }, adress)));
+  p.append(el("p", { class: "utskrift" }, ...tDelar("Beslutet finns i diariet under adressen {adress}", { adress: el("span", { class: "mono" }, adress) })));
 
   const kontakt = kontaktRuta(nr); kontakt.hidden = true;
   const status = el("p", { class: "delstatus", role: "status", "aria-live": "polite" });
   p.append(
     el("div", { class: "actions" },
-      el("button", { type: "button", class: "btn", "aria-expanded": "false", onclick: (e) => { kontakt.hidden = !kontakt.hidden; e.currentTarget.setAttribute("aria-expanded", String(!kontakt.hidden)); if (!kontakt.hidden) kontakt.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }); } }, "Begär handläggning"),
-      el("button", { type: "button", class: "btn ghost", onclick: () => overklaga(a, status) }, "Överklaga beslutet")),
+      el("button", { type: "button", class: "btn", "aria-expanded": "false", onclick: (e) => { kontakt.hidden = !kontakt.hidden; e.currentTarget.setAttribute("aria-expanded", String(!kontakt.hidden)); if (!kontakt.hidden) kontakt.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }); } }, t("Begär handläggning")),
+      el("button", { type: "button", class: "btn ghost", onclick: () => overklaga(a, status) }, t("Överklaga beslutet"))),
     el("div", { class: "actions sekundar" },
-      el("button", { type: "button", class: "btn ghost liten", onclick: () => kopiera(adress, status) }, "Kopiera beslutets adress"),
-      el("button", { type: "button", class: "btn ghost liten", onclick: () => window.print() }, "Skriv ut beslutet"),
-      el("button", { type: "button", class: "link", onclick: start }, "Ny ansökan"),
-      el("a", { href: "#registret", class: "link" }, "Se hela registret")),
+      el("button", { type: "button", class: "btn ghost liten", onclick: () => kopiera(adress, status) }, t("Kopiera beslutets adress")),
+      el("button", { type: "button", class: "btn ghost liten", onclick: () => window.print() }, t("Skriv ut beslutet")),
+      el("button", { type: "button", class: "link", onclick: start }, t("Ny ansökan")),
+      el("a", { href: vag("registret"), class: "link" }, t("Se hela registret"))),
     status, kontakt);
   visa(p);
   nar(p, () => {
@@ -615,11 +624,11 @@ function beslut(a, kod) {
 async function kopiera(adress, status) {
   try {
     await navigator.clipboard.writeText(adress);
-    status.replaceChildren("Adressen har kopierats. Den som öppnar adressen tar del av samma beslut.");
+    status.replaceChildren(t("Adressen har kopierats. Den som öppnar adressen tar del av samma beslut."));
     klick();
   } catch (e) {
-    const f = el("input", { class: "adressfalt", type: "text", readonly: true, value: adress, "aria-label": "Beslutets adress", onfocus: (ev) => ev.target.select() });
-    status.replaceChildren("Adressen kunde inte kopieras automatiskt. Markera och kopiera den nedan.", f);
+    const f = el("input", { class: "adressfalt", type: "text", readonly: true, value: adress, "aria-label": t("Beslutets adress"), onfocus: (ev) => ev.target.select() });
+    status.replaceChildren(t("Adressen kunde inte kopieras automatiskt. Markera och kopiera den nedan."), f);
     f.focus(); f.select();
   }
 }

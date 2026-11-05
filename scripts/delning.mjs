@@ -6,6 +6,7 @@
 //   arende/<id>/index.html        en delningssida per ärende, med egna Open Graph-taggar.
 //                                 Den som öppnar länken skickas vidare till ärendet (#arende-<id>).
 //   sitemap.xml, robots.txt
+//   en/dela/…, en/case/<id>/      samma sak för den engelska sidan (uppdrag 9). Texterna kommer från content/en/.
 //
 // Adressen hämtas från adress: i content/verket.md. Bilden till startsidan är verket i
 // delningsverk: (om fältet finns), annars det första hjälteverket. Ärenden använder sitt omslag.
@@ -17,6 +18,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 import matter from "gray-matter";
 import { lasRegister, storstaJpeg } from "./bilder.mjs";
+import { lasEngelska } from "./sprak.mjs";
 
 const HAR = path.dirname(fileURLToPath(import.meta.url));
 const TYPSNITT = { sans: path.join(HAR, "typsnitt/PublicSans.ttf"), mono: path.join(HAR, "typsnitt/IBMPlexMono-Regular.ttf"), mono5: path.join(HAR, "typsnitt/IBMPlexMono-Medium.ttf") };
@@ -36,7 +38,21 @@ export function lasInnehall(rot = process.cwd()) {
     .filter((a) => !a.utkast);
   let adress = String(process.env.VERKET_ADRESS || verket.adress || "").trim();
   if (adress && !adress.endsWith("/")) adress += "/";
-  return { verket, verk, arenden, adress };
+  // Den engelska versionen: content/en/ ovanpå det svenska. Markdown behövs inte här, bara fälten.
+  const ansokan = JSON.parse(fs.readFileSync(c("ansokan.json"), "utf8"));
+  const en = lasEngelska(path.join(rot, "content"), { verket, ansokan, arenden, renderBody: () => "", parseInline: (x) => x });
+  return { verket, verk, arenden, adress, ansokan, en };
+}
+
+// Ett språk i taget. t() gör samma sak som på sajten (src/sprak.js): svensk text in, sidans språk ut.
+// prefix är mappen sidan ligger i, vag är adressen efter # till ett ärende.
+export function sprakversion(inn, sprak) {
+  const en = sprak === "en", ord = en ? inn.en.gransnitt : {};
+  const t = (s, v) => { const x = ord[s] || s; return v ? x.replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m)) : x; };
+  const verket = en ? { ...inn.verket, ...inn.en.verket } : inn.verket;
+  const arenden = inn.arenden.map((a) => (en && inn.en.arenden[a.id] ? { ...a, ...inn.en.arenden[a.id] } : en ? { ...a, status: t(a.status || "Under handläggning") } : a));
+  const ansokan = en ? inn.en.ansokan : inn.ansokan;
+  return { ...inn, sprak, t, verket, arenden, ansokan, prefix: en ? "en/" : "", arendeMapp: en ? "case" : "arende", arendeVag: en ? "case" : "arende", locale: en ? "en_GB" : "sv_SE" };
 }
 const synligtFoto = (v) => v && v.bild && v.synlig !== false;
 function startverk({ verket, verk }) {
@@ -66,13 +82,13 @@ async function rubrik(str, width, max = 3) {
 
 // ---------- delar av bilden ----------
 // Fotografiet som en bilaga: skugga, en lätt vridning och ett gem.
-async function bilaga({ fil, platshallare, bw = 436, bh = 327, vrid = 2.2 }) {
+async function bilaga({ fil, platshallare, t, bw = 436, bh = 327, vrid = 2.2 }) {
   const pad = 46, cw = bw + pad * 2, ch = bh + pad * 2;
   let foto;
   if (fil && fs.existsSync(fil)) {
     foto = await sharp(fil).rotate().resize(bw, bh, { fit: "cover", position: sharp.strategy.attention }).modulate({ brightness: 0.98 }).toBuffer();
   } else {
-    const t1 = await text("Handlingar inkommer", { font: "mono", size: 15, color: F.muted, versaler: true, tracking: 1.6 });
+    const t1 = await text(t("Handlingar inkommer"), { font: "mono", size: 15, color: F.muted, versaler: true, tracking: 1.6 });
     const t2 = platshallare ? await text(platshallare, { font: "mono", size: 13, color: F.muted }) : null;
     foto = await sharp({ create: { width: bw, height: bh, channels: 4, background: F.field } })
       .composite([{ input: svg(bw, bh, `<rect x="18" y="18" width="${bw - 36}" height="${bh - 36}" fill="none" stroke="${F.rule}" stroke-width="1.5" stroke-dasharray="6 5"/>`) },
@@ -103,7 +119,7 @@ async function stampel(ord, under, { vrid = -8 } = {}) {
 }
 
 // ---------- hela bilden ----------
-export async function delningsbild({ org, form, titel, ingress, fot, ord, under, fil, platshallare }, ut) {
+export async function delningsbild({ org, form, titel, ingress, fot, ord, under, fil, platshallare, t = (s) => s }, ut) {
   const PW = 1100, PH = 560, L = 72, R = PW - 48, KOL = 500;
   const papperSvg = svg(PW, PH, `
     <defs>
@@ -124,7 +140,7 @@ export async function delningsbild({ org, form, titel, ingress, fot, ord, under,
     if (tIngress.rader > (tTitel.rader > 2 ? 2 : 4)) tIngress = await text(forstaMening(ingress), { size: 22, color: F.muted, width: KOL - 20, radhojd: 31 });
   }
   const tFot = await text(fot, { font: "mono", size: 14, color: F.muted });
-  const b = await bilaga({ fil, platshallare });
+  const b = await bilaga({ fil, platshallare, t });
   const s = await stampel(ord, under);
 
   const titelY = 112, ingressY = titelY + tTitel.h + 26;
@@ -156,33 +172,39 @@ export async function delningsbild({ org, form, titel, ingress, fot, ord, under,
 
 // ---------- alla delningsbilder ----------
 export async function skapaDelningsbilder(utmapp, inn = lasInnehall()) {
-  const { verket, verk, arenden } = inn, reg = lasRegister();
+  const filer = [];
+  for (const sprak of ["sv", "en"]) filer.push(...(await delningsbilderFor(utmapp, sprakversion(inn, sprak))));
+  return filer;
+}
+async function delningsbilderFor(utmapp, inn) {
+  const { verket, verk, arenden, t, prefix } = inn, reg = lasRegister();
   const jpeg = (id) => (synligtFoto(verk[id]) ? storstaJpeg(verk[id].bild, reg[verk[id].bild]) : null);
   const fot = verket.undertitel || "";
   const start = startverk(inn);
   const filer = [];
   await delningsbild({
-    org: verket.namn, form: verket.blankett || "", titel: "Ansökan om kreativ insats", ingress: forstaMening(verket.inledning),
-    fot, ord: "Bifalles", under: "förenklat förfarande", fil: jpeg(start),
-  }, path.join(utmapp, "dela/verket.jpg"));
-  filer.push("dela/verket.jpg");
+    org: verket.namn, form: verket.blankett || "", titel: t("Ansökan om kreativ insats"), ingress: forstaMening(verket.inledning),
+    fot, ord: inn.ansokan.beslut.bifall.stampel, under: t("förenklat förfarande"), fil: jpeg(start), t,
+  }, path.join(utmapp, `${prefix}dela/verket.jpg`));
+  filer.push(`${prefix}dela/verket.jpg`);
   for (const a of arenden) {
     await delningsbild({
-      org: verket.namn, form: `Ärende · ${a.diarienummer || ""}`, titel: a.titel || a.id, ingress: a.ingress, fot,
-      ord: a.status || "Under handläggning", under: a.diarienummer || "", fil: jpeg(a.omslag), platshallare: a.diarienummer,
-    }, path.join(utmapp, `dela/arende-${a.id}.jpg`));
-    filer.push(`dela/arende-${a.id}.jpg`);
+      org: verket.namn, form: t("Ärende · {dnr}", { dnr: a.diarienummer || "" }), titel: a.titel || a.id, ingress: a.ingress, fot,
+      ord: a.status || t("Under handläggning"), under: a.diarienummer || "", fil: jpeg(a.omslag), platshallare: a.diarienummer, t,
+    }, path.join(utmapp, `${prefix}dela/arende-${a.id}.jpg`));
+    filer.push(`${prefix}dela/arende-${a.id}.jpg`);
   }
   return filer;
 }
 
 // ---------- delningssidor, sitemap och robots ----------
-function delningssida(a, { verket, adress }) {
-  const titel = `${a.titel} · ${verket.namn}`, besk = a.ingress || verket.inledning || "", mal = `../../#arende-${a.id}`;
-  const abs = (p) => (adress ? adress + p : `../../${p}`);
+function delningssida(a, { verket, adress, t, sprak, prefix, arendeMapp, arendeVag, locale }) {
+  const titel = `${a.titel} · ${verket.namn}`, besk = a.ingress || verket.inledning || "", mal = `../../#${arendeVag}-${a.id}`;
+  const abs = (p) => (adress ? adress + prefix + p : `../../${p}`);
   const bild = abs(`dela/arende-${a.id}.jpg`);
+  const ikon = prefix ? "../../../" : "../../";
   return `<!doctype html>
-<html lang="sv">
+<html lang="${sprak}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -190,18 +212,18 @@ function delningssida(a, { verket, adress }) {
 <meta name="description" content="${esc(besk)}">
 <meta name="robots" content="noindex,follow">
 <meta name="theme-color" content="#0f1315">
-<link rel="icon" href="../../favicon.ico" sizes="32x32">
-<link rel="icon" href="../../ikon.svg" type="image/svg+xml">
+<link rel="icon" href="${ikon}favicon.ico" sizes="32x32">
+<link rel="icon" href="${ikon}ikon.svg" type="image/svg+xml">
 <meta property="og:type" content="article">
-<meta property="og:locale" content="sv_SE">
+<meta property="og:locale" content="${locale}">
 <meta property="og:site_name" content="${esc(verket.namn)}">
 <meta property="og:title" content="${esc(a.titel)}">
 <meta property="og:description" content="${esc(besk)}">
-${adress ? `<meta property="og:url" content="${esc(adress)}arende/${esc(a.id)}/">\n` : ""}<meta property="og:image" content="${esc(bild)}">
+${adress ? `<meta property="og:url" content="${esc(adress)}${prefix}${arendeMapp}/${esc(a.id)}/">\n` : ""}<meta property="og:image" content="${esc(bild)}">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${esc(`Ärende ${a.diarienummer || ""}, ${a.titel}. Ett papper från ${verket.namn} med en stämpel.`)}">
+<meta property="og:image:alt" content="${esc(t("Ärende {dnr}, {titel}. Ett papper från {namn} med en stämpel.", { dnr: a.diarienummer || "", titel: a.titel, namn: verket.namn }))}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(a.titel)}">
 <meta name="twitter:description" content="${esc(besk)}">
@@ -211,10 +233,10 @@ ${adress ? `<meta property="og:url" content="${esc(adress)}arende/${esc(a.id)}/"
 </head>
 <body>
 <main>
-<small>${esc(verket.namn)} · Ärende ${esc(a.diarienummer || "")}</small>
+<small>${esc(verket.namn)} · ${esc(t("Ärende {dnr}", { dnr: a.diarienummer || "" }))}</small>
 <h1>${esc(a.titel)}</h1>
 <p>${esc(besk)}</p>
-<p><a href="${esc(mal)}">Öppna ärendet</a></p>
+<p><a href="${esc(mal)}">${esc(t("Öppna ärendet"))}</a></p>
 </main>
 </body>
 </html>
@@ -223,15 +245,19 @@ ${adress ? `<meta property="og:url" content="${esc(adress)}arende/${esc(a.id)}/"
 
 export async function skrivDelning(utmapp, inn = lasInnehall()) {
   const filer = await skapaDelningsbilder(utmapp, inn);
-  for (const a of inn.arenden) {
-    const p = path.join(utmapp, "arende", a.id, "index.html");
-    fs.mkdirSync(path.dirname(p), { recursive: true });
-    fs.writeFileSync(p, delningssida(a, inn));
+  for (const sprak of ["sv", "en"]) {
+    const s = sprakversion(inn, sprak);
+    for (const a of s.arenden) {
+      const p = path.join(utmapp, s.prefix, s.arendeMapp, a.id, "index.html");
+      fs.mkdirSync(path.dirname(p), { recursive: true });
+      fs.writeFileSync(p, delningssida(a, s));
+    }
   }
-  // Sajten är en enda sida (vyerna ligger efter #), så sitemap innehåller bara startsidan.
-  // Delningssidorna leder vidare och ska inte indexeras för sig.
+  // Sajten är en sida per språk (vyerna ligger efter #), så sitemap innehåller bara de två startsidorna,
+  // med hänvisningar mellan språken. Delningssidorna leder vidare och ska inte indexeras för sig.
   if (inn.adress) {
-    fs.writeFileSync(path.join(utmapp, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${esc(inn.adress)}</loc></url>\n</urlset>\n`);
+    const a = esc(inn.adress), alt = `\n    <xhtml:link rel="alternate" hreflang="sv" href="${a}"/>\n    <xhtml:link rel="alternate" hreflang="en" href="${a}en/"/>\n  `;
+    fs.writeFileSync(path.join(utmapp, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n  <url><loc>${a}</loc>${alt}</url>\n  <url><loc>${a}en/</loc>${alt}</url>\n</urlset>\n`);
   }
   fs.writeFileSync(path.join(utmapp, "robots.txt"), `User-agent: *\nAllow: /\n${inn.adress ? `\nSitemap: ${inn.adress}sitemap.xml\n` : ""}`);
   return filer.length;
@@ -258,7 +284,7 @@ export default function delning() {
     async closeBundle() {
       if (!bygge) return;
       const t = Date.now(), n = await skrivDelning(ut);
-      console.log(`[delning] ${n} delningsbilder, ${n - 1} delningssidor, sitemap.xml och robots.txt (${((Date.now() - t) / 1000).toFixed(1)} s)`);
+      console.log(`[delning] ${n} delningsbilder, ${n - 2} delningssidor (svenska och engelska), sitemap.xml och robots.txt (${((Date.now() - t) / 1000).toFixed(1)} s)`);
     },
   };
 }

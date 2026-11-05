@@ -6,6 +6,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
 import delning from "./scripts/delning.mjs";
+import sprak, { lasEngelska } from "./scripts/sprak.mjs";
 
 const CONTENT = path.resolve("content");
 const ID = "virtual:arkiv";
@@ -74,7 +75,9 @@ function load({ medUtkast = false } = {}) {
   const v = matter(fs.readFileSync(path.join(CONTENT, "verket.md"), "utf8"));
   const ansokan = JSON.parse(fs.readFileSync(path.join(CONTENT, "ansokan.json"), "utf8"));
   if (fel.length) console.warn("\n[innehåll] " + fel.join("\n[innehåll] ") + "\n");
-  return { verk, arenden, verket: { ...v.data, bestallare: renderBody(v.content) }, ansokan };
+  // Den engelska versionen (content/en/). Verken delas, texterna läggs ovanpå.
+  const en = lasEngelska(CONTENT, { verket: v.data, ansokan, arenden, renderBody, parseInline: (s) => marked.parseInline(s) });
+  return { verk, arenden, verket: { ...v.data, bestallare: renderBody(v.content) }, ansokan, en };
 }
 
 function arkiv() {
@@ -100,6 +103,6 @@ function arkiv() {
 
 export default defineConfig({
   base: "./",
-  plugins: [arkiv(), delning(), import("./scripts/admin/plugin.mjs").then((m) => m.default())], // Redigeringsbordet finns bara i npm run dev
+  plugins: [arkiv(), delning(), sprak({ CONTENT }), import("./scripts/admin/plugin.mjs").then((m) => m.default())], // Redigeringsbordet finns bara i npm run dev
   build: { outDir: "dist", assetsInlineLimit: 0, chunkSizeWarningLimit: 900 },
 });

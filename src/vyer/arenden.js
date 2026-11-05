@@ -5,13 +5,24 @@
 import "../stil/arenden.css";
 import { A, S, el, papper, huvud, tumnagel, metaRad, byId, kontaktRuta, kanalFarg, PREVIEW, ytBild, reduce, bild } from "../data.js";
 import { oppna } from "../visare.js";
+import { EN, t, vag } from "../sprak.js";
 
 const efterDnr = (a, b) => String(a.diarienummer).localeCompare(String(b.diarienummer), "sv", { numeric: true });
-const ARENDEN = A.arenden.slice().sort((a, b) => efterDnr(b, a));
+// På den engelska sidan läggs content/en/arenden/<id>.md ovanpå det svenska ärendet.
+// Ett ärende som inte har översatts visas på svenska, med en upplysning (sv = true).
+const ARENDEN = A.arenden.map((a) => {
+  const e = EN && A.en.arenden[a.id];
+  return EN ? (e ? { ...a, ...e, statusSv: a.status } : { ...a, statusSv: a.status, sv: true }) : { ...a, statusSv: a.status };
+}).sort((a, b) => efterDnr(b, a));
 const PUBLICERADE = ARENDEN.filter((a) => !a.utkast);
 const UTKAST = ARENDEN.filter((a) => a.utkast).sort(efterDnr);
-const statusKlass = (a) => (a.utkast ? "utkast" : /avgjor/i.test(a.status || "") ? "avgjord" : "oppen");
-const statusText = (a) => (a.utkast ? "Utkast" : a.status || "Under handläggning");
+const statusKlass = (a) => (a.utkast ? "utkast" : /avgjor/i.test(a.statusSv || "") ? "avgjord" : "oppen");
+// Ett svenskt ärende på den engelska sidan får sin status översatt, om den är en av de vanliga.
+const STATUS = { "Avgjort": t("Avgjort"), "Under handläggning": t("Under handläggning") };
+const statusText = (a) => (a.utkast ? t("Utkast") : (a.sv ? STATUS[a.status] : null) || a.status || t("Under handläggning"));
+// Ett ärende som visas på svenska på den engelska sidan.
+const svensk = (a) => (a.sv ? { lang: "sv" } : {});
+const svenskNot = () => el("p", { class: "sprak-not", lang: "en" }, t("Ärendet har ännu inte översatts. Det återges på svenska."));
 
 // [JOHAN: fråga] i texten. Frågorna får inte själva innehålla hakparenteser.
 const FRAGA = /\[JOHAN:\s*([^\]]+?)\s*\]/g;
@@ -21,13 +32,14 @@ const ental = (n, en, fler) => `${n} ${n === 1 ? en : fler}`;
 
 export function lista(app) {
   const p = papper();
-  p.append(huvud("Ärendeförteckning", "Ärenden"),
-    el("p", { class: "lead" }, "Utvalda projekt, från första idé via skisser och material till färdigt verk. Ärenden under handläggning fylls på efter hand."));
+  p.append(huvud(t("Ärendeförteckning"), t("Ärenden")),
+    el("p", { class: "lead" }, t("Utvalda projekt, från första idé via skisser och material till färdigt verk. Ärenden under handläggning fylls på efter hand.")));
   // Rubriken behövs för rubrikordningen (h1, h2, h3) men syns inte: listan talar för sig själv.
-  p.append(el("h2", { class: "dold" }, "Förteckning"), el("ul", { class: "arendelista" }, PUBLICERADE.map(rad)));
+  p.append(el("h2", { class: "dold" }, t("Förteckning")), el("ul", { class: "arendelista" }, PUBLICERADE.map(rad)));
   if (UTKAST.length) {
     const fragor = UTKAST.reduce((s, a) => s + antalFragor(a), 0);
-    p.append(el("section", { class: "utkastdel", "aria-labelledby": "utkast-rubrik" },
+    // Utkasten är Johans egna arbetspapper och syns bara i npm run dev. De står på svenska även på den engelska sidan.
+    p.append(el("section", { class: "utkastdel", "aria-labelledby": "utkast-rubrik", lang: "sv" },
       el("h2", { id: "utkast-rubrik" }, "Utkast under beredning"),
       el("p", { class: "utkastnot" },
         el("span", { class: "prov" }, "Ej offentligt"),
@@ -40,13 +52,13 @@ export function lista(app) {
 function rad(a) {
   const om = byId[a.omslag];
   const n = a.utkast ? antalFragor(a) : 0;
-  return el("li", { class: a.utkast ? "ar-utkast" : null }, el("a", { href: "#arende-" + a.id },
-    el("div", { class: "om" }, om ? tumnagel(om) : el("div", { class: "ytthumb", style: "background:var(--field);color:var(--muted)" }, el("small", {}, a.diarienummer), el("strong", {}, "Handlingar inkommer"))),
+  return el("li", { class: a.utkast ? "ar-utkast" : null }, el("a", { href: vag("arende", a.id) },
+    el("div", { class: "om" }, om ? tumnagel(om) : el("div", { class: "ytthumb", style: "background:var(--field);color:var(--muted)" }, el("small", {}, a.diarienummer), el("strong", {}, t("Handlingar inkommer")))),
     el("div", {},
-      el("h3", {}, a.titel),
-      el("p", {}, `${a.diarienummer} · ${utanFragor(a.period)}`),
-      a.ingress ? el("p", {}, utanFragor(a.ingress)) : null,
-      n ? el("p", { class: "fragantal" }, ental(n, "fråga till Johan", "frågor till Johan")) : null),
+      el("h3", svensk(a), a.titel),
+      el("p", {}, `${a.diarienummer} · ${utanFragor(a.period)}`, a.sv && !a.utkast ? ` · ${t("på svenska")}` : ""),
+      a.ingress ? el("p", svensk(a), utanFragor(a.ingress)) : null,
+      n ? el("p", { class: "fragantal", lang: "sv" }, ental(n, "fråga till Johan", "frågor till Johan")) : null),
     el("span", { class: "status " + statusKlass(a) }, statusText(a))));
 }
 
@@ -57,20 +69,22 @@ export function arende(app, id) {
   const fragor = [];
   const p = papper(); p.classList.add("arende");
   if (a.utkast) p.classList.add("ar-utkast");
-  p.append(huvud(`Ärende · ${a.diarienummer}`, a.titel));
+  p.append(huvud(t("Ärende · {dnr}", { dnr: a.diarienummer }), a.titel));
+  if (a.sv) p.querySelector("h1").setAttribute("lang", "sv");
   if (a.utkast) {
-    p.append(el("div", { class: "utkaststampel", "aria-hidden": "true" }, "Utkast", el("small", {}, "publiceras ej")),
-      el("p", { class: "utkastnot" }, el("span", { class: "prov" }, "Utkast"),
+    p.append(el("div", { class: "utkaststampel", "aria-hidden": "true" }, t("Utkast"), el("small", {}, "publiceras ej")),
+      el("p", { class: "utkastnot", lang: "sv" }, el("span", { class: "prov" }, "Utkast"),
         "Ärendet syns bara på den här datorn, när sajten körs med npm run dev. Det tas inte med när sajten byggs."));
   }
   const om = byId[a.omslag];
   if (om) p.append(omslag(om));
+  if (a.sv && !a.utkast) p.append(svenskNot());
   p.append(el("div", { class: "fields" },
-    el("div", {}, el("span", {}, "Diarienummer"), el("b", {}, a.diarienummer)),
-    el("div", {}, el("span", {}, "Period"), el("b", {}, medFragor(a.period || "–", fragor))),
-    el("div", {}, el("span", {}, "Status"), el("b", {}, statusText(a)))));
-  if (a.ingress) p.append(el("p", { class: "lead" }, medFragor(a.ingress, fragor)));
-  const kropp = el("div", { class: "kropp", html: a.html });
+    el("div", {}, el("span", {}, t("Diarienummer")), el("b", {}, a.diarienummer)),
+    el("div", {}, el("span", {}, t("Period")), el("b", {}, medFragor(a.period || "–", fragor))),
+    el("div", {}, el("span", {}, t("Status")), el("b", {}, statusText(a)))));
+  if (a.ingress) p.append(el("p", { class: "lead", ...svensk(a) }, medFragor(a.ingress, fragor)));
+  const kropp = el("div", { class: "kropp", html: a.html, ...svensk(a) });
   markeraFragor(kropp, fragor);
   // Fyll i bilageraderna (::verk i markdown).
   kropp.querySelectorAll(".bilagerad").forEach((rad) => {
@@ -80,7 +94,7 @@ export function arende(app, id) {
   });
   p.append(kropp);
   if (fragor.length) p.append(forelaggande(a, fragor));
-  p.append(el("div", { class: "actions" }, el("a", { href: "#arenden", class: "btn ghost" }, "← Alla ärenden"), el("a", { href: "#ansokan", class: "btn" }, "Ansök om kreativ insats")));
+  p.append(el("div", { class: "actions" }, el("a", { href: vag("arenden"), class: "btn ghost" }, t("← Alla ärenden")), el("a", { href: vag("ansokan"), class: "btn" }, t("Ansök om kreativ insats"))));
   app.replaceChildren(p);
   return a.titel;
 }
@@ -138,7 +152,7 @@ function forelaggande(a, fragor) {
     try { await navigator.clipboard.writeText(text); svar.textContent = "Frågorna är kopierade."; }
     catch { svar.textContent = "Kopieringen medgavs inte. Markera listan och kopiera för hand."; }
   } }, "Kopiera frågorna");
-  return el("section", { class: "forelaggande", "aria-labelledby": "forelaggande-rubrik" },
+  return el("section", { class: "forelaggande", "aria-labelledby": "forelaggande-rubrik", lang: "sv" },
     el("h2", { id: "forelaggande-rubrik" }, "Föreläggande om komplettering"),
     el("p", {}, `Handläggaren saknar uppgifter i ärendet. Johan föreläggs att besvara ${ental(fragor.length, "fråga", "frågor")}. Svaren kan lämnas muntligen.`),
     lista,
@@ -159,7 +173,7 @@ function visaFraga(n) {
 
 export function bestallare(app) {
   const p = papper(); p.classList.add("bestallare");
-  p.append(huvud("Upplysningar · Utgåva 2026:1", "För beställare"), el("div", { html: S.bestallare }));
+  p.append(huvud(t("Upplysningar · Utgåva 2026:1"), t("För beställare")), el("div", { html: S.bestallare }));
   p.append(kontaktRuta(null));
   app.replaceChildren(p);
 }

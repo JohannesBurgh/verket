@@ -7,6 +7,7 @@ import "../stil/arkivrummet.css";
 import { VERK, el, reduce } from "../data.js";
 import { oppna, oppen as visareOppen } from "../visare.js";
 import { klick, prassel } from "../ljud.js";
+import { t, vag } from "../sprak.js";
 import { skapaPapper, skuggTextur, kanalKort, fotoMaterial, GEMENSAMT } from "../rum/papper.js";
 import { skapaEfter } from "../rum/efter.js";
 import { skapaKvalitet } from "../rum/kvalitet.js";
@@ -25,8 +26,8 @@ export function stoppa() { if (byggd) byggd.stoppa(); }
 // Utan WebGL: en lapp i stället för ett rum.
 function utanRum() {
   const rot = el("section", { class: "rum" },
-    el("div", { class: "rum-lapp" }, el("b", {}, "Arkivrummet kan inte visas på den här enheten."),
-      el("p", {}, "Webbläsaren saknar stöd för tredimensionell återgivning. Samtliga handlingar finns i "), el("a", { href: "#registret" }, "Registret"), "."));
+    el("div", { class: "rum-lapp" }, el("b", {}, t("Arkivrummet kan inte visas på den här enheten.")),
+      el("p", {}, t("Webbläsaren saknar stöd för tredimensionell återgivning. Samtliga handlingar finns i "), el("a", { href: vag("registret") }, t("Registret")), ".")));
   return { rot, starta() {}, stoppa() {} };
 }
 
@@ -61,19 +62,19 @@ function bygg() {
   // ---- DOM ----
   const canvas = renderer.domElement;
   canvas.className = "gl"; canvas.tabIndex = 0;
-  canvas.setAttribute("aria-label", "Arkivrummet, ett tredimensionellt rum med alla handlingar. Pilarna flyttar blicken. Enter öppnar handlingen mitt i bild.");
+  canvas.setAttribute("aria-label", t("Arkivrummet, ett tredimensionellt rum med alla handlingar. Pilarna flyttar blicken. Enter öppnar handlingen mitt i bild."));
   const namn = el("b"), under = el("small");
-  const tips = el("div", { class: "tips" }), laddar = el("div", { class: "laddar" }, "[ handlingarna hämtas ]"), svep = el("div", { class: "svep", "aria-hidden": "true" });
-  const tl = el("canvas", { tabindex: "0", role: "slider", "aria-label": "Tidslinje. Klicka på ett år för att lyfta fram det. Med tangentbordet: pilarna väljer år, Enter öppnar en handling från året.", "aria-valuemin": Y0, "aria-valuemax": Y1 + 2, "aria-valuenow": Y0 });
+  const tips = el("div", { class: "tips" }), laddar = el("div", { class: "laddar" }, t("[ handlingarna hämtas ]")), svep = el("div", { class: "svep", "aria-hidden": "true" });
+  const tl = el("canvas", { tabindex: "0", role: "slider", "aria-label": t("Tidslinje. Klicka på ett år för att lyfta fram det. Med tangentbordet: pilarna väljer år, Enter öppnar en handling från året."), "aria-valuemin": Y0, "aria-valuemax": Y1 + 2, "aria-valuenow": Y0 });
   const absKnapp = el("button", { type: "button", class: "abs", "aria-pressed": "true" }, "Absurdimo");
   const arText = el("span", { class: "ar" });
-  const ROOMNAMES = [["falt", "Fältet", "1"], ["rulle", "Rullen", "2"], ["moln", "Molnet", "3"], ["vagg", "Väggen", "4"], ["mork", "Mörkrummet", "5"]];
-  const docka = el("nav", { class: "docka", "aria-label": "Rum" });
-  ROOMNAMES.forEach(([k, t, n]) => docka.append(el("button", { type: "button", "data-rum": k, "aria-pressed": "false", title: `${t} (${n})` }, t)));
-  const blasKnapp = el("button", { type: "button", class: "blas" }, "Blås"); docka.append(blasKnapp);
+  const ROOMNAMES = [["falt", t("Fältet"), "1"], ["rulle", t("Rullen"), "2"], ["moln", t("Molnet"), "3"], ["vagg", t("Väggen"), "4"], ["mork", t("Mörkrummet"), "5"]];
+  const docka = el("nav", { class: "docka", "aria-label": t("Rum") });
+  ROOMNAMES.forEach(([k, namn, n]) => docka.append(el("button", { type: "button", "data-rum": k, "aria-pressed": "false", title: `${namn} (${n})` }, namn)));
+  const blasKnapp = el("button", { type: "button", class: "blas" }, t("Blås")); docka.append(blasKnapp);
   const korn = el("div", { class: "korn", "aria-hidden": "true" });
-  const atergivning = el("button", { type: "button", class: "atergivning", title: "Efterbehandling: djupskärpa, ljus och korn" });
-  const rot = el("section", { class: "rum", "aria-labelledby": "rum-rubrik" }, el("h1", { class: "dold", id: "rum-rubrik" }, "Arkivrummet"), canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, laddar, svep, tips,
+  const atergivning = el("button", { type: "button", class: "atergivning", title: t("Efterbehandling: djupskärpa, ljus och korn") });
+  const rot = el("section", { class: "rum", "aria-labelledby": "rum-rubrik" }, el("h1", { class: "dold", id: "rum-rubrik" }, t("Arkivrummet")), canvas, korn, el("div", { class: "rumnamn" }, namn, under), atergivning, laddar, svep, tips,
     el("div", { class: "hud" }, el("div", { class: "tidslinje" }, absKnapp, arText, tl), docka));
 
   // ---- scen ----
@@ -118,7 +119,7 @@ function bygg() {
   const ritaEtiketter = () => {
     let sista = -1e9;
     for (let y = Y0; y <= Y1; y++) { const x = xOf(borjan[y]); if (antal[y] > 0 && x - sista > 2.3) { etikett(String(y), x, -3.6); sista = x; } }
-    etikett("utan datum", xOf(tot + .2), -3.6, "#8aa0a8", 30);
+    etikett(t("utan datum"), xOf(tot + .2), -3.6, "#8aa0a8", 30);
     absEtikett.push(etikett("Absurdimo", xOf(tot + ZON_UD + .3), -3.6, "#ef3fe6", 32));
     satsLime();
   };
@@ -185,7 +186,7 @@ function bygg() {
   const minU = 0, maxU = () => totalt();
   // dof: var djupskärpan börjar och hur fort den tar, räknat från kameran
   const ROOMS = {
-    falt: { namn: "Fältet", under: "tiden åt sidan, ljuset upp och ner", pan: true, fov: 50, stil: "glid", dof: (z) => [z + 1.6, 7],
+    falt: { namn: t("Fältet"), under: t("tiden åt sidan, ljuset upp och ner"), pan: true, fov: 50, stil: "glid", dof: (z) => [z + 1.6, 7],
       fit() { return passaV(4.15, 50) * 1.06; }, tillPan: (u) => xOf(u), franPan: (p) => p / XS + tot / 2, panSpann: () => [xOf(minU), xOf(maxU())],
       layout() {
         const lagd = [];
@@ -202,7 +203,7 @@ function bygg() {
           rikta(s, new THREE.Vector3(x, y, z), new THREE.Vector3(x, y, z + 5));
         });
       } },
-    rulle: { namn: "Rullen", under: "vidvinkel mot trumman. färgen runt, tiden längs", pan: true, fov: 74, stil: "trumma", dof: (z) => [z + .4, 4],
+    rulle: { namn: t("Rullen"), under: t("vidvinkel mot trumman. färgen runt, tiden längs"), pan: true, fov: 74, stil: "trumma", dof: (z) => [z + .4, 4],
       fit() { return Math.max(7.2, passaV(4.5, 74) * .92); }, tillPan: (u) => (u - tot / 2) * .5, franPan: (p) => p / .5 + tot / 2, panSpann: () => [(minU - tot / 2) * .5, (maxU() - tot / 2) * .5],
       layout() {
         aktiva().forEach((s) => {
@@ -211,7 +212,7 @@ function bygg() {
           rikta(s, p, p.clone().add(ut), new THREE.Vector3(0, Math.sin(th), -Math.cos(th)));
         });
       } },
-    moln: { namn: "Molnet", under: "du står mitt i. tiden är höjd, färgen är väderstreck", inne: true, fov: 76, stil: "dimma", dof: () => [7.2, 5],
+    moln: { namn: t("Molnet"), under: t("du står mitt i. tiden är höjd, färgen är väderstreck"), inne: true, fov: 76, stil: "dimma", dof: () => [7.2, 5],
       lat: (u) => (u / Math.max(1, totalt()) - .5) * .7 + .04,
       layout() {
         aktiva().forEach((s) => {
@@ -219,7 +220,7 @@ function bygg() {
           rikta(s, new THREE.Vector3(Math.cos(lon) * Math.cos(lat) * R, Math.sin(lat) * R, Math.sin(lon) * Math.cos(lat) * R), new THREE.Vector3(0, 0, 0));
         });
       } },
-    vagg: { namn: "Väggen", under: "du står i mitten, åren runt dig", inne: true, fov: 62, stil: "vagg", dof: () => [10.5, 6],
+    vagg: { namn: t("Väggen"), under: t("du står i mitten, åren runt dig"), inne: true, fov: 62, stil: "vagg", dof: () => [10.5, 6],
       layout() {
         const l = kronologisk(), rader = 6, kol = Math.ceil(l.length / rader), R = 8.5;
         const gap = Math.min(1.0, (Math.tan(THREE.MathUtils.degToRad(31)) * anvand() * R * 1.9 - .9) / (rader - 1));
@@ -230,7 +231,7 @@ function bygg() {
           rikta(s, p, new THREE.Vector3(0, p.y, 0));
         });
       } },
-    mork: { namn: "Mörkrummet", under: "rött ljus. bilden växer fram när du närmar dig", pan: true, fov: 46, stil: "mork", lutning: LUTNING, dof: (z) => [z + .9, 5],
+    mork: { namn: t("Mörkrummet"), under: t("rött ljus. bilden växer fram när du närmar dig"), pan: true, fov: 46, stil: "mork", lutning: LUTNING, dof: (z) => [z + .9, 5],
       fit() { return Math.max(passaV(2.8, 46), 2.7 / (Math.tan(THREE.MathUtils.degToRad(23)) * camera.aspect)); }, tillPan: (u) => M.x(u), franPan: (p) => M.u(p), panSpann: () => [M.x(minU), M.x(maxU())],
       layout() { M.lagg(kronologisk(), rikta, visaAbs); } },
   };
@@ -321,11 +322,12 @@ function bygg() {
     if (u != null) { const x = hudX(u, w); tc.fillStyle = "#d4ff3f"; tc.fillRect(x - 1, 2, 2, h - 4); tc.beginPath(); tc.moveTo(x - 6, 2); tc.lineTo(x + 6, 2); tc.lineTo(x, 9); tc.fill(); }
     const a = fokusAr ?? (u != null ? uTillAr(u) : null);
     const n = a == null || a >= UD ? 0 : antal[Math.floor(a)];
-    const text = a == null ? "" : a >= ABS ? "Absurdimo" : a >= UD ? "Utan datum" : `${Math.floor(a)} · ${n} ${n === 1 ? "handling" : "handlingar"}`;
-    arText.textContent = text + (text && fokusAr != null && a < UD ? " · klicka igen för att släppa" : "");
+    const text = a == null ? "" : a >= ABS ? "Absurdimo" : a >= UD ? t("Utan datum") : t("{ar} · {n} handlingar", { ar: Math.floor(a), n });
+    arText.textContent = text + (text && fokusAr != null && a < UD ? t(" · klicka igen för att släppa") : "");
     // Skärmläsaren får samma uppgift som syns ovanför tidslinjen.
     const nu = a == null ? Y0 : a >= ABS ? ABS : a >= UD ? UD : Math.floor(a);
-    if (tl.getAttribute("aria-valuetext") !== (text || "Inget år valt")) { tl.setAttribute("aria-valuenow", nu); tl.setAttribute("aria-valuetext", text || "Inget år valt"); }
+    const vt = text || t("Inget år valt");
+    if (tl.getAttribute("aria-valuetext") !== vt) { tl.setAttribute("aria-valuenow", nu); tl.setAttribute("aria-valuetext", vt); }
   }
   let drar = false, dragFlytt = 0, sistaX = 0;
   tl.addEventListener("pointerdown", (e) => { drar = true; dragFlytt = 0; sistaX = e.clientX; tl.setPointerCapture(e.pointerId); });
@@ -373,7 +375,7 @@ function bygg() {
     }
     const s = vald(e);
     if (s !== hover) { if (hover) hover.het = false; hover = s; if (s) s.het = true; canvas.classList.toggle("pointer", !!s); }
-    if (s) { tips.replaceChildren(s.v.titel, el("span", {}, s.abs ? "Absurdimo" : s.undated ? "odaterad" : String(Math.floor(s.v.ar)))); const r = rot.getBoundingClientRect(); tips.style.transform = `translate(${Math.min(e.clientX - r.left + 14, r.width - 260)}px,${e.clientY - r.top + 14}px)`; }
+    if (s) { tips.replaceChildren(s.v.titel, el("span", {}, s.abs ? "Absurdimo" : s.undated ? t("odaterad") : String(Math.floor(s.v.ar)))); const r = rot.getBoundingClientRect(); tips.style.transform = `translate(${Math.min(e.clientX - r.left + 14, r.width - 260)}px,${e.clientY - r.top + 14}px)`; }
     else tips.style.transform = "translate(-9999px,0)";
   });
   canvas.addEventListener("pointerup", (e) => { canvas.classList.remove("grabbing"); if (ner && flytt < 6) { const s = vald(e); if (s) oppnaFro(s); } ner = null; });
@@ -434,7 +436,7 @@ function bygg() {
   function tillampa() {
     renderer.setPixelRatio(kv.dpr); storlek(); satsLime();
     rot.classList.toggle("enkel", !kv.efter);
-    atergivning.textContent = "Återgivning: " + (kv.efter ? "full" : "förenklad");
+    atergivning.textContent = kv.efter ? t("Återgivning: full") : t("Återgivning: förenklad");
     atergivning.setAttribute("aria-pressed", kv.efter ? "true" : "false");
   }
   atergivning.addEventListener("click", () => { kv.vaxla(); tillampa(); klick(); });
