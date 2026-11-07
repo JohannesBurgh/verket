@@ -1,6 +1,6 @@
 ---
 titel: "Kontaktannonsen: 1337 H4XX0r söker sällskap"
-datum: null
+datum: "2022-03-11"
 typ: youtube
 youtube: "dw-sanmjryE"
 bild: "bilder/abs-kontaktannonsen-1337-h4xx0r-soker-sallsk.jpg"

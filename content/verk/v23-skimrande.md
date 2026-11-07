@@ -1,6 +1,6 @@
 ---
 titel: "Skimrande"
-datum: "2016"
+datum: "2015"
 typ: video
 video: "film/v23-skimrande.mp4"
 format: 1.778
@@ -13,6 +13,5 @@ bild: "bilder/v23-skimrande.jpg"
 dom: "ja"
 original: "Skimrande_ KLAR.mp4"
 kalla: "Scenkonst Samples work Johan Söderberg (No trailers)"
-datum_gissat: true
 ---
 Trailer med en skådespelare som talar till kameran framför ett stilla vatten i motljus.

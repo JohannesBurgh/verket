@@ -1,7 +1,6 @@
 ---
 titel: "Bra människor"
-datum: "2014"
-datum_gissat: true
+datum: "2017"
 typ: youtube
 youtube: "8bTNSh4n7iE"
 bild: "bilder/film-bra-manniskor.jpg"

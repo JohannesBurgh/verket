@@ -1,6 +1,6 @@
 ---
 titel: "Hårdhänte Erik"
-datum: null
+datum: "2022-03-04"
 typ: youtube
 youtube: "lQm1XdQABdk"
 bild: "bilder/abs-hardhante-erik.jpg"

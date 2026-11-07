@@ -1,6 +1,6 @@
 ---
 titel: "Gråter stora killar?, trailer"
-datum: "2016-09-23"
+datum: "2015"
 typ: youtube
 youtube: "WLOP8ZklNQU"
 bild: "bilder/film-grater-stora-killar-trailer.jpg"

@@ -1,7 +1,6 @@
 ---
 titel: "Plateau Effect, Cullberg"
-datum: "2013"
-datum_gissat: true
+datum: "2015"
 typ: youtube
 youtube: "mqaPbGgnniU"
 bild: "bilder/film-plateau-effect-cullberg.jpg"

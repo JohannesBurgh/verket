@@ -1,7 +1,6 @@
 ---
 titel: "De redan frälsta, trailer"
-datum: "2015"
-datum_gissat: true
+datum: "2016"
 typ: youtube
 youtube: "AsKEuptvheE"
 bild: "bilder/film-de-redan-fralsta-trailer.jpg"

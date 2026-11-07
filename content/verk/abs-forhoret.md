@@ -1,6 +1,6 @@
 ---
 titel: "Förhöret"
-datum: null
+datum: "2016-11-20"
 typ: youtube
 youtube: "k7BCLY-5QnI"
 bild: "bilder/abs-forhoret.jpg"

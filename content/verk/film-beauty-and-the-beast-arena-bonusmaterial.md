@@ -1,7 +1,6 @@
 ---
 titel: "Beauty and the Beast ARENA, bonusmaterial"
-datum: "2013"
-datum_gissat: true
+datum: "2017"
 typ: youtube
 youtube: "YJ_L73D9JYU"
 bild: "bilder/film-beauty-and-the-beast-arena-bonusmaterial.jpg"

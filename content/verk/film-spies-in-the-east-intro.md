@@ -1,7 +1,6 @@
 ---
 titel: "Spies in the east, intro"
-datum: "2018"
-datum_gissat: true
+datum: "2021"
 typ: youtube
 youtube: "MjsxTARTOcM"
 bild: "bilder/film-spies-in-the-east-intro.jpg"

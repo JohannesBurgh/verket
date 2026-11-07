@@ -1,6 +1,6 @@
 ---
 titel: "Frisören"
-datum: null
+datum: "2017-01-01"
 typ: youtube
 youtube: "0wcI9toOABc"
 bild: "bilder/abs-frisoren.jpg"

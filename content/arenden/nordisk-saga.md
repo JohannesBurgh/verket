@@ -22,14 +22,16 @@ Handläggaren noterar att maskerna återkommer. Barnen bär dem som om det vore 
 
 ## Material
 
-Under hösten flyttade arbetet ut i landskapet. Färgerna drogs isär: rosa fält, svart vatten, en slöja i skogen.
+Materialet samlades in under försommaren och sensommaren 2010. Förteckning: ett fält i rosa, löv som hålls fast mellan två händer, en sjö som inte ger något tillbaka. Ljuset är lågt och saknar avsändare. Handläggaren har inte kunnat fastställa var bilderna utspelar sig. Endast att det inte är en plats där man stannar.
 
-::verk 031-rosa-falt 029-lov-mellan-hander 043-sjon 042-i-morkret-vid-klippan
+::verk 031-rosa-falt 029-lov-mellan-hander 043-sjon
+
+En sovande och en som inte blinkar har lagts till handlingarna i efterhand.
+
+::verk 016-somnad 020-bla-blick
 
 ## Beslut
 
-Ärendet avslutas med Gasmasken, som Verket betraktar som en sammanfattning av hela året.
+Ärendet avslutas med ett självporträtt. Den sökande bär gasmask. Året har varit en emotionell resa under väg, och Verket konstaterar en form av platsdysfori. Flytten till hufvudstaden är genomförd. Mycket arbete kvarstår.
 
 ::verk 079-gasmasken
-
-<!-- [JOHAN: skriv om fritt. Prata gärna in det i stället, så skriver Claude om det.] -->

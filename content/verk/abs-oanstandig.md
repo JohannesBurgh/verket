@@ -1,6 +1,6 @@
 ---
 titel: "Oanständig"
-datum: null
+datum: "2022-04-22"
 typ: youtube
 youtube: "-1QU7AUR2k0"
 bild: "bilder/abs-oanstandig.jpg"

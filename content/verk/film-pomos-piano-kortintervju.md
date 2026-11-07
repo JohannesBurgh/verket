@@ -1,6 +1,6 @@
 ---
 titel: "Pomos piano, kortintervju"
-datum: "2013-10-23"
+datum: "2015"
 typ: youtube
 youtube: "d7V0j3k6UyA"
 bild: "bilder/film-pomos-piano-kortintervju.jpg"
@@ -14,4 +14,4 @@ farg: {nyans: 4, mattnad: 0.5, ljushet: 0.3}
 ton: {rorligt: 1, manniska: 1, uppdrag: 0.7}
 kalla: "YouTube-spellistan Showreel, scenkonst"
 ---
-Kort intervju inför Pomos piano, som turnerade med Riksteatern hösten 2013.
+Kort intervju inför Pomos piano, som turnerade med Riksteatern.

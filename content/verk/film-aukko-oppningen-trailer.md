@@ -1,6 +1,6 @@
 ---
 titel: "Aukko (Öppningen), trailer"
-datum: "2016-06-08"
+datum: "2014"
 typ: youtube
 youtube: "Oxld8DBQc28"
 bild: "bilder/film-aukko-oppningen-trailer.jpg"

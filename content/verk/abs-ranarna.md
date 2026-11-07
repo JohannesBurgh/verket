@@ -1,6 +1,6 @@
 ---
 titel: "Rånarna"
-datum: null
+datum: "2017-02-05"
 typ: youtube
 youtube: "l-IJoCqfwGY"
 bild: "bilder/abs-ranarna.jpg"

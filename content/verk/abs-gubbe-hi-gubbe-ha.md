@@ -1,6 +1,6 @@
 ---
 titel: "GUBBE HI GUBBE HÄ!"
-datum: null
+datum: "2017-02-19"
 typ: youtube
 youtube: "ul4m-80miU8"
 bild: "bilder/abs-gubbe-hi-gubbe-ha.jpg"

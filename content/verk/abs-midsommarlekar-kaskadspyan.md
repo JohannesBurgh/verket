@@ -1,6 +1,6 @@
 ---
 titel: "Midsommarlekar (kaskadspyan)"
-datum: null
+datum: "2017-06-22"
 typ: youtube
 youtube: "nWEpOO7DDlQ"
 bild: "bilder/abs-midsommarlekar-kaskadspyan.jpg"

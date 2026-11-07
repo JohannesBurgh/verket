@@ -13,6 +13,5 @@ bild: "bilder/v05-bella-figura-reptrailer.jpg"
 dom: "ja"
 original: "Bella Figura reptrailer - 16-9_2 Youtube.mp4"
 kalla: "Operan - Bella Figura - In the middle - färdiga filmer"
-datum_gissat: true
 ---
 Trailer klippt ur repetitionerna av Bella Figura. De röda kjolarna återkommer.

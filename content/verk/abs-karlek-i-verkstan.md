@@ -1,6 +1,6 @@
 ---
 titel: "Kärlek i verkstan"
-datum: null
+datum: "2017-01-22"
 typ: youtube
 youtube: "_JqXmmGj3aE"
 bild: "bilder/abs-karlek-i-verkstan.jpg"

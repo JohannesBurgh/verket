@@ -1,7 +1,6 @@
 ---
 titel: "Riksteaterns logga, animerad"
-datum: "2014"
-datum_gissat: true
+datum: "2016"
 typ: video
 video: "film/rikslogo-2014.mp4"
 bild: "bilder/rikslogo-2014.jpg"

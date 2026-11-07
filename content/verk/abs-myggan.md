@@ -1,6 +1,6 @@
 ---
 titel: "Myggan"
-datum: null
+datum: "2016-09-26"
 typ: youtube
 youtube: "Upu4nQZVtt0"
 bild: "bilder/abs-myggan.jpg"

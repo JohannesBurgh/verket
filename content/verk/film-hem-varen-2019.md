@@ -1,7 +1,6 @@
 ---
 titel: "Hem, våren 2019"
 datum: "2019"
-datum_gissat: true
 typ: youtube
 youtube: "-PRCUVPJ1UI"
 bild: "bilder/film-hem-varen-2019.jpg"

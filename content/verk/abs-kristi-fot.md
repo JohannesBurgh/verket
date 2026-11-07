@@ -1,6 +1,6 @@
 ---
 titel: "Kristi fot"
-datum: null
+datum: "2016-09-26"
 typ: youtube
 youtube: "frlRmcai7ec"
 bild: "bilder/abs-kristi-fot.jpg"

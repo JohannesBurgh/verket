@@ -1,6 +1,6 @@
 ---
 titel: "Schack matt"
-datum: null
+datum: "2016-10-06"
 typ: youtube
 youtube: "Av3rY-gVA5s"
 bild: "bilder/abs-schack-matt.jpg"

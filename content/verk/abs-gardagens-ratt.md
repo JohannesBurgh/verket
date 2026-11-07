@@ -1,6 +1,6 @@
 ---
 titel: "Gårdagens rätt"
-datum: null
+datum: "2016-11-26"
 typ: youtube
 youtube: "V6W11SQyTu8"
 bild: "bilder/abs-gardagens-ratt.jpg"

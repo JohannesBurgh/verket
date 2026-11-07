@@ -1,7 +1,6 @@
 ---
 titel: "En komisk depression, trailer"
-datum: "2017"
-datum_gissat: true
+datum: "2016"
 typ: youtube
 youtube: "J0AuwIvK038"
 bild: "bilder/film-en-komisk-depression-trailer.jpg"

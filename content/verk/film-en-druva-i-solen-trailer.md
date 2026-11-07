@@ -1,7 +1,6 @@
 ---
 titel: "En druva i solen, trailer"
-datum: "2016"
-datum_gissat: true
+datum: "2017"
 typ: youtube
 youtube: "6BJd-BY84E8"
 bild: "bilder/film-en-druva-i-solen-trailer.jpg"

@@ -20,12 +20,16 @@ The case officer notes that the masks recur. The children wear them as though it
 
 ## Material
 
-During the autumn the work moved out into the landscape. The colours were pulled apart: a pink field, black water, a veil in the forest.
+The material was collected in early and late summer 2010. Inventory: a field in pink, leaves held between two hands, a lake that gives nothing back. The light is low and has no sender. The case officer has not been able to establish where the images take place. Only that it is not a place where one stays.
 
-::verk 031-rosa-falt 029-lov-mellan-hander 043-sjon 042-i-morkret-vid-klippan
+::verk 031-rosa-falt 029-lov-mellan-hander 043-sjon
+
+One who sleeps and one who does not blink have been added to the file afterwards.
+
+::verk 016-somnad 020-bla-blick
 
 ## Decision
 
-The case is concluded with The gas mask, which the Office regards as a summary of the entire year.
+The case is concluded with a self-portrait. The applicant wears a gas mask. The year has been an emotional journey on the way, and the Office finds a form of place dysphoria. The move to the capital has been carried out. Much work remains.
 
 ::verk 079-gasmasken

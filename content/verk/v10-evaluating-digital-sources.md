@@ -13,6 +13,5 @@ bild: "bilder/v10-evaluating-digital-sources.jpg"
 dom: "hjalte"
 original: "Eduflix - AI enhanced - Evaluating digital sources.mp4"
 kalla: "Portfolio Johan O Söderberg 2026_EDUCATION"
-datum_gissat: true
 ---
 Utbildningsfilm om att granska digitala källor. Miljöer, personer och illustrationer är framtagna med generativ AI och klippta till en berättelse.

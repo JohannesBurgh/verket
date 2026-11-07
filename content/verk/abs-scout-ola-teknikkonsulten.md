@@ -1,6 +1,6 @@
 ---
 titel: "Scout-Ola: Teknikkonsulten"
-datum: null
+datum: "2016-11-03"
 typ: youtube
 youtube: "-eWIUEphPcc"
 bild: "bilder/abs-scout-ola-teknikkonsulten.jpg"
