@@ -1,6 +1,6 @@
 ---
 titel: "Arbetsförmedlingen: Äntligen ett ledigt jobb!"
-datum: null
+datum: "2017-02-12"
 typ: youtube
 youtube: "Hl7enmAifxg"
 bild: "bilder/abs-arbetsformedlingen-antligen-ett-ledigt-j.jpg"

@@ -1,6 +1,6 @@
 ---
 titel: "The Daily Ritual, theme song"
-datum: null
+datum: "2016-12-25"
 typ: youtube
 youtube: "s58eo1cJycM"
 bild: "bilder/abs-the-daily-ritual-theme-song.jpg"

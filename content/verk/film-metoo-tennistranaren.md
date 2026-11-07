@@ -1,7 +1,6 @@
 ---
 titel: "#metoo, tennistränaren"
 datum: "2020"
-datum_gissat: true
 typ: youtube
 youtube: "FrHwyr83RCw"
 bild: "bilder/film-metoo-tennistranaren.jpg"

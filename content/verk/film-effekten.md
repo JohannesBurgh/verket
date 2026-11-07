@@ -1,7 +1,6 @@
 ---
 titel: "Effekten"
-datum: "2016"
-datum_gissat: true
+datum: "2015"
 typ: youtube
 youtube: "bKNtGWQSYlI"
 bild: "bilder/film-effekten.jpg"

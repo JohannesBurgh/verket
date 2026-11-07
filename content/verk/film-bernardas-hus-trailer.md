@@ -1,7 +1,6 @@
 ---
 titel: "Bernardas hus, trailer"
 datum: "2016"
-datum_gissat: true
 typ: youtube
 youtube: "z6C7RAlUOOA"
 bild: "bilder/film-bernardas-hus-trailer.jpg"

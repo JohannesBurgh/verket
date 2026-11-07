@@ -12,5 +12,4 @@ vikt: "frö"
 synlig: true
 farg: {nyans: 350, mattnad: 0.5, ljushet: 0.3}
 ton: {lek: 1, rorligt: 1, manniska: 0.8, uppdrag: 1}
-datum_gissat: true
 ---

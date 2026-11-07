@@ -1,6 +1,6 @@
 ---
 titel: "Naturrutan"
-datum: null
+datum: "2016-12-11"
 typ: youtube
 youtube: "jDH9pw4iX4k"
 bild: "bilder/abs-naturrutan.jpg"

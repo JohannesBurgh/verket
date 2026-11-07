@@ -14,4 +14,4 @@ farg: {nyans: 4, mattnad: 0.5, ljushet: 0.3}
 ton: {rorligt: 1, scen: 1, lek: 0.6}
 kalla: "YouTube-spellistan Showreel, scenkonst"
 ---
-Trailer för Tigern, som turnerade med Riksteatern våren 2016. Om rädslan för det främmande.
+Trailer för Tigern, som turnerade med Riksteatern våren 2016. Om rädslan för det främmande. Filmad på Dramaten.

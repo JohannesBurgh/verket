@@ -1,6 +1,6 @@
 ---
 titel: "Dagens visdomsord: Tänkvärt om vind"
-datum: null
+datum: "2016-11-15"
 typ: youtube
 youtube: "yQTDsDbRGZI"
 bild: "bilder/abs-dagens-visdomsord-tankvart-om-vind.jpg"

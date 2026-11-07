@@ -1,6 +1,6 @@
 ---
 titel: "High heels too, trailer"
-datum: "2013-04-10"
+datum: "2014"
 typ: youtube
 youtube: "erhNye9D3EY"
 bild: "bilder/film-high-heels-too-trailer.jpg"
@@ -14,4 +14,4 @@ farg: {nyans: 270, mattnad: 0.4, ljushet: 0.2}
 ton: {rorligt: 1, scen: 1, konst: 0.9}
 kalla: "YouTube-spellistan Showreel, scenkonst"
 ---
-Trailer för High heels too med Cullberg, 2013. Koreografi Benoît Lachambre.
+Trailer för High heels too med Cullberg. Koreografi Benoît Lachambre.

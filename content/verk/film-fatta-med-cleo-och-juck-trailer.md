@@ -1,7 +1,6 @@
 ---
 titel: "FATTA! med Cleo och JUCK, trailer"
-datum: "2012"
-datum_gissat: true
+datum: "2016"
 typ: youtube
 youtube: "g7LVJlNFyY8"
 bild: "bilder/film-fatta-med-cleo-och-juck-trailer.jpg"

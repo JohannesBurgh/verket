@@ -1,6 +1,6 @@
 ---
 titel: "Fader Jans oheliga nattvard"
-datum: null
+datum: "2022-03-24"
 typ: youtube
 youtube: "HQ22DTVf1Bw"
 bild: "bilder/abs-fader-jans-oheliga-nattvard.jpg"

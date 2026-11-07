@@ -1,6 +1,6 @@
 ---
 titel: "Pojkarna, bakom kulisserna"
-datum: "2013-10-11"
+datum: "2014"
 typ: youtube
 youtube: "uw6bzieRTSY"
 bild: "bilder/film-pojkarna-bakom-kulisserna.jpg"
@@ -14,4 +14,4 @@ farg: {nyans: 4, mattnad: 0.5, ljushet: 0.3}
 ton: {rorligt: 1, scen: 1, manniska: 0.8}
 kalla: "YouTube-spellistan Showreel, scenkonst"
 ---
-Bakom kulisserna på Pojkarna, som spelades på Uppsala stadsteater hösten 2013 och turnerade med Riksteatern.
+Bakom kulisserna på Pojkarna, som spelades på Uppsala stadsteater och turnerade med Riksteatern.

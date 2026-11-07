@@ -1,6 +1,6 @@
 ---
 titel: "Vägra återvinna"
-datum: null
+datum: "2017-01-08"
 typ: youtube
 youtube: "rITStfgmu9g"
 bild: "bilder/abs-vagra-atervinna.jpg"

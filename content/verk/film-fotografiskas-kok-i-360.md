@@ -1,7 +1,6 @@
 ---
 titel: "Fotografiskas kök i 360°"
-datum: "2019"
-datum_gissat: true
+datum: "2020"
 typ: youtube
 youtube: "wx66nHhKTko"
 bild: "bilder/film-fotografiskas-kok-i-360.jpg"

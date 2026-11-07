@@ -1,7 +1,6 @@
 ---
 titel: "Männen med rosa triangel, trailer"
 datum: "2015"
-datum_gissat: true
 typ: youtube
 youtube: "NI6dVNtuhH4"
 bild: "bilder/film-mannen-med-rosa-triangel-trailer.jpg"
