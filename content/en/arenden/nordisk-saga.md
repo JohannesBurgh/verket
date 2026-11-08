@@ -24,9 +24,9 @@ The material was collected in early and late summer 2010. Inventory: a field in 
 
 ::verk 031-rosa-falt 029-lov-mellan-hander 043-sjon
 
-One who sleeps and one who does not blink have been added to the file afterwards.
+One who sleeps, one who does not blink, a veil and black water have been added to the file afterwards.
 
-::verk 016-somnad 020-bla-blick
+::verk 016-somnad 020-bla-blick 078-slojan-i-skogen 047-svart-vatten
 
 ## Decision
 
