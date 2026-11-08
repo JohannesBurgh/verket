@@ -43,6 +43,10 @@ Meeat Burgers, Blosserum och Distribulock är exempelföretag som skapades för 
 
 ::verk 184-talk-58144 132-black-and-white-glossy-interior-photog-e 174-editorial-lifestyle-magazine-cover-bl-5f 148-a-father-and-son-having-a-beautiful-mo-4
 
+### Sociala medier
+
+::verk v24-sveakbt-reel
+
 ## Beslut
 
 Det går att göra mycket olika saker. Johan har kompetensen och vill arbeta med det på ett ansvarsfullt och ärligt sätt.

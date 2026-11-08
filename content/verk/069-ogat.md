@@ -1,5 +1,5 @@
 ---
-titel: "Ögat"
+titel: "Heligt öga"
 datum: "2010-03-20"
 typ: foto
 bild: "bilder/069.jpg"

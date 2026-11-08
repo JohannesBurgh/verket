@@ -1,5 +1,5 @@
 ---
-titel: "Två vid vattenbrynet"
+titel: "Familj vid vattenbrynet"
 datum: "2010-03-25"
 typ: foto
 bild: "bilder/005.jpg"

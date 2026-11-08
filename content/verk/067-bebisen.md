@@ -1,5 +1,5 @@
 ---
-titel: "Bebisen"
+titel: "From above"
 datum: "2010-03-19"
 typ: foto
 bild: "bilder/067.jpg"

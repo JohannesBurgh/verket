@@ -42,6 +42,10 @@ Meeat Burgers, Blosserum and Distribulock are example companies created for the 
 
 ::verk 184-talk-58144 132-black-and-white-glossy-interior-photog-e 174-editorial-lifestyle-magazine-cover-bl-5f 148-a-father-and-son-having-a-beautiful-mo-4
 
+### Social media
+
+::verk v24-sveakbt-reel
+
 ## Decision
 
 A great many different things can be done. Johan has the competence and wants to work with it responsibly and honestly.

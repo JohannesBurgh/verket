@@ -1,5 +1,5 @@
 ---
-titel: "Barnet och valparna"
+titel: "Gatuliv I"
 datum: "2010-02-09"
 typ: foto
 bild: "bilder/056.jpg"

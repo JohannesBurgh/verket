@@ -1,5 +1,5 @@
 ---
-titel: "Ansikte vid elden"
+titel: "Bronsstatyer gjutning II"
 datum: "2006-03-08"
 typ: foto
 bild: "bilder/033.jpg"
