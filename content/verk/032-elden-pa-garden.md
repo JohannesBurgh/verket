@@ -1,5 +1,5 @@
 ---
-titel: "Elden på gården"
+titel: "Bronsstatyer gjutning I"
 datum: "2006-03-07"
 typ: foto
 bild: "bilder/032.jpg"

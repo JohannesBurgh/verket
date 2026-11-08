@@ -1,5 +1,5 @@
 ---
-titel: "Tvätten"
+titel: "Man kan tro det är stageat"
 datum: "2006-03-16"
 typ: foto
 bild: "bilder/039.jpg"

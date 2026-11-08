@@ -1,5 +1,5 @@
 ---
-titel: "Alex med fisken"
+titel: "Reklamkampanj solglasögon. PURE westcoast"
 datum: "2005-08-17"
 typ: foto
 bild: "bilder/004.jpg"

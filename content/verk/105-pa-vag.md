@@ -1,5 +1,5 @@
 ---
-titel: "På väg"
+titel: "På väg. Självporträtt"
 datum: null
 typ: foto
 bild: "bilder/105.jpg"

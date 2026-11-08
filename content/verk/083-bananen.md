@@ -1,5 +1,5 @@
 ---
-titel: "Bananen"
+titel: "Bananen. Självporträtt"
 datum: null
 typ: foto
 bild: "bilder/083.jpg"

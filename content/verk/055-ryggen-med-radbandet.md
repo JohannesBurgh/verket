@@ -1,5 +1,5 @@
 ---
-titel: "Ryggen med radbandet"
+titel: "Ryggen"
 datum: "2010-02-09"
 typ: foto
 bild: "bilder/055.jpg"

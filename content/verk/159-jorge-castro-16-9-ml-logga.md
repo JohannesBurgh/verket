@@ -7,7 +7,7 @@ format: 1.778
 epok: "Evenemang, 2025–2026"
 avdelning: "Uppdragen"
 vikt: "damm"
-synlig: true
+synlig: false
 farg: {nyans: 210, mattnad: 0.44, ljushet: 0.21}
 ton: {manniska: 0.8, uppdrag: 1, stilla: 1}
 original: "Jorge-Castro-16-9-ML-logga.jpg"

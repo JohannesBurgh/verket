@@ -1,5 +1,5 @@
 ---
-titel: "Vid fönstret"
+titel: "Resa"
 datum: "2010-02-17"
 typ: foto
 bild: "bilder/061.jpg"

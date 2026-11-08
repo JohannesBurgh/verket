@@ -27,7 +27,7 @@ Dagens visdomsord och Scout-Ola är återkommande inslag. The Daily Ritual är e
 
 ::verk abs-fader-jans-oheliga-nattvard abs-forhoret abs-frisoren abs-gardagens-ratt abs-gubbe-hi-gubbe-ha abs-hardhante-erik abs-karlek-i-verkstan
 
-::verk abs-kristi-fot abs-midsommarlekar-kaskadspyan abs-myggan abs-oanstandig abs-ranarna abs-schack-matt abs-vagra-atervinna
+::verk abs-kristi-fot abs-midsommarlekar-kaskadspyan abs-myggan abs-oanstandig abs-ranarna abs-schack-matt abs-vagra-atervinna 096-rosen
 
 ## Beslut
 

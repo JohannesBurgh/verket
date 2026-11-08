@@ -1,5 +1,5 @@
 ---
-titel: "Svart ko i stallet"
+titel: "Mörk helighet"
 datum: "2010-03-26"
 typ: foto
 bild: "bilder/008.jpg"

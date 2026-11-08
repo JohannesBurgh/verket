@@ -1,5 +1,5 @@
 ---
-titel: "Fingret"
+titel: "Fingret, vilket finger? Självporträtt"
 datum: null
 typ: foto
 bild: "bilder/076.jpg"

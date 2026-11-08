@@ -26,7 +26,7 @@ Dagens visdomsord and Scout-Ola are recurring items. The Daily Ritual is a going
 
 ::verk abs-fader-jans-oheliga-nattvard abs-forhoret abs-frisoren abs-gardagens-ratt abs-gubbe-hi-gubbe-ha abs-hardhante-erik abs-karlek-i-verkstan
 
-::verk abs-kristi-fot abs-midsommarlekar-kaskadspyan abs-myggan abs-oanstandig abs-ranarna abs-schack-matt abs-vagra-atervinna
+::verk abs-kristi-fot abs-midsommarlekar-kaskadspyan abs-myggan abs-oanstandig abs-ranarna abs-schack-matt abs-vagra-atervinna 096-rosen
 
 ## Decision
 

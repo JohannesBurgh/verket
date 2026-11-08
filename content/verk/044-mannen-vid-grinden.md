@@ -1,5 +1,5 @@
 ---
-titel: "Mannen vid grinden"
+titel: "Förbipassage godkänd"
 datum: "2006-03-31"
 typ: foto
 bild: "bilder/044.jpg"

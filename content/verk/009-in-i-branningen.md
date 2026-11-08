@@ -1,5 +1,5 @@
 ---
-titel: "In i bränningen"
+titel: "Bränning"
 datum: "2010-03-26"
 typ: foto
 bild: "bilder/009.jpg"
