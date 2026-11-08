@@ -26,9 +26,9 @@ Materialet samlades in under försommaren och sensommaren 2010. Förteckning: et
 
 ::verk 031-rosa-falt 029-lov-mellan-hander 043-sjon
 
-En sovande och en som inte blinkar har lagts till handlingarna i efterhand.
+En sovande, en som inte blinkar, en slöja och svart vatten har lagts till handlingarna i efterhand.
 
-::verk 016-somnad 020-bla-blick
+::verk 016-somnad 020-bla-blick 078-slojan-i-skogen 047-svart-vatten
 
 ## Beslut
 
