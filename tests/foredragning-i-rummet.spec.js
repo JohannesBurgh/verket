@@ -23,6 +23,13 @@ async function oppna(page, fro) {
 async function pausa(page) {
   await page.keyboard.press(" ");
   await expect(fd(page).locator(".fd-paus")).toHaveAttribute("aria-pressed", "true");
+  // Spelaren startar av sig själv. Hinner den förbi korta avsnitt innan pausen tar, börjar jämförelsen fel.
+  // Därför spolas den till början, och fokus lämnar förloppet så att piltangenterna går till spelaren igen.
+  const spar = fd(page).locator(".fd-spar");
+  await spar.focus();
+  await page.keyboard.press("Home");
+  await expect(spar).toHaveAttribute("aria-valuenow", "0");
+  await page.evaluate(() => document.activeElement && document.activeElement.blur());
 }
 // Hoppar ett avsnitt framåt och väntar tills det nya avsnittet syns.
 async function nasta(page) {
